@@ -1,16 +1,14 @@
 import { motion } from "framer-motion";
 
 const STAGES = [
-  { id: "analyzing", label: "Analyzing", icon: "🎬" },
-  { id: "visuals", label: "Generating Visuals", icon: "🎨" },
-  { id: "narration", label: "Recording Narration", icon: "🎙️" },
-  { id: "rendering", label: "Rendering", icon: "🎥" },
+  { id: "analyzing", label: "Analyzing Script", icon: "🎬" },
+  { id: "generating", label: "Visuals & Narration", icon: "🎨" },
+  { id: "rendering", label: "Rendering Video", icon: "🎥" },
 ];
 
 const STAGE_ORDER = [
   "analyzing",
-  "visuals",
-  "narration",
+  "generating",
   "rendering",
   "complete",
 ];

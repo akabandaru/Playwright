@@ -32,64 +32,55 @@ export default function App() {
     setMusicRecommendation(null);
 
     try {
-      // Stage 1: Analyzing script
-      setStage("analyzing");
-      const analyzeResponse = await fetch(`${API_URL}/api/analyze`, {
+      const response = await fetch(`${API_URL}/api/generate-video`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ script }),
       });
 
-      if (!analyzeResponse.ok) throw new Error("Failed to analyze script");
-      const { beats: analyzedBeats } = await analyzeResponse.json();
-      setBeats(analyzedBeats);
+      if (!response.ok) throw new Error("Failed to start pipeline");
 
-      // Stage 2: Generating visuals
-      setStage("visuals");
-      const visualsResponse = await fetch(`${API_URL}/api/generate-visuals`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ beats: analyzedBeats }),
-      });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
 
-      if (!visualsResponse.ok) throw new Error("Failed to generate visuals");
-      const { beats: beatsWithImages } = await visualsResponse.json();
-      setBeats(beatsWithImages);
-      setImages(beatsWithImages.map((b) => b.imageUrl));
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      // Stage 3: Recording narration
-      setStage("narration");
-      const narrationResponse = await fetch(
-        `${API_URL}/api/generate-narration`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ beats: beatsWithImages }),
-        },
-      );
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
 
-      if (!narrationResponse.ok)
-        throw new Error("Failed to generate narration");
-      const { audioUrls, musicRecommendation: music } =
-        await narrationResponse.json();
-      setMusicRecommendation(music);
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              
+              setStage(data.stage);
 
-      // Stage 4: Rendering video
-      setStage("rendering");
-      const renderResponse = await fetch(`${API_URL}/api/render-video`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          beats: beatsWithImages,
-          audioUrls,
-        }),
-      });
+              if (data.beats) {
+                setBeats(data.beats);
+                setImages(data.beats.map((b) => b.imageUrl).filter(Boolean));
+              }
 
-      if (!renderResponse.ok) throw new Error("Failed to render video");
-      const { videoUrl: url } = await renderResponse.json();
-      setVideoUrl(url);
+              if (data.videoUrl) {
+                setVideoUrl(data.videoUrl);
+              }
 
-      setStage("complete");
+              if (data.musicRecommendation) {
+                setMusicRecommendation(data.musicRecommendation);
+              }
+
+              if (data.stage === "error") {
+                throw new Error(data.message);
+              }
+            } catch (parseError) {
+              if (parseError.message !== "Unexpected end of JSON input") {
+                console.error("Parse error:", parseError);
+              }
+            }
+          }
+        }
+      }
     } catch (err) {
       console.error("Pipeline error:", err);
       setError(err.message || "An error occurred during generation");
