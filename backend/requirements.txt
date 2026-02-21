@@ -14,3 +14,6 @@ pydantic
 pillow
 numpy
 datasets
+elevenlabs
+pydub
+ffmpeg

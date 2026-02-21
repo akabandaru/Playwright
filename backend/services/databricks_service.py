@@ -89,7 +89,7 @@ def log_metric(key: str, value: float):
     global _current_run, _inference_logs
     
     if _inference_logs:
-        _inference_logs[-1]["metrics"][key] = value
+        _inference_logs[-1].setdefault("metrics", {})[key] = value
     
     if not DATABRICKS_AVAILABLE or not _current_run:
         return
@@ -198,7 +198,8 @@ def get_few_shot_examples(limit: int = 3) -> List[Dict[str, Any]]:
 
     Returns a list of dicts with keys: genre, scene, beats
     """
-    rows = _fetch_few_shot_from_databricks(limit)
+    # rows = _fetch_few_shot_from_databricks(limit)
+    rows = _fetch_few_shot_from_csv(limit)
     if rows is None:
         rows = _fetch_few_shot_from_csv(limit)
     return rows
@@ -216,6 +217,7 @@ def _fetch_few_shot_from_databricks(limit: int) -> Optional[List[Dict[str, Any]]
     if not all([host, token, http_path]):
         return None
 
+    print("[DATABRICKS] Attempting to connect to SQL warehouse...")
     try:
         with databricks_sql.connect(
             server_hostname=host.replace("https://", ""),

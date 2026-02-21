@@ -15,11 +15,26 @@ import numpy as np
 
 TEMP_DIR = Path(__file__).parent.parent / "temp"
 OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
-TEMP_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
+VIDEOS_DIR = OUTPUT_DIR / "videos"
+IMAGES_DIR = OUTPUT_DIR / "images"
+
+VIDEOS_DIR.mkdir(exist_ok=True)
 
 async def download_image(url: str, client: httpx.AsyncClient) -> str:
-    """Download an image and save to temp directory."""
+    """Download an image or resolve local path and save to temp directory."""
+    # Handle local API paths like /api/image/filename.png
+    if url.startswith("/api/image/"):
+        filename = url.replace("/api/image/", "")
+        local_path = IMAGES_DIR / filename
+        if local_path.exists():
+            return str(local_path)
+        # If not found locally, try downloading with full URL
+        url = f"http://localhost:8000{url}"
+    
+    # Handle relative paths without http
+    if not url.startswith("http"):
+        url = f"http://localhost:8000{url}"
+    
     response = await client.get(url, timeout=60.0)
     response.raise_for_status()
     
@@ -68,10 +83,13 @@ async def render_video(
         download_tasks = []
         for beat in beats:
             image_url = beat.get("imageUrl") or beat.get("image_url")
+            print(f"[VIDEO] Beat {beat.get('beat_number')}: image_url = {image_url}")
             if image_url:
                 download_tasks.append(download_image(image_url, client))
         
+        print(f"[VIDEO] Downloading {len(download_tasks)} images...")
         image_paths = await asyncio.gather(*download_tasks, return_exceptions=True)
+        print(f"[VIDEO] Downloaded images: {image_paths}")
     
     audio_map = {a["beat_number"]: a["audio_path"] for a in audio_files if a.get("audio_path")}
     
@@ -124,7 +142,7 @@ async def render_video(
             final_video = final_video.with_audio(bg_music)
     
     output_filename = f"playwright_{uuid.uuid4().hex[:8]}.mp4"
-    output_path = OUTPUT_DIR / output_filename
+    output_path = VIDEOS_DIR / output_filename
     
     await asyncio.to_thread(
         final_video.write_videofile,

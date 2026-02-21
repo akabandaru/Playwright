@@ -16,6 +16,7 @@ export default function App() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [figmaUrl, setFigmaUrl] = useState(null);
   const [stage, setStage] = useState(null);
+  const [stageMessage, setStageMessage] = useState("");
   const [error, setError] = useState(null);
   const [musicRecommendation, setMusicRecommendation] = useState(null);
 
@@ -30,6 +31,8 @@ export default function App() {
     setVideoUrl(null);
     setFigmaUrl(null);
     setMusicRecommendation(null);
+    setStageMessage("");
+    setStage("analyzing"); // Show progress immediately
 
     try {
       const response = await fetch(`${API_URL}/api/generate-video`, {
@@ -54,16 +57,37 @@ export default function App() {
           if (line.startsWith("data: ")) {
             try {
               const data = JSON.parse(line.slice(6));
+              console.log("SSE data:", data);
               
               setStage(data.stage);
+              if (data.message) {
+                setStageMessage(data.message);
+              }
 
               if (data.beats) {
                 setBeats(data.beats);
                 setImages(data.beats.map((b) => b.imageUrl).filter(Boolean));
               }
 
+              // Handle individual beat updates (streaming images)
+              if (data.beatUpdate) {
+                const { index, beat } = data.beatUpdate;
+                setBeats((prevBeats) => {
+                  const newBeats = [...prevBeats];
+                  newBeats[index] = { ...newBeats[index], ...beat };
+                  return newBeats;
+                });
+                if (beat.imageUrl) {
+                  setImages((prevImages) => {
+                    const newImages = [...prevImages];
+                    newImages[index] = beat.imageUrl;
+                    return newImages;
+                  });
+                }
+              }
+
               if (data.videoUrl) {
-                setVideoUrl(data.videoUrl);
+                setVideoUrl(`${API_URL}${data.videoUrl}`);
               }
 
               if (data.musicRecommendation) {
@@ -71,7 +95,9 @@ export default function App() {
               }
 
               if (data.stage === "error") {
-                throw new Error(data.message);
+                setError(data.message);
+                setStage(null);
+                return;
               }
             } catch (parseError) {
               if (parseError.message !== "Unexpected end of JSON input") {
@@ -110,7 +136,9 @@ export default function App() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {stage && stage !== "complete" && <PipelineProgress stage={stage} />}
+        {stage && stage !== "complete" && (
+          <PipelineProgress stage={stage} message={stageMessage} />
+        )}
       </AnimatePresence>
 
       <AnimatePresence>

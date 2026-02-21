@@ -36,7 +36,17 @@ async def close_client():
         _client = None
 
 _SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
-Your job is to break a screenplay scene into 4-8 distinct visual beats suitable for storyboarding.
+Your job is to break a screenplay scene into distinct visual beats suitable for storyboarding.
+
+Return a top-level JSON object with keys:
+    character_bible       (array of objects with keys: name, description)
+    beats                 (array of beat objects)
+
+For each character in character_bible:
+    - Use canonical character names as they appear in the script
+    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
+        clothing palette, signature accessory, and cinematic style notes
+    - Keep each description 180-260 characters and physically specific
 
 For each beat, return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
@@ -58,7 +68,12 @@ For each beat, return a JSON object with EXACTLY these keys:
   narrator_line        (string — a cinematic voiceover, 100-150 characters)
   music_style          (string — music style or feel for this beat, e.g., ambient, orchestral, dark, melancholic, tense, etc.)
 
-Return ONLY a valid JSON object: {"beats": [ ... ]}
+Critical continuity and environment rules:
+    - Reuse character_bible details whenever a character appears in a beat.
+    - Ensure each visual_description has rich environmental detail first, then character action.
+    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic.
+
+Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
 No markdown, no explanation, no extra keys."""
 
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
@@ -99,11 +114,13 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
             "tokens_used": int,
         }
     """
+    print("[DECOMPOSER] Starting run...")
     run_id = db.start_run(screenplay_text)
     t_start = time.time()
 
     try:
         # ── 1. Fetch few-shot examples ────────────────────────────────────────
+        print("[DECOMPOSER] Fetching few-shot examples...")
         examples = db.get_few_shot_examples(limit=2)
 
         # ── 2. Build prompt ───────────────────────────────────────────────────
@@ -120,6 +137,7 @@ SCENE TO ANALYZE:
 Return JSON:"""
 
         # ── 3. Call Gemini ────────────────────────────────────────────────────
+        print("[DECOMPOSER] Calling Gemini API...")
         response = await _get_client().aio.models.generate_content(
             model="gemini-2.5-flash-lite",
             contents=prompt,
@@ -132,9 +150,11 @@ Return JSON:"""
             ),
         )
         raw_text = response.text
+        print(f"[DECOMPOSER] Gemini responded")
 
         # ── 4. Parse response ─────────────────────────────────────────────────
         beats = _parse_beats(raw_text)
+        print(f"[DECOMPOSER] Parsed beats")
 
         # ── 5. Log metrics ────────────────────────────────────────────────────
         inference_time = round(time.time() - t_start, 3)
@@ -182,6 +202,9 @@ def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     Robustly extract the beats array from Gemini's JSON response.
     Handles both {"beats": [...]} and a bare [...] array.
     """
+    import re
+    
+    # Try direct parse first
     try:
         parsed = json.loads(raw)
         if isinstance(parsed, dict) and "beats" in parsed:
@@ -191,10 +214,44 @@ def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     except json.JSONDecodeError:
         pass
 
-    # Last resort: find the outermost array in the text
+    # Try to extract array and fix common JSON issues
     start = raw.find("[")
     end = raw.rfind("]") + 1
     if start != -1 and end > start:
-        return json.loads(raw[start:end])
+        json_str = raw[start:end]
+        
+        # Try parsing as-is first
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            pass
+        
+        # Fix common issues: trailing commas, unescaped quotes in strings
+        # Remove trailing commas before ] or }
+        json_str = re.sub(r',\s*([}\]])', r'\1', json_str)
+        
+        # Try again after fixes
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            pass
+        
+        # Last resort: try to parse individual beat objects
+        beats = []
+        beat_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
+        matches = re.findall(beat_pattern, json_str)
+        for match in matches:
+            try:
+                # Fix trailing commas in individual objects
+                fixed = re.sub(r',\s*([}\]])', r'\1', match)
+                beat = json.loads(fixed)
+                if isinstance(beat, dict) and "beat_number" in beat:
+                    beats.append(beat)
+            except json.JSONDecodeError:
+                continue
+        
+        if beats:
+            print(f"[DECOMPOSER] Recovered {len(beats)} beats from malformed JSON")
+            return beats
 
     raise ValueError(f"Could not parse beats from Gemini response: {raw[:200]}")

@@ -13,10 +13,10 @@ const STAGE_ORDER = [
   "complete",
 ];
 
-export default function PipelineProgress({ stage }) {
+export default function PipelineProgress({ stage, message }) {
   const currentIndex = STAGE_ORDER.indexOf(stage);
   const progress =
-    stage === "complete" ? 100 : (currentIndex / STAGES.length) * 100;
+    stage === "complete" ? 100 : ((currentIndex + 1) / STAGES.length) * 100;
 
   return (
     <motion.div
@@ -26,9 +26,19 @@ export default function PipelineProgress({ stage }) {
       className="w-full max-w-4xl mx-auto px-4 py-8"
     >
       <div className="glass-card p-6">
-        <h3 className="text-white/80 font-medium mb-6 text-center">
+        <h3 className="text-white/80 font-medium mb-2 text-center">
           Pipeline Progress
         </h3>
+        {message && (
+          <motion.p
+            key={message}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-accent-gold text-sm text-center mb-6"
+          >
+            {message}
+          </motion.p>
+        )}
 
         <div className="relative">
           {/* Background line */}
