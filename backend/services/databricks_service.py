@@ -1,9 +1,11 @@
+import csv
+import json
 import os
 import time
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, Any, Optional, List
-from contextlib import contextmanager
 
 try:
     import mlflow
@@ -11,6 +13,14 @@ try:
     DATABRICKS_AVAILABLE = True
 except ImportError:
     DATABRICKS_AVAILABLE = False
+
+try:
+    from databricks import sql as databricks_sql
+    DATABRICKS_SQL_AVAILABLE = True
+except ImportError:
+    DATABRICKS_SQL_AVAILABLE = False
+
+_FEW_SHOT_CSV = Path(__file__).parent.parent / "data" / "few_shot_examples.csv"
 
 _current_run = None
 _inference_logs: List[Dict[str, Any]] = []
@@ -28,13 +38,18 @@ def init_databricks():
         return False
     
     try:
-        mlflow.set_tracking_uri(f"databricks")
+        mlflow.set_tracking_uri("databricks")
         os.environ["DATABRICKS_HOST"] = host
         os.environ["DATABRICKS_TOKEN"] = token
-        
+
         if experiment_id:
+            # Numeric ID takes priority if set
             mlflow.set_experiment(experiment_id=experiment_id)
-        
+        else:
+            # Fall back to a named experiment — Databricks creates it if missing
+            experiment_name = os.getenv("DATABRICKS_MLFLOW_EXPERIMENT_NAME", "/playwright/runs")
+            mlflow.set_experiment(experiment_name)
+
         return True
     except Exception as e:
         print(f"Failed to initialize Databricks: {e}")
@@ -123,6 +138,28 @@ def end_run(status: str = "FINISHED"):
     finally:
         _current_run = None
 
+def log_dataset_stats(dataset_name: str, record_count: int, sample_titles: Optional[List[str]] = None):
+    """Log dataset metadata to the current MLflow run."""
+    if _inference_logs:
+        _inference_logs[-1].setdefault("datasets", {})[dataset_name] = {
+            "record_count": record_count,
+            "sample_titles": sample_titles or [],
+        }
+
+    if not DATABRICKS_AVAILABLE or not _current_run:
+        return
+
+    if isinstance(_current_run, dict) and _current_run.get("local"):
+        return
+
+    try:
+        mlflow.log_param(f"dataset_{dataset_name}_count", record_count)
+        if sample_titles:
+            mlflow.log_param(f"dataset_{dataset_name}_samples", ", ".join(sample_titles[:5]))
+    except Exception as e:
+        print(f"Failed to log dataset stats: {e}")
+
+
 def log_inference(
     script: str,
     beats_count: int,
@@ -147,6 +184,86 @@ def log_inference(
     
     if len(_inference_logs) > 1000:
         _inference_logs = _inference_logs[-500:]
+
+def get_few_shot_examples(limit: int = 3) -> List[Dict[str, Any]]:
+    """
+    Fetch few-shot examples for the scene decomposer prompt.
+
+    Primary path: Databricks SQL warehouse
+        SELECT genre, scene_text, beat_breakdown
+        FROM few_shot_examples LIMIT <limit>
+
+    Fallback: read from the local CSV at data/few_shot_examples.csv
+    so the app works even without a live Databricks connection.
+
+    Returns a list of dicts with keys: genre, scene, beats
+    """
+    rows = _fetch_few_shot_from_databricks(limit)
+    if rows is None:
+        rows = _fetch_few_shot_from_csv(limit)
+    return rows
+
+
+def _fetch_few_shot_from_databricks(limit: int) -> Optional[List[Dict[str, Any]]]:
+    """Query the Databricks SQL warehouse. Returns None if unavailable."""
+    if not DATABRICKS_SQL_AVAILABLE:
+        return None
+
+    host = os.getenv("DATABRICKS_HOST")
+    token = os.getenv("DATABRICKS_TOKEN")
+    http_path = os.getenv("DATABRICKS_HTTP_PATH")
+
+    if not all([host, token, http_path]):
+        return None
+
+    try:
+        with databricks_sql.connect(
+            server_hostname=host.replace("https://", ""),
+            http_path=http_path,
+            access_token=token,
+        ) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    f"SELECT genre, scene_text, beat_breakdown "
+                    f"FROM few_shot_examples LIMIT {int(limit)}"
+                )
+                rows = cursor.fetchall()
+                columns = [d[0] for d in cursor.description]
+
+        results = []
+        for row in rows:
+            record = dict(zip(columns, row))
+            results.append({
+                "genre": record.get("genre", ""),
+                "scene": record.get("scene_text", ""),
+                "beats": json.loads(record.get("beat_breakdown") or "[]"),
+            })
+        return results
+
+    except Exception as e:
+        print(f"Databricks SQL fetch failed, falling back to CSV: {e}")
+        return None
+
+
+def _fetch_few_shot_from_csv(limit: int) -> List[Dict[str, Any]]:
+    """Read few-shot examples from the local CSV fallback."""
+    if not _FEW_SHOT_CSV.exists():
+        print(f"Warning: few_shot_examples.csv not found at {_FEW_SHOT_CSV}")
+        return []
+
+    results = []
+    with _FEW_SHOT_CSV.open(encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        for i, row in enumerate(reader):
+            if i >= limit:
+                break
+            results.append({
+                "genre": row.get("genre", ""),
+                "scene": row.get("scene_text", ""),
+                "beats": json.loads(row.get("beat_breakdown") or "[]"),
+            })
+    return results
+
 
 def get_dashboard_stats() -> Dict[str, Any]:
     """Get aggregated stats from inference logs."""
