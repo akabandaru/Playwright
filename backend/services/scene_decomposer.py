@@ -40,7 +40,7 @@ Your job is to break a screenplay scene into 4-8 distinct visual beats suitable 
 
 For each beat return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
-  visual_description   (string — what is visible in the frame, a description of the actors and the environment)
+  visual_description   (string — what is visible in the frame, a description of the actors and the environment, keep primary actor's description consistent for each beat)
   camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
                         over-the-shoulder, low angle, high angle, dutch angle,
                         POV shot, tracking shot)
@@ -60,7 +60,7 @@ For each beat return a JSON object with EXACTLY these keys:
                         - Weather (rain, wind, thunder, etc.)
                         - Spatial feeling (echoing hall, tight room, open field)
                         - Emotional tone through sound (ominous rumble, soft rain, bustling city sounds, etc.)
-  narrator_line        (string — cinematic voiceover, 100-150 characters)
+  narrator_line        (string — cinematic voiceover, 100-150 characters, make it descriptive of the scene and very vague)
   music_style          (string — music style/feel for this beat)
 
 Return ONLY a valid JSON object: {"beats": [ ... ]}
@@ -193,6 +193,9 @@ def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     Robustly extract the beats array from Gemini's JSON response.
     Handles both {"beats": [...]} and a bare [...] array.
     """
+    import re
+    
+    # Try direct parse first
     try:
         parsed = json.loads(raw)
         if isinstance(parsed, dict) and "beats" in parsed:
@@ -202,10 +205,44 @@ def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     except json.JSONDecodeError:
         pass
 
-    # Last resort: find the outermost array in the text
+    # Try to extract array and fix common JSON issues
     start = raw.find("[")
     end = raw.rfind("]") + 1
     if start != -1 and end > start:
-        return json.loads(raw[start:end])
+        json_str = raw[start:end]
+        
+        # Try parsing as-is first
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            pass
+        
+        # Fix common issues: trailing commas, unescaped quotes in strings
+        # Remove trailing commas before ] or }
+        json_str = re.sub(r',\s*([}\]])', r'\1', json_str)
+        
+        # Try again after fixes
+        try:
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            pass
+        
+        # Last resort: try to parse individual beat objects
+        beats = []
+        beat_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
+        matches = re.findall(beat_pattern, json_str)
+        for match in matches:
+            try:
+                # Fix trailing commas in individual objects
+                fixed = re.sub(r',\s*([}\]])', r'\1', match)
+                beat = json.loads(fixed)
+                if isinstance(beat, dict) and "beat_number" in beat:
+                    beats.append(beat)
+            except json.JSONDecodeError:
+                continue
+        
+        if beats:
+            print(f"[DECOMPOSER] Recovered {len(beats)} beats from malformed JSON")
+            return beats
 
     raise ValueError(f"Could not parse beats from Gemini response: {raw[:200]}")
