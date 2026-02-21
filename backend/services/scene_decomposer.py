@@ -40,7 +40,7 @@ Your job is to break a screenplay scene into 4-8 distinct visual beats suitable 
 
 For each beat return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
-  visual_description   (string — what is visible in the frame)
+  visual_description   (string — what is visible in the frame, a description of the actors and the environment)
   camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
                         over-the-shoulder, low angle, high angle, dutch angle,
                         POV shot, tracking shot)
@@ -105,11 +105,13 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
             "tokens_used": int,
         }
     """
+    print("[DECOMPOSER] Starting run...")
     run_id = db.start_run(screenplay_text)
     t_start = time.time()
 
     try:
         # ── 1. Fetch few-shot examples ────────────────────────────────────────
+        print("[DECOMPOSER] Fetching few-shot examples...")
         examples = db.get_few_shot_examples(limit=2)
 
         # ── 2. Build prompt ───────────────────────────────────────────────────
@@ -126,6 +128,7 @@ SCENE TO ANALYZE:
 Return JSON:"""
 
         # ── 3. Call Gemini ────────────────────────────────────────────────────
+        print("[DECOMPOSER] Calling Gemini API...")
         response = await _get_client().aio.models.generate_content(
             model="gemini-2.5-flash-lite",
             contents=prompt,
@@ -138,9 +141,11 @@ Return JSON:"""
             ),
         )
         raw_text = response.text
+        print(f"[DECOMPOSER] Gemini responded")
 
         # ── 4. Parse response ─────────────────────────────────────────────────
         beats = _parse_beats(raw_text)
+        print(f"[DECOMPOSER] Parsed beats")
 
         # ── 5. Log metrics ────────────────────────────────────────────────────
         inference_time = round(time.time() - t_start, 3)
