@@ -16,7 +16,7 @@ load_dotenv(Path(__file__).parent / ".env")
 
 sys.path.insert(0, str(Path(__file__).parent))
 from services.scene_decomposer import decompose_scene
-from services.elevenlabs_service import generate_voices
+from services.elevenlabs_service import generate_voices_and_sfx
 from services.scene_decomposer import close_client
 
 # TEST_SCENE = """
@@ -90,7 +90,7 @@ async def main():
         print("Full JSON output:")
         print(json.dumps(result["beats"], indent=2))
 
-        audio_results = await generate_voices(result['beats'])
+        audio_results = await generate_voices_and_sfx(result['beats'])
         print("Audio results:", audio_results)
     finally:
         await close_client()
