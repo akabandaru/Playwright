@@ -10,17 +10,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from services.gemini_service import analyze_script
+from services.scene_decomposer import decompose_scene
 from services.replicate_service import generate_images
 from services.elevenlabs_service import generate_voices
 from services.video_service import render_video
 from services.figma_service import create_figma_storyboard
 from services.databricks_service import (
-    start_run,
-    log_metric,
-    log_params,
     end_run,
+    log_metric,
     log_inference,
+    log_dataset_stats,
     get_dashboard_stats,
 )
 
@@ -90,32 +89,16 @@ async def health_check():
 async def api_analyze(request: ScriptRequest):
     """
     Analyze a script and break it down into visual beats.
-    Uses Gemini 1.5 Pro with structured JSON output.
+    Uses Gemini 1.5 Pro with few-shot examples and MLflow tracking via scene_decomposer.
     """
     if not request.script.strip():
         raise HTTPException(status_code=400, detail="Script cannot be empty")
-    
-    pipeline_start = time.time()
-    
-    run_id = start_run(request.script)
-    
+
     try:
-        beats = await analyze_script(request.script)
-        
-        log_metric("beats_count", len(beats))
-        log_metric("script_length", len(request.script))
-        
-        moods = [b.get("mood", "") for b in beats]
-        cameras = [b.get("camera_angle", "") for b in beats]
-        log_params({
-            "moods": ",".join(moods[:5]),
-            "cameras": ",".join(cameras[:5]),
-        })
-        
-        return {"beats": beats, "run_id": run_id}
-    
+        result = await decompose_scene(request.script)
+        return {"beats": result["beats"], "run_id": result["run_id"]}
+
     except Exception as e:
-        end_run("FAILED")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -291,4 +274,4 @@ async def api_dashboard():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
