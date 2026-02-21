@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 from services.scene_decomposer import decompose_scene
 from services.replicate_service import generate_images
 from services.elevenlabs_service import generate_voices
@@ -85,11 +86,15 @@ async def health_check():
     return {"status": "healthy"}
 
 
+class AnalyzeRequest(BaseModel):
+    script: str
+    use_databricks: bool = True
+
+
 @app.post("/api/analyze")
 async def api_analyze(request: ScriptRequest):
     """
     Analyze a script and break it down into visual beats.
-    Uses Gemini 1.5 Pro with few-shot examples and MLflow tracking via scene_decomposer.
     """
     if not request.script.strip():
         raise HTTPException(status_code=400, detail="Script cannot be empty")
