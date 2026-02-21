@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #080808;
+  --color-accent-gold: #F5A623;
+  --color-accent-teal: #00D4B4;
+  --color-figma-purple: #7B61FF;
+  
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-white font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+  }
+  
+  .badge-gold {
+    @apply bg-accent-gold/20 text-accent-gold px-2 py-1 rounded-md text-xs font-medium;
+  }
+  
+  .badge-teal {
+    @apply bg-accent-teal/20 text-accent-teal px-2 py-1 rounded-md text-xs font-medium;
+  }
+  
+  .badge-neutral {
+    @apply bg-white/10 text-white/80 px-2 py-1 rounded-md text-xs font-medium;
+  }
+}
