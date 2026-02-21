@@ -36,17 +36,7 @@ async def close_client():
         _client = None
 
 _SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
-Your job is to break a screenplay scene into distinct visual beats suitable for storyboarding.
-
-Return a top-level JSON object with keys:
-    character_bible       (array of objects with keys: name, description)
-    beats                 (array of beat objects)
-
-For each character in character_bible:
-    - Use canonical character names as they appear in the script
-    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
-        clothing palette, signature accessory, and cinematic style notes
-    - Keep each description 180-260 characters and physically specific
+Your job is to break a screenplay scene into 4-8 distinct visual beats suitable for storyboarding.
 
 For each beat, return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
@@ -68,12 +58,7 @@ For each beat, return a JSON object with EXACTLY these keys:
   narrator_line        (string — a cinematic voiceover, 100-150 characters)
   music_style          (string — music style or feel for this beat, e.g., ambient, orchestral, dark, melancholic, tense, etc.)
 
-Critical continuity and environment rules:
-    - Reuse character_bible details whenever a character appears in a beat.
-    - Ensure each visual_description has rich environmental detail first, then character action.
-    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic.
-
-Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
+Return ONLY a valid JSON object: {"beats": [ ... ]}
 No markdown, no explanation, no extra keys."""
 
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:

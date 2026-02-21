@@ -212,7 +212,7 @@ async def api_generate_video(request: ScriptRequest):
             print(f"[PIPELINE] COMPLETE in {pipeline_latency:.2f}s - Video: {video_url}\n")
             
             # Final result
-            yield f"data: {json.dumps({'stage': 'complete', 'message': 'Video ready!', 'videoUrl': video_url, 'beats': beats, 'musicRecommendation': music_rec, 'duration': video_result.get('duration', 0), 'pipelineTime': pipeline_latency})}\n\n"
+            yield f"data: {json.dumps({'stage': 'complete', 'message': 'Video ready!', 'videoUrl': video_url, 'beats': beats, 'duration': video_result.get('duration', 0), 'pipelineTime': pipeline_latency})}\n\n"
             
         except Exception as e:
             print(f"[PIPELINE] ERROR: {str(e)}")
