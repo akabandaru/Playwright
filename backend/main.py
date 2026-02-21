@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from services.scene_decomposer import decompose_scene
-from services.elevenlabs_service import generate_voices
+from services.elevenlabs_service import generate_voices_and_sfx
 from services.video_service import render_video
 from services.figma_service import create_figma_storyboard
 from services.image_provider_models import GenerateFrameRequest, ImageProviderBeatPayload
