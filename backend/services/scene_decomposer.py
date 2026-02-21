@@ -38,34 +38,28 @@ async def close_client():
 _SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
 Your job is to break a screenplay scene into 4-8 distinct visual beats suitable for storyboarding.
 
-For each beat return a JSON object with EXACTLY these keys:
+For each beat, return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
-  visual_description   (string — what is visible in the frame)
-  camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
-                        over-the-shoulder, low angle, high angle, dutch angle,
-                        POV shot, tracking shot)
-  mood                 (string — emotional tone of the beat, only choose the best match out of this list: happy, sad, tense, calm, melancholic, mysterious, default)
-  lighting             (string — lighting style)
-  characters_present   (array of character name strings)
-  visuals              - Describe ONLY background ambience and environmental sound effects; the output will be used to generate fitting sound effects for the scene.
-                        - Include layered atmospheric sounds (weather, environment, room tone, distant movement, texture)
-                        - Avoid dialogue, narration, or character voices
-                        - Avoid music unless explicitly described
-                        - Be 350 characters max, but include as much detail as possible within that limit
-                        - Be vivid, specific, and immersive
-                        - Sound like instructions for a Hollywood sound designer
-
-                        Focus on:
-                        - Environment (indoor/outdoor, size of space; use solely this if it strongly influences the scene; for example rain fall, echoing footsteps in a hallway, or bustling city sounds would be dominating sounds to include)
-                        - Weather (rain, wind, thunder, etc.)
-                        - Spatial feeling (echoing hall, tight room, open field)
-                        - Emotional tone through sound (ominous rumble, soft rain, bustling city sounds, etc.)
-  narrator_line        (string — cinematic voiceover, 100-150 characters)
-  music_style          (string — music style/feel for this beat)
+  visual_description   (string — what is visible in the frame, e.g., a wide shot of a room, a character’s close-up, etc.)
+  camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up, over-the-shoulder, low angle, high angle, dutch angle, POV shot, tracking shot)
+  mood                 (string — emotional tone of the beat, choose the best match from: happy, sad, tense, calm, melancholic, mysterious, default)
+  lighting             (string — lighting style, e.g., harsh, soft, natural, dim, overcast, etc.)
+  characters_present   (array of character names in the current beat, only include characters visible in the scene)
+  visuals              - Describe ONLY background ambiance and environmental sound effects; the output will be used to generate fitting sound effects for the scene.
+                        - Include layered atmospheric sounds (weather, environment, room tone, distant movement, texture).
+                        - Avoid dialogue, narration, or character voices unless explicitly described.
+                        - Avoid music unless explicitly described in the prompt.
+                        - Be specific, vivid, and immersive. Limit to 350 characters maximum.
+                        - Focus on: 
+                          - Environment (indoor/outdoor, room size, or space type),
+                          - Weather (rain, wind, thunder, etc.),
+                          - Spatial feeling (e.g., echoing hall, open field, tight room),
+                          - Emotional tone through sound (e.g., ominous rumble, bustling city, soft rain).
+  narrator_line        (string — a cinematic voiceover, 100-150 characters)
+  music_style          (string — music style or feel for this beat, e.g., ambient, orchestral, dark, melancholic, tense, etc.)
 
 Return ONLY a valid JSON object: {"beats": [ ... ]}
 No markdown, no explanation, no extra keys."""
-
 
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
     """Render the few-shot examples as a readable prompt block."""
