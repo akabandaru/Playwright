@@ -18,10 +18,7 @@ OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
 VIDEOS_DIR = OUTPUT_DIR / "videos"
 IMAGES_DIR = OUTPUT_DIR / "images"
 
-TEMP_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
 VIDEOS_DIR.mkdir(exist_ok=True)
-IMAGES_DIR.mkdir(exist_ok=True)
 
 async def download_image(url: str, client: httpx.AsyncClient) -> str:
     """Download an image or resolve local path and save to temp directory."""
