@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from services.gemini_service import analyze_script
-from services.replicate_service import generate_images
+from services.diffusers_service import generate_images
 from services.elevenlabs_service import generate_voices
 from services.video_service import render_video
 from services.figma_service import create_figma_storyboard
@@ -122,8 +122,8 @@ async def api_analyze(request: ScriptRequest):
 @app.post("/api/generate-images")
 async def api_generate_images(request: BeatsRequest):
     """
-    Generate images for each beat using Replicate SDXL.
-    Runs all generations in parallel.
+    Generate images for each beat using local Diffusers SDXL pipeline.
+    Runs generations sequentially for single-GPU stability.
     """
     if not request.beats:
         raise HTTPException(status_code=400, detail="Beats array cannot be empty")

@@ -1,11 +1,14 @@
 fastapi
 uvicorn[standard]
 google-generativeai
-replicate
 requests
 moviepy
 python-dotenv
 httpx
+diffusers
+transformers
+accelerate
+safetensors
 databricks-sdk
 mlflow
 pydantic

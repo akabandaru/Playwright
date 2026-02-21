@@ -19,7 +19,8 @@ A modern full-stack application with React (Vite) frontend and FastAPI backend.
 
 ## Prerequisites
 
-- Python 3.9+
+- Python 3.10 (recommended for local SDXL)
+- Conda (recommended)
 - Node.js 18+
 - npm or yarn
 
@@ -31,12 +32,14 @@ Copy the `.env` file and fill in your API keys:
 
 ```
 GEMINI_API_KEY=your_gemini_api_key
-REPLICATE_API_TOKEN=your_replicate_token
 ELEVENLABS_API_KEY=your_elevenlabs_key
 FIGMA_ACCESS_TOKEN=your_figma_token
 DATABRICKS_HOST=your_databricks_host
 DATABRICKS_TOKEN=your_databricks_token
 DATABRICKS_MLFLOW_EXPERIMENT_ID=your_experiment_id
+
+# Local SD model source (Hugging Face ID or local .safetensors/.ckpt path)
+SD_MODEL_PATH=stabilityai/stable-diffusion-xl-base-1.0
 ```
 
 ### 2. Backend Setup
@@ -44,12 +47,15 @@ DATABRICKS_MLFLOW_EXPERIMENT_ID=your_experiment_id
 ```bash
 cd backend
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Create conda environment (recommended)
+conda create -n playwright-sd python=3.10 -y
+conda activate playwright-sd
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Install CUDA-enabled torch for GPU inference
+pip install --index-url https://download.pytorch.org/whl/cu121 torch torchvision
 
 # Run the server
 uvicorn main:app --reload
