@@ -115,7 +115,7 @@ async def generate_music(scene_description: str, mood: str, length_ms: int, musi
         Mood: {mood}.
         Scene: {scene_description}.
         Music Style: {music_style}. 
-        Instrumental only. No vocals. No speech. Just music.
+        Instrumental only. No vocals. Absolutely no speech or words. Just music. No narration in the music. 
         The music should reflect the following:
         - The tone and emotion of the scene: {mood} (such as melancholic, tense, calm, ominous, etc.).
         - Consider the atmosphere described in the scene: (e.g., heavy rain, distant city hum, whistling wind, etc.).
