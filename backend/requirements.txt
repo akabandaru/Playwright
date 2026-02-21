@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+google-generativeai
+replicate
+requests
+moviepy
+python-dotenv
+httpx
+databricks-sdk
+mlflow
+pydantic
+pillow
+numpy
