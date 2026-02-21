@@ -47,6 +47,19 @@ For each beat return a JSON object with EXACTLY these keys:
   mood                 (string — emotional tone of the beat, only choose the best match out of this list: happy, sad, tense, calm, melancholic, mysterious, default)
   lighting             (string — lighting style)
   characters_present   (array of character name strings)
+  visuals              - Describe ONLY background ambience and environmental sound effects; the output will be used to generate fitting sound effects for the scene.
+                        - Include layered atmospheric sounds (weather, environment, room tone, distant movement, texture)
+                        - Avoid dialogue, narration, or character voices
+                        - Avoid music unless explicitly described
+                        - Be 350 characters max, but include as much detail as possible within that limit
+                        - Be vivid, specific, and immersive
+                        - Sound like instructions for a Hollywood sound designer
+
+                        Focus on:
+                        - Environment (indoor/outdoor, size of space; use solely this if it strongly influences the scene; for example rain fall, echoing footsteps in a hallway, or bustling city sounds would be dominating sounds to include)
+                        - Weather (rain, wind, thunder, etc.)
+                        - Spatial feeling (echoing hall, tight room, open field)
+                        - Emotional tone through sound (ominous rumble, soft rain, bustling city sounds, etc.)
   narrator_line        (string — cinematic voiceover, 100-150 characters)
   music_style          (string — music style/feel for this beat)
 
@@ -64,7 +77,7 @@ def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
         lines.append(f"GENRE: {ex['genre'].upper()}")
         lines.append(f"SCENE:\n{ex['scene']}\n")
         lines.append("IDEAL BEAT BREAKDOWN:")
-        lines.append(json.dumps({"beats": ex["beats"]}, indent=2))
+        lines.append(json.dumps({"beats": ex["beats"]}, separators=(",", ":")))
         lines.append("")
 
     lines.append("--- END OF EXAMPLES ---\n")
@@ -114,13 +127,13 @@ Return JSON:"""
 
         # ── 3. Call Gemini ────────────────────────────────────────────────────
         response = await _get_client().aio.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite",
             contents=prompt,
             config=types.GenerateContentConfig(
-                temperature=0.7,
-                top_p=0.95,
+                temperature=0.5,
+                top_p=0.9,
                 top_k=40,
-                max_output_tokens=8192,
+                max_output_tokens=1200,
                 response_mime_type="application/json",
             ),
         )
