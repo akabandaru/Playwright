@@ -56,7 +56,7 @@ async def generate_single_voice(
             "similarity_boost": 0.9,
             "style": 0.9,
             "use_speaker_boost": True,
-            "speaking_rate": 0.6
+            "speed": 0.85
         }
     }
 
@@ -104,64 +104,80 @@ async def generate_sound_effects(scene_description: str) -> str:
 
     return str(audio_path)
 
-def mix_narration_with_sfx(narration_path: str, sfx_path: str, output_path: str, narration_volume: float = -5.0, sfx_volume: float = -20.0):
+
+async def generate_music(scene_description: str, mood: str, length_ms: int, music_style: str) -> str:
+    """
+    Generate background music using ElevenLabs Music API.
+    """
+    # You can either use a fixed prompt template per mood
+    prompt = f"""
+        Cinematic background score.
+        Mood: {mood}.
+        Scene: {scene_description}.
+        Music Style: {music_style}. 
+        Instrumental only. No vocals. No speech. Just music.
+        The music should reflect the following:
+        - The tone and emotion of the scene: {mood} (such as melancholic, tense, calm, ominous, etc.).
+        - Consider the atmosphere described in the scene: (e.g., heavy rain, distant city hum, whistling wind, etc.).
+        - The music should either support or contrast the scene to create tension, atmosphere, or drama (e.g., ominous drones, building tension, peaceful piano, etc.).
+        - Focus on creating a **musical texture** that enhances the feeling described in the scene, for example: a soft melody for calm, a building orchestral score for tension, or a low, rumbling bass for mystery.
+        - The music should **match the pacing** of the narrative, whether it's slow and atmospheric or fast and building in intensity.
+        - The music should be playing for the entire duration of the scene, and should be designed to loop seamlessly if needed.
+        """
+
+    print(f"Generating music with prompt: {prompt.strip()}")
+
+    length_ms = int(round(max(length_ms, 3000)))
+
+    composition_plan = elevenlabs.music.composition_plan.create(
+        prompt=prompt,
+        music_length_ms=length_ms,
+    )
+
+    composition = elevenlabs.music.compose(
+        composition_plan=composition_plan
+    )
+
+    music_filename = f"music_{uuid.uuid4().hex[:8]}.mp3"
+    music_path = TEMP_DIR / music_filename
+
+    with open(music_path, "wb") as f:
+        for chunk in composition:
+            f.write(chunk)
+
+    return str(music_path)
+
+
+def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, output_path: str, narration_volume: float = -5.0, sfx_volume: float = -20.0, music_volume: float = -8.0):
     """
     Mix narration with background sound effects (from ElevenLabs).
     """
     # Load narration
-    narration = AudioSegment.from_mp3(narration_path)
-    narration = narration + narration_volume  # Lower the volume of narration if needed
+    narration = AudioSegment.from_mp3(narration_path) + narration_volume
+    sfx = AudioSegment.from_mp3(sfx_path) + sfx_volume
+    music = AudioSegment.from_mp3(music_path) + music_volume
 
-    # Load sound effects
-    sfx = AudioSegment.from_mp3(sfx_path)
-    sfx = sfx + sfx_volume  # Adjust SFX volume if needed
+    # Loop SFX and music to match narration length
+    def loop_to_length(audio, target_length):
+        return (audio * (target_length // len(audio) + 1))[:target_length]
 
-    # Loop sound effect to match the length of narration
-    sfx = sfx * (len(narration) // len(sfx) + 1)
+    sfx = loop_to_length(sfx, len(narration))
+    music = loop_to_length(music, len(narration))
 
-    # Overlay sound effects on narration
-    mixed_audio = narration.overlay(sfx)
+    # Layering order matters
+    mixed = narration.overlay(sfx)
+    mixed = mixed.overlay(music)
 
-    # Export mixed audio to file
-    mixed_audio.export(output_path, format="mp3")
+    mixed.export(output_path, format="mp3")
     return output_path
 
-# def mix_narration_with_sfx(narration_path, sfx_path, output_path,
-#                            narration_volume=-5.0,
-#                            sfx_volume=-22.0):
 
-#     narration = AudioSegment.from_mp3(narration_path) + narration_volume
-#     sfx = AudioSegment.from_mp3(sfx_path) + sfx_volume
-
-#     # Make ambience softer and less repetitive
-#     sfx = sfx.low_pass_filter(4000)
-
-#     def loop_with_crossfade(base, target_length, crossfade_ms=800):
-#         import random
-#         output = AudioSegment.empty()
-
-#         while len(output) < target_length:
-#             gain = random.uniform(-1.5, 1.5)
-#             varied = base + gain
-#             if len(output) == 0:
-#                 output = varied
-#             else:
-#                 output = output.append(varied, crossfade=crossfade_ms)
-
-#         return output[:target_length]
-
-#     sfx = loop_with_crossfade(sfx, len(narration))
-
-#     mixed = narration.overlay(sfx)
-#     mixed.export(output_path, format="mp3")
-
-#     return output_path
-
-async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: int, voice_id: str, mood: str) -> str:
+async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: int, voice_id: str, mood: str, music_style: str) -> str:
     # Step 1: Generate the narration
     async with httpx.AsyncClient() as client:
         narration = await generate_single_voice(screenplay_text, beat_number, voice_id, client)
 
+    narration_length = get_mp3_length(narration['audio_path']) * 1000
     # Step 2: Generate sound effects based on the scene description
     scene_description = scene_description = f"""
         Cinematic background ambience.
@@ -172,13 +188,27 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
         """  
     # Custom description for sound effects
     sfx_path = await generate_sound_effects(scene_description)
+    sfx_length = get_mp3_length(sfx_path) * 1000
+
+    print(f"Length of narration: {narration_length} milliseconds")
+    print(f"Length of sound effects: {sfx_length} milliseconds")
+
+    music_path = await generate_music(
+        scene_description,
+        mood,
+        narration_length,
+        music_style,
+    )
+
 
     # Step 3: Mix narration with sound effects
     output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
-    final_audio_path = mix_narration_with_sfx(narration['audio_path'], sfx_path, output_path)
+    final_audio_path = mix_narration_with_sfx(narration['audio_path'], sfx_path, music_path, output_path)
+
+    final_length = get_mp3_length(final_audio_path)
+    print(f"Length of final mixed audio: {final_length} milliseconds")
 
     return final_audio_path
-
 
 async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Generate voice audio and sound effects for all narrator lines in parallel with mood-based voices."""
@@ -192,8 +222,9 @@ async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str,
                 visuals = beat.get("visuals", "")
                 beat_number = beat.get("beat_number", 1)
                 mood = beat.get("mood", "default").lower()
-                voice_id = MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
-                return await generate_scene_audio(text, visuals, beat_number, voice_id, mood)
+                music_style = beat.get("music_style", "cinematic")
+                voice_id = MOOD_VOICE_MAP["default"] # MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
+                return await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style)
 
         tasks = [safe_generate(b) for b in beats if b.get("narrator_line")]
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -211,3 +242,12 @@ async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str,
             processed_results.append({"beat_number": idx + 1, "audio_path": result})
 
     return processed_results
+
+def get_mp3_length(mp3_path: str) -> float:
+    """Return the length (duration) of an MP3 file in seconds."""
+    # Load the MP3 file
+    audio = AudioSegment.from_mp3(mp3_path)
+    
+    # Return the duration in milliseconds
+    print(f"Audio length in ms: {len(audio)}")
+    return float(len(audio)) / 1000.0
