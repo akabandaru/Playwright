@@ -1,5 +1,11 @@
 .env
-.venv
-__pycache__
+.venv/
+venv/
+__pycache__/
 outputs/
 temp/
+*.pyc
+.DS_Store
+*.egg-info/
+dist/
+build/

@@ -7,10 +7,6 @@ requests
 moviepy
 python-dotenv
 httpx
-diffusers
-transformers
-accelerate
-safetensors
 databricks-sdk
 databricks-sql-connector
 mlflow
@@ -18,3 +14,6 @@ pydantic
 pillow
 numpy
 datasets
+elevenlabs
+pydub
+ffmpeg
