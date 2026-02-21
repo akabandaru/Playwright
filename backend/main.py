@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from pathlib import Path
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
@@ -11,11 +12,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-from services.diffusers_service import generate_images
 from services.scene_decomposer import decompose_scene
 from services.elevenlabs_service import generate_voices
 from services.video_service import render_video
 from services.figma_service import create_figma_storyboard
+from services.image_provider_models import GenerateFrameRequest, ImageProviderBeatPayload
+from services.image_provider_service import (
+    ImageProviderClientError,
+    check_image_provider_health,
+    generate_beat_image,
+    save_generated_image,
+)
 from services.databricks_service import (
     end_run,
     log_metric,
@@ -44,6 +51,8 @@ app.add_middleware(
 
 OUTPUT_DIR = Path(__file__).parent / "outputs"
 OUTPUT_DIR.mkdir(exist_ok=True)
+IMAGES_DIR = OUTPUT_DIR / "images"
+IMAGES_DIR.mkdir(exist_ok=True)
 
 
 class ScriptRequest(BaseModel):
@@ -59,6 +68,7 @@ class Beat(BaseModel):
     characters_present: List[str] = []
     narrator_line: str
     music_recommendation: Optional[str] = None
+    music_style: Optional[str] = None
     imageUrl: Optional[str] = None
     image_url: Optional[str] = None
 
@@ -110,8 +120,7 @@ async def api_analyze(request: ScriptRequest):
 @app.post("/api/generate-images")
 async def api_generate_images(request: BeatsRequest):
     """
-    Generate images for each beat using local Diffusers SDXL pipeline.
-    Runs generations sequentially for single-GPU stability.
+    Generate images for each beat using external image provider API.
     """
     if not request.beats:
         raise HTTPException(status_code=400, detail="Beats array cannot be empty")
@@ -120,7 +129,33 @@ async def api_generate_images(request: BeatsRequest):
     
     try:
         beats_dict = [b.model_dump() for b in request.beats]
-        image_results = await generate_images(beats_dict)
+        image_results = []
+
+        for beat in request.beats:
+            payload = ImageProviderBeatPayload(
+                beat_number=beat.beat_number,
+                visual_description=beat.visual_description,
+                camera_angle=beat.camera_angle,
+                mood=beat.mood,
+                lighting=beat.lighting,
+                characters_present=beat.characters_present,
+                narrator_line=beat.narrator_line,
+                music_style=beat.music_style or beat.music_recommendation,
+            )
+
+            result = await generate_beat_image(payload)
+            request_id = result.metadata.get("request_id") or uuid.uuid4().hex
+            filename_hint = f"beat_{beat.beat_number}_{request_id}"
+            image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
+            image_url = f"/api/image/{image_path.name}"
+
+            image_results.append(
+                {
+                    "beat_number": beat.beat_number,
+                    "image_url": image_url,
+                    "provider_metadata": result.metadata,
+                }
+            )
         
         latency = time.time() - start_time
         log_metric("image_generation_latency", latency)
@@ -135,8 +170,51 @@ async def api_generate_images(request: BeatsRequest):
             "latency": latency,
         }
     
+    except ImageProviderClientError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/generate-frame")
+async def api_generate_frame(request: GenerateFrameRequest):
+    """
+    Generate a single frame from one beat via external image provider.
+    """
+    try:
+        beat_payload = ImageProviderBeatPayload(**request.model_dump(exclude={"return_base64", "save_to_disk"}))
+        result = await generate_beat_image(beat_payload)
+
+        response: dict = {
+            "metadata": result.metadata,
+        }
+
+        if request.save_to_disk:
+            request_id = result.metadata.get("request_id") or uuid.uuid4().hex
+            filename_hint = f"beat_{request.beat_number}_{request_id}"
+            image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
+            response["fileUrl"] = f"/api/image/{image_path.name}"
+
+        if request.return_base64:
+            response["image_b64"] = result.image_b64
+
+        return response
+    except ImageProviderClientError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@app.get("/api/image-provider-health")
+async def api_image_provider_health():
+    """
+    Health pass-through for the external image provider tunnel.
+    """
+    try:
+        data = await check_image_provider_health()
+        return {"ok": True, "provider": data}
+    except ImageProviderClientError as exc:
+        raise HTTPException(status_code=503, detail=f"provider unreachable / tunnel not ready: {exc}")
 
 
 @app.post("/api/generate-voice")
@@ -260,6 +338,23 @@ async def api_get_video(filename: str):
     return FileResponse(
         path=str(video_path),
         media_type="video/mp4",
+        filename=filename,
+    )
+
+
+@app.get("/api/image/{filename}")
+async def api_get_image(filename: str):
+    """
+    Serve generated image files for frontend preview.
+    """
+    image_path = IMAGES_DIR / filename
+
+    if not image_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(
+        path=str(image_path),
+        media_type="image/png",
         filename=filename,
     )
 

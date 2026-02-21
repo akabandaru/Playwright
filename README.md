@@ -19,8 +19,7 @@ A modern full-stack application with React (Vite) frontend and FastAPI backend.
 
 ## Prerequisites
 
-- Python 3.10 (recommended for local SDXL)
-- Conda (recommended)
+- Python 3.10+
 - Node.js 18+
 - npm or yarn
 
@@ -38,8 +37,12 @@ DATABRICKS_HOST=your_databricks_host
 DATABRICKS_TOKEN=your_databricks_token
 DATABRICKS_MLFLOW_EXPERIMENT_ID=your_experiment_id
 
-# Local SD model source (Hugging Face ID or local .safetensors/.ckpt path)
-SD_MODEL_PATH=stabilityai/stable-diffusion-xl-base-1.0
+# External image provider Cloudflare tunnel URL
+IMAGE_PROVIDER_URL=https://attraction-local-inspector-shoot.trycloudflare.com
+
+# Optional provider timeouts
+IMAGE_PROVIDER_GENERATE_TIMEOUT_SECONDS=300
+IMAGE_PROVIDER_HEALTH_TIMEOUT_SECONDS=20
 ```
 
 ### 2. Backend Setup
@@ -47,15 +50,8 @@ SD_MODEL_PATH=stabilityai/stable-diffusion-xl-base-1.0
 ```bash
 cd backend
 
-# Create conda environment (recommended)
-conda create -n playwright-sd python=3.10 -y
-conda activate playwright-sd
-
 # Install dependencies
 pip install -r requirements.txt
-
-# Install CUDA-enabled torch for GPU inference
-pip install --index-url https://download.pytorch.org/whl/cu121 torch torchvision
 
 # Run the server
 uvicorn main:app --reload
@@ -117,3 +113,32 @@ npm run preview  # Preview production build
 | GET    | /         | Welcome message   |
 | GET    | /health   | Health check      |
 | GET    | /docs     | API documentation |
+
+## External Image Provider Integration
+
+- `POST /api/generate-frame`: Generates one image from one beat (saves PNG to backend outputs and returns metadata + file URL).
+- `POST /api/generate-images`: Batch generate images for beats.
+- `GET /api/image-provider-health`: Checks upstream provider health (`/health` pass-through).
+
+### Sample Local Test (`/api/generate-frame`)
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/generate-frame \
+	-H "Content-Type: application/json" \
+	-d '{
+		"beat_number": 1,
+		"visual_description": "Massive flames recede to reveal a dark bat symbol.",
+		"camera_angle": "wide shot",
+		"mood": "ominous",
+		"lighting": "firelight",
+		"characters_present": [],
+		"narrator_line": "Some symbols are born in fire.",
+		"music_style": "dark, percussive, building crescendo",
+		"width": 832,
+		"height": 464,
+		"steps": 8,
+		"guidance_scale": 3.0,
+		"return_base64": false,
+		"save_to_disk": true
+	}'
+```
