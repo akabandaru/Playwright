@@ -1,0 +1,26 @@
+{
+  "name": "PLAYWRIGHT Storyboard",
+  "id": "playwright-storyboard-exporter",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["http://localhost:8000", "https://*.vercel.app"]
+  },
+  "parameters": [
+    {
+      "name": "Storyboard ID",
+      "key": "storyboard_id",
+      "description": "The PLAYWRIGHT storyboard ID to import",
+      "allowFreeform": true
+    },
+    {
+      "name": "API URL",
+      "key": "api_url",
+      "description": "Backend URL (default: http://localhost:8000)",
+      "allowFreeform": true,
+      "optional": true
+    }
+  ]
+}

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PLAYWRIGHT Storyboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --surface2: #0f3460;
+      --accent: #e94560;
+      --accent2: #533483;
+      --text: #eaeaea;
+      --text-muted: #8892a4;
+      --border: #2a2a4a;
+      --success: #4caf7d;
+      --warning: #f0a500;
+      --error: #e94560;
+      --radius: 8px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      min-height: 100vh;
+      font-size: 13px;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .header-text h1 {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+    .header-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Section ── */
+    .section { margin-bottom: 16px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    /* ── Input ── */
+    input[type="text"] {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 12px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input[type="text"]:focus { border-color: var(--accent); }
+    input[type="text"]::placeholder { color: var(--text-muted); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 10px 16px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      margin-top: 8px;
+    }
+
+    /* ── Status log ── */
+    #log-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      min-height: 80px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.7;
+      display: none;
+    }
+    #log-wrap.visible { display: block; }
+    .log-line { display: flex; gap: 8px; }
+    .log-line .ts { color: var(--text-muted); flex-shrink: 0; }
+    .log-line.info  .msg { color: var(--text); }
+    .log-line.ok    .msg { color: var(--success); }
+    .log-line.warn  .msg { color: var(--warning); }
+    .log-line.error .msg { color: var(--error); }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      background: var(--surface);
+      border-radius: 4px;
+      height: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .progress-wrap.visible { display: block; }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    /* ── Beat grid preview ── */
+    #beat-preview {
+      display: none;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    #beat-preview.visible { display: flex; }
+    .beat-chip {
+      background: var(--surface2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+    .beat-chip.done { background: var(--success); color: #fff; }
+    .beat-chip.active { background: var(--accent); color: #fff; }
+    .beat-chip.error { background: var(--error); color: #fff; }
+
+    /* ── Result card ── */
+    #result-card {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--success);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-top: 12px;
+    }
+    #result-card.visible { display: block; }
+    #result-card h3 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 8px;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      padding: 3px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-row .key { color: var(--text-muted); }
+    .result-row .val { color: var(--text); font-weight: 500; word-break: break-all; text-align: right; max-width: 60%; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">🎬</div>
+    <div class="header-text">
+      <h1>PLAYWRIGHT</h1>
+      <p>Storyboard → Figma</p>
+    </div>
+  </div>
+
+  <!-- API URL -->
+  <div class="section">
+    <div class="section-label">Backend URL</div>
+    <input type="text" id="api-url" value="http://localhost:8000" placeholder="http://localhost:8000" />
+  </div>
+
+  <!-- Storyboard ID -->
+  <div class="section">
+    <div class="section-label">Storyboard ID</div>
+    <input type="text" id="storyboard-id" placeholder="Paste storyboard_id from the export response…" />
+  </div>
+
+  <!-- Beat chips -->
+  <div id="beat-preview"></div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- Buttons -->
+  <button class="btn btn-primary" id="btn-import" onclick="startImport()">
+    <span>▶</span> Import Storyboard
+  </button>
+  <button class="btn btn-secondary" id="btn-cancel" style="display:none" onclick="cancelImport()">
+    Cancel
+  </button>
+
+  <!-- Log -->
+  <div class="section" style="margin-top:12px;">
+    <div class="section-label">Log</div>
+    <div id="log-wrap"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="result-card">
+    <h3>✓ Storyboard created</h3>
+    <div id="result-rows"></div>
+  </div>
+
+<script>
+  let cancelled = false;
+
+  // ── Logging ──────────────────────────────────────────────────────────────
+  function log(msg, level = 'info') {
+    const wrap = document.getElementById('log-wrap');
+    wrap.classList.add('visible');
+    const ts = new Date().toLocaleTimeString('en-US', { hour12: false });
+    const line = document.createElement('div');
+    line.className = `log-line ${level}`;
+    line.innerHTML = `<span class="ts">${ts}</span><span class="msg">${msg}</span>`;
+    wrap.appendChild(line);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  function setProgress(pct) {
+    document.getElementById('progress-wrap').classList.add('visible');
+    document.getElementById('progress-bar').style.width = `${pct}%`;
+  }
+
+  // ── Beat chips ────────────────────────────────────────────────────────────
+  function renderChips(frames) {
+    const wrap = document.getElementById('beat-preview');
+    wrap.innerHTML = '';
+    frames.forEach((f, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'beat-chip';
+      chip.id = `chip-${i}`;
+      chip.textContent = `Beat ${f.name.split(' ')[1]}`;
+      wrap.appendChild(chip);
+    });
+    wrap.classList.add('visible');
+  }
+
+  function setChip(index, state) {
+    const chip = document.getElementById(`chip-${index}`);
+    if (chip) { chip.className = `beat-chip ${state}`; }
+  }
+
+  // ── Result card ───────────────────────────────────────────────────────────
+  function showResult(data) {
+    const card = document.getElementById('result-card');
+    const rows = document.getElementById('result-rows');
+    rows.innerHTML = '';
+    const fields = [
+      ['Frames created', data.framesCreated],
+      ['File name',      data.fileName],
+      ['Storyboard ID',  data.storyboard_id],
+    ];
+    fields.forEach(([k, v]) => {
+      const row = document.createElement('div');
+      row.className = 'result-row';
+      row.innerHTML = `<span class="key">${k}</span><span class="val">${v}</span>`;
+      rows.appendChild(row);
+    });
+    card.classList.add('visible');
+  }
+
+  // ── Main import flow ──────────────────────────────────────────────────────
+  async function startImport() {
+    cancelled = false;
+    const apiUrl   = document.getElementById('api-url').value.trim().replace(/\/$/, '');
+    const sid      = document.getElementById('storyboard-id').value.trim();
+
+    if (!sid) { log('Please enter a storyboard_id.', 'warn'); return; }
+
+    document.getElementById('btn-import').disabled = true;
+    document.getElementById('btn-cancel').style.display = 'block';
+    document.getElementById('result-card').classList.remove('visible');
+    document.getElementById('log-wrap').innerHTML = '';
+    document.getElementById('log-wrap').classList.remove('visible');
+    document.getElementById('beat-preview').classList.remove('visible');
+    setProgress(5);
+
+    log(`Fetching payload for storyboard <b>${sid}</b>…`);
+
+    // ── Step 1: fetch the plugin payload from the backend ──────────────────
+    let payload;
+    try {
+      const resp = await fetch(`${apiUrl}/api/export-figma/${sid}/payload`);
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ detail: resp.statusText }));
+        throw new Error(err.detail || resp.statusText);
+      }
+      payload = await resp.json();
+    } catch (e) {
+      log(`Failed to fetch payload: ${e.message}`, 'error');
+      reset();
+      return;
+    }
+
+    const frames = payload.frames || [];
+    log(`Payload received — ${frames.length} beat(s), file: "${payload.file_name}"`, 'ok');
+    renderChips(frames);
+    setProgress(15);
+
+    if (cancelled) { reset(); return; }
+
+    // ── Step 2: tell the plugin sandbox to create the Figma nodes ──────────
+    parent.postMessage({
+      pluginMessage: {
+        type: 'CREATE_STORYBOARD',
+        payload,
+        apiUrl,
+      }
+    }, '*');
+  }
+
+  function cancelImport() {
+    cancelled = true;
+    parent.postMessage({ pluginMessage: { type: 'CANCEL' } }, '*');
+    log('Cancelled.', 'warn');
+    reset();
+  }
+
+  function reset() {
+    document.getElementById('btn-import').disabled = false;
+    document.getElementById('btn-cancel').style.display = 'none';
+  }
+
+  // ── Messages from code.js ─────────────────────────────────────────────────
+  window.onmessage = async (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+
+    switch (msg.type) {
+      // Deep-link pre-fill: populate fields and auto-start import
+      case 'PREFILL': {
+        const sidEl = document.getElementById('storyboard-id');
+        const urlEl = document.getElementById('api-url');
+        if (sidEl) sidEl.value = msg.storyboard_id || '';
+        if (urlEl && msg.api_url) urlEl.value = msg.api_url;
+        log(`Deep link received — storyboard <b>${msg.storyboard_id}</b>`, 'ok');
+        // Auto-start after a short delay so the user can see the pre-fill
+        setTimeout(() => startImport(), 600);
+        break;
+      }
+
+      case 'PROGRESS':
+        setProgress(msg.pct);
+        if (msg.beatIndex !== undefined) setChip(msg.beatIndex, 'active');
+        log(msg.text);
+        break;
+
+      case 'BEAT_DONE':
+        setChip(msg.beatIndex, 'done');
+        break;
+
+      case 'BEAT_ERROR':
+        setChip(msg.beatIndex, 'error');
+        log(`Beat ${msg.beatNumber}: ${msg.error}`, 'warn');
+        break;
+
+      // Relay: plugin sandbox can't do HTTP — we do it from the UI iframe
+      case 'REGISTER_MAPPING': {
+        const { apiUrl, sid, body } = msg;
+        try {
+          const resp = await fetch(`${apiUrl}/api/export-figma/${sid}/mapping`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          if (resp.ok) {
+            log('Node mapping registered with backend.', 'ok');
+          } else {
+            const err = await resp.json().catch(() => ({ detail: resp.statusText }));
+            log(`Mapping registration failed: ${err.detail}`, 'warn');
+          }
+        } catch (e) {
+          log(`Mapping registration error: ${e.message}`, 'warn');
+        }
+        break;
+      }
+
+      case 'DONE':
+        setProgress(100);
+        log(`Done! ${msg.framesCreated} frame(s) created.`, 'ok');
+        showResult(msg);
+        reset();
+        break;
+
+      case 'ERROR':
+        log(`Error: ${msg.error}`, 'error');
+        reset();
+        break;
+    }
+  };
+</script>
+</body>
+</html>
