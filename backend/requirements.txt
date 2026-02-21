@@ -1,6 +1,8 @@
 fastapi
 uvicorn[standard]
 google-generativeai
+google-genai
+replicate
 requests
 moviepy
 python-dotenv
@@ -10,7 +12,9 @@ transformers
 accelerate
 safetensors
 databricks-sdk
+databricks-sql-connector
 mlflow
 pydantic
 pillow
 numpy
+datasets
