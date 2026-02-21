@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from services.gemini_service import analyze_script
+from services.segmentation_service import segment_script
 from services.replicate_service import generate_images
 from services.elevenlabs_service import generate_voices
 from services.video_service import render_video
@@ -86,11 +86,18 @@ async def health_check():
     return {"status": "healthy"}
 
 
+class AnalyzeRequest(BaseModel):
+    script: str
+    use_databricks: bool = True
+
+
 @app.post("/api/analyze")
 async def api_analyze(request: ScriptRequest):
     """
     Analyze a script and break it down into visual beats.
-    Uses Gemini 1.5 Pro with structured JSON output.
+    
+    Uses trained Databricks segmentation model first, falls back to Gemini.
+    Set DATABRICKS_HOST and DATABRICKS_TOKEN env vars to use the trained model.
     """
     if not request.script.strip():
         raise HTTPException(status_code=400, detail="Script cannot be empty")
@@ -100,10 +107,11 @@ async def api_analyze(request: ScriptRequest):
     run_id = start_run(request.script)
     
     try:
-        beats = await analyze_script(request.script)
+        beats = await segment_script(request.script, use_databricks=True)
         
         log_metric("beats_count", len(beats))
         log_metric("script_length", len(request.script))
+        log_metric("analysis_latency", time.time() - pipeline_start)
         
         moods = [b.get("mood", "") for b in beats]
         cameras = [b.get("camera_angle", "") for b in beats]
