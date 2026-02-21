@@ -29,6 +29,12 @@ def _get_client() -> "genai.Client":
         _client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     return _client
 
+async def close_client():
+    global _client
+    if _client:
+        await _client.aio.aclose()
+        _client = None
+
 _SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
 Your job is to break a screenplay scene into 4-8 distinct visual beats suitable for storyboarding.
 
@@ -38,7 +44,7 @@ For each beat return a JSON object with EXACTLY these keys:
   camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
                         over-the-shoulder, low angle, high angle, dutch angle,
                         POV shot, tracking shot)
-  mood                 (string — emotional tone of the beat)
+  mood                 (string — emotional tone of the beat, only choose the best match out of this list: happy, sad, tense, calm, melancholic, mysterious, default)
   lighting             (string — lighting style)
   characters_present   (array of character name strings)
   narrator_line        (string — cinematic voiceover, 100-150 characters)
