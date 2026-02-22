@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import AudioPlayer from "./AudioPlayer";
 
+const API_URL = "http://localhost:8000";
+
 export default function StoryboardGrid({ beats }) {
   if (!beats || beats.length === 0) return null;
 
