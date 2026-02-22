@@ -169,6 +169,127 @@ def _normalize_genre_preset(genre_preset: Optional[str]) -> str:
     return aliases.get(value, "none")
 
 
+def _assign_character_seeds(beats: list[dict]) -> dict[str, int]:
+    """
+    Assign one stable seed per character name, derived deterministically from
+    the name itself. Every beat that contains that character will use the same
+    seed, so the diffusion model starts from the same noise state and produces
+    consistent facial structure, body proportions, and clothing across all beats.
+
+    The seed is a 31-bit positive integer (FLUX accepts 1–2_147_483_647).
+    Using hashlib keeps it stable across Python runs (unlike hash()).
+    """
+    import hashlib
+
+    char_seeds: dict[str, int] = {}
+    all_names: set[str] = set()
+    for beat in beats:
+        all_names.update(beat.get("characters_present", []))
+
+    for name in all_names:
+        digest = int(hashlib.sha256(name.encode()).hexdigest(), 16)
+        char_seeds[name] = (digest % 2_147_483_646) + 1  # clamp to [1, 2^31-1]
+
+    return char_seeds
+
+
+def _pick_beat_seed(beat: dict, char_seeds: dict[str, int], scene_seed: int) -> int:
+    """
+    Return the seed to use for this beat.
+
+    Priority:
+      1. If one character is present → use that character's seed.
+      2. If multiple characters are present → use the seed of the first listed
+         (the "dominant" character in the beat).
+      3. No characters → use the scene seed so environment stays consistent.
+    """
+    present = beat.get("characters_present", [])
+    for name in present:
+        if name in char_seeds:
+            return char_seeds[name]
+    return scene_seed
+
+
+def _build_diffusion_prompt(
+    beat: dict,
+    scene_context: dict,
+    char_desc_map: dict,
+) -> str:
+    """
+    Assemble a single, complete diffusion prompt from all available context.
+
+    The image provider server only uses visual_description — everything else
+    (mood, lighting, color_palette, character descriptions, scene style) must
+    be baked directly into this string. FLUX.1-schnell responds best to dense,
+    comma-separated tag-style prompts.
+
+    Character descriptions are placed FIRST so the model weights them most
+    heavily — this is the primary lever for appearance consistency alongside
+    seed locking.
+    """
+    parts: list[str] = []
+
+    # ── 1. Character physical descriptions FIRST (highest model weight) ───────
+    for name in beat.get("characters_present", []):
+        desc = char_desc_map.get(name, "").strip()
+        if desc:
+            parts.append(desc)
+
+    # ── 2. Core visual description from Gemini ────────────────────────────────
+    visual = beat.get("visual_description", "").strip()
+    if visual:
+        parts.append(visual)
+
+    # ── 3. Lighting ───────────────────────────────────────────────────────────
+    lighting = beat.get("lighting", "").strip()
+    if lighting:
+        parts.append(f"{lighting} lighting")
+
+    # ── 4. Mood as atmosphere tag ─────────────────────────────────────────────
+    mood = beat.get("mood", "").strip()
+    if mood and mood != "default":
+        parts.append(f"{mood} atmosphere")
+
+    # ── 5. Color palette ──────────────────────────────────────────────────────
+    palette = beat.get("color_palette", "").strip()
+    if palette:
+        parts.append(palette)
+
+    # ── 6. Foreground depth cue ───────────────────────────────────────────────
+    fg = beat.get("foreground_elements", "").strip()
+    if fg:
+        parts.append(fg)
+
+    # ── 7. Scene-level style (film stock + color grade + visual style) ────────
+    sc = scene_context or {}
+    style_tags: list[str] = []
+    if sc.get("visual_style"):
+        style_tags.append(sc["visual_style"])
+    if sc.get("film_stock"):
+        style_tags.append(sc["film_stock"])
+    if sc.get("color_grade"):
+        style_tags.append(sc["color_grade"])
+    if sc.get("genre"):
+        style_tags.append(sc["genre"])
+    if sc.get("era"):
+        style_tags.append(sc["era"])
+    if style_tags:
+        parts.append(", ".join(style_tags))
+
+    # ── 8. Cinematic quality tail ─────────────────────────────────────────────
+    parts.append("cinematic composition, professional photography, highly detailed, sharp focus")
+
+    return ", ".join(p for p in parts if p)
+
+
+def _build_negative_prompt(scene_context: dict, beat: dict) -> Optional[str]:
+    """Merge scene-level and beat-level negative prompt hints."""
+    global_neg = (scene_context or {}).get("negative_space", "")
+    beat_neg = beat.get("negative_prompt_hints", "")
+    combined = ", ".join(filter(None, [global_neg, beat_neg]))
+    return combined if combined else None
+
+
 async def generate_images_for_beats(beats: List[dict], style_mode: str = "photoreal") -> List[dict]:
     """Generate images for all beats using the image provider."""
     image_results = []
@@ -210,6 +331,15 @@ async def api_generate_video(request: ScriptRequest):
     if not request.script.strip():
         raise HTTPException(status_code=400, detail="Script cannot be empty")
 
+    def _sse_json(obj) -> str:
+        """json.dumps with a fallback encoder that stringifies non-serializable types (e.g. PosixPath)."""
+        from pathlib import PurePath
+        def _default(o):
+            if isinstance(o, PurePath):
+                return str(o)
+            raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+        return json.dumps(obj, default=_default)
+
     async def generate():
         pipeline_start = time.time()
         normalized_style = _normalize_style_mode(request.style_mode)
@@ -218,7 +348,7 @@ async def api_generate_video(request: ScriptRequest):
         try:
             # Stage 1: Analyze script
             print("\n[PIPELINE]: Analyzing script...")
-            yield f"data: {json.dumps({'stage': 'analyzing', 'message': 'Analyzing script...'})}\n\n"
+            yield f"data: {_sse_json({'stage': 'analyzing', 'message': 'Analyzing script...'})}\n\n"
             
             result = await decompose_scene(
                 request.script,
@@ -226,12 +356,34 @@ async def api_generate_video(request: ScriptRequest):
                 style_mode=normalized_style,
             )
             beats = result["beats"]
-            
-            yield f"data: {json.dumps({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
+            character_bible = result.get("character_bible", [])
+            scene_context = result.get("scene_context", {})
+
+            # Build a lookup from character name → physical description for prompt injection
+            char_desc_map = {
+                entry["name"]: entry["description"]
+                for entry in character_bible
+                if isinstance(entry, dict) and entry.get("name") and entry.get("description")
+            }
+
+            # Assign one stable seed per character (derived from their name) so every
+            # beat featuring the same character starts from the same noise state,
+            # producing consistent appearance across the whole storyboard.
+            char_seeds = _assign_character_seeds(beats)
+
+            # Scene seed: used for beats with no characters (environment/establishing shots).
+            # Derived from the script text so the world looks consistent too.
+            import hashlib as _hl
+            scene_seed = (int(_hl.sha256(request.script[:512].encode()).hexdigest(), 16) % 2_147_483_646) + 1
+
+            if char_seeds:
+                print(f"[PIPELINE] Character seeds: { {n: s for n, s in char_seeds.items()} }")
+
+            yield f"data: {_sse_json({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
             
             # Stage 2: Generate visuals and narration in parallel
             print("[PIPELINE]: Generating visuals and narration (parallel)...")
-            yield f"data: {json.dumps({'stage': 'generating', 'message': 'Generating visuals and narration...'})}\n\n"
+            yield f"data: {_sse_json({'stage': 'generating', 'message': 'Generating visuals and narration...'})}\n\n"
             
             # Start voice generation in background
             voice_task = asyncio.create_task(generate_voices_and_sfx(beats, voice_id=request.voice_id))
@@ -239,19 +391,32 @@ async def api_generate_video(request: ScriptRequest):
             # Generate images one by one and stream each as it completes
             for i, beat in enumerate(beats):
                 print(f"[PIPELINE]: Generating image {i+1}/{len(beats)}...")
-                print(f"  Visual: {beat.get('visual_description', '')[:100]}...")
-                print(f"  Camera: {beat.get('camera_angle', '')} | Mood: {beat.get('mood', '')} | Lighting: {beat.get('lighting', '')}")
-                yield f"data: {json.dumps({'stage': 'generating', 'message': f'Generating image {i+1} of {len(beats)}...'})}\n\n"
-                
+
+                # Assemble the full diffusion prompt — the server only uses visual_description
+                diffusion_prompt = _build_diffusion_prompt(beat, scene_context, char_desc_map)
+                negative = _build_negative_prompt(scene_context, beat)
+
+                # Pick seed: character seed if any character present, else scene seed
+                beat_seed = _pick_beat_seed(beat, char_seeds, scene_seed)
+                present = beat.get("characters_present", [])
+                seed_source = present[0] if present else "scene"
+                print(f"  Prompt ({len(diffusion_prompt)} chars): {diffusion_prompt[:120]}...")
+                print(f"  Seed: {beat_seed} (from: {seed_source}) | Camera: {beat.get('camera_angle', '')} | Mood: {beat.get('mood', '')}")
+                yield f"data: {_sse_json({'stage': 'generating', 'message': f'Generating image {i+1} of {len(beats)}...'})}\n\n"
+
                 payload = ImageProviderBeatPayload(
                     beat_number=beat.get("beat_number", 0),
-                    visual_description=beat.get("visual_description", ""),
+                    visual_description=diffusion_prompt,
                     camera_angle=beat.get("camera_angle", ""),
                     mood=beat.get("mood", ""),
                     lighting=beat.get("lighting", ""),
                     characters_present=beat.get("characters_present", []),
                     narrator_line=beat.get("narrator_line", ""),
                     music_style=beat.get("music_style") or beat.get("music_recommendation"),
+                    negative_prompt=negative,
+                    steps=20,
+                    guidance_scale=7.0,
+                    seed=beat_seed,
                     style_mode=normalized_style,
                 )
                 
@@ -259,22 +424,22 @@ async def api_generate_video(request: ScriptRequest):
                 request_id = result.metadata.get("request_id") or uuid.uuid4().hex
                 filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
                 image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
-                image_url = f"/api/image/{image_path.name}"
+                image_url = f"/api/image/{str(image_path.name)}"
                 
                 print(f"  ✓ Image saved: {image_url}")
                 
                 # Update beat with image URL
                 beat["imageUrl"] = image_url
                 beat["image_url"] = image_url
-                
+
                 # Stream the updated beat immediately
-                yield f"data: {json.dumps({'stage': 'generating', 'message': f'Image {i+1} of {len(beats)} complete', 'beatUpdate': {'index': i, 'beat': beat}})}\n\n"
+                yield f"data: {_sse_json({'stage': 'generating', 'message': f'Image {i+1} of {len(beats)} complete', 'beatUpdate': {'index': i, 'beat': beat}})}\n\n"
             
             # Wait for voice generation to complete
             audio_results = await voice_task
             
-            # Attach audio paths to beats
-            audio_map = {a["beat_number"]: a.get("audio_path") for a in audio_results if a.get("audio_path")}
+            # Attach audio paths to beats (str() guards against PosixPath values)
+            audio_map = {a["beat_number"]: str(a.get("audio_path", "")) for a in audio_results if a.get("audio_path")}
             for beat in beats:
                 beat_num = beat.get("beat_number", 0)
                 if beat_num in audio_map:
@@ -288,7 +453,7 @@ async def api_generate_video(request: ScriptRequest):
                     music_rec = beat.get("music_recommendation") or beat.get("music_style")
                     break
 
-            yield f"data: {json.dumps({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
+            yield f"data: {_sse_json({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
             
             pipeline_latency = time.time() - pipeline_start
             log_metric("total_pipeline_latency", pipeline_latency)
@@ -314,7 +479,7 @@ async def api_generate_video(request: ScriptRequest):
             import traceback
             traceback.print_exc()
             end_run("FAILED")
-            yield f"data: {json.dumps({'stage': 'error', 'message': str(e)})}\n\n"
+            yield f"data: {_sse_json({'stage': 'error', 'message': str(e)})}\n\n"
 
     return StreamingResponse(
         generate(),
@@ -651,6 +816,51 @@ async def api_delete_figma_mapping(storyboard_id: str):
             detail=f"No mapping found for storyboard '{storyboard_id}'",
         )
     return {"deleted": True, "storyboard_id": storyboard_id}
+
+
+class FigmaTemplateRequest(BaseModel):
+    file_key: str
+
+
+@app.post("/api/figma-template")
+async def api_set_figma_template(request: FigmaTemplateRequest):
+    """
+    Save a Figma template file key to the .env file so future exports
+    patch into that template. Called by the plugin after it creates a
+    new template via the 'Setup Template' button.
+    """
+    file_key = request.file_key.strip()
+    if not file_key:
+        raise HTTPException(status_code=400, detail="file_key is required")
+
+    env_path = Path(__file__).parent / ".env"
+    try:
+        lines = env_path.read_text().splitlines() if env_path.exists() else []
+        updated = False
+        new_lines = []
+        for line in lines:
+            if line.startswith("FIGMA_TEMPLATE_FILE_KEY=") or line.startswith("#FIGMA_TEMPLATE_FILE_KEY="):
+                new_lines.append(f"FIGMA_TEMPLATE_FILE_KEY={file_key}")
+                updated = True
+            else:
+                new_lines.append(line)
+        if not updated:
+            new_lines.append(f"FIGMA_TEMPLATE_FILE_KEY={file_key}")
+        env_path.write_text("\n".join(new_lines) + "\n")
+
+        # Also update the running process environment so it takes effect immediately
+        os.environ["FIGMA_TEMPLATE_FILE_KEY"] = file_key
+
+        return {"saved": True, "file_key": file_key}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Could not write .env: {exc}")
+
+
+@app.get("/api/figma-template")
+async def api_get_figma_template():
+    """Return the currently configured Figma template file key."""
+    key = os.getenv("FIGMA_TEMPLATE_FILE_KEY", "").strip()
+    return {"file_key": key or None}
 
 
 if __name__ == "__main__":

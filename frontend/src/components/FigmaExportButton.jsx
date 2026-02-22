@@ -33,14 +33,9 @@ const ExternalLinkIcon = () => (
   </svg>
 )
 
-// ── Build the figma:// deep link URL ─────────────────────────────────────────
-function buildDeepLink(storyboardId, apiUrl) {
-  // Figma deep link format:
-  //   figma://run?pluginId=<id>&pluginData=<json>
-  // When the user clicks this in a browser, macOS opens Figma desktop and
-  // launches the plugin with the pluginData available as figma.pluginData.
-  const pluginData = JSON.stringify({ storyboard_id: storyboardId, api_url: apiUrl })
-  return `figma://run?pluginId=playwright-storyboard-exporter&pluginData=${encodeURIComponent(pluginData)}`
+// ── Open Figma.com in a new tab ───────────────────────────────────────────────
+function openFigmaWithPlugin() {
+  window.open('https://www.figma.com/files/recent', '_blank', 'noopener,noreferrer')
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -80,7 +75,6 @@ export default function FigmaExportButton({ beats, disabled }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (_) {
-      // Fallback for non-secure contexts
       const el = document.createElement('textarea')
       el.value = storyboardId
       document.body.appendChild(el)
@@ -92,7 +86,9 @@ export default function FigmaExportButton({ beats, disabled }) {
     }
   }
 
-  const deepLink = storyboardId ? buildDeepLink(storyboardId, API_URL) : '#'
+  const handleOpenFigma = () => {
+    openFigmaWithPlugin()
+  }
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-4 space-y-3">
@@ -133,7 +129,7 @@ export default function FigmaExportButton({ beats, disabled }) {
           </motion.div>
         )}
 
-        {/* ── Ready: deep link + copy fallback ────────────────────────────── */}
+        {/* ── Ready ───────────────────────────────────────────────────────── */}
         {state === 'ready' && (
           <motion.div
             key="ready"
@@ -142,38 +138,42 @@ export default function FigmaExportButton({ beats, disabled }) {
             exit={{ opacity: 0, y: -8 }}
             className="space-y-3"
           >
-            {/* Primary CTA — opens Figma desktop and launches the plugin */}
-            <a
-              href={deepLink}
+            {/* Primary CTA — open Figma with plugin pre-filled */}
+            <button
+              onClick={handleOpenFigma}
               className="flex items-center justify-center gap-3 w-full py-4 bg-[#7B61FF] hover:bg-[#6B51EF] text-white font-semibold rounded-xl transition-colors"
             >
               <FigmaLogo />
-              Open in Figma Plugin
+              Open in Figma
               <ExternalLinkIcon />
-            </a>
+            </button>
 
-            {/* Info row */}
-            <p className="text-center text-xs text-white/40 leading-relaxed">
-              Opens Figma desktop and launches the PLAYWRIGHT plugin automatically.
-              <br />
-              The plugin will import your storyboard with one click.
+            <p className="text-xs text-white/40 text-center leading-relaxed px-2">
+              Opens Figma in a new tab. Copy the Storyboard ID below, then run the{' '}
+              <span className="text-white/60">PLAYWRIGHT Storyboard</span> plugin and paste it in.
             </p>
 
-            {/* Fallback — copy the storyboard ID for manual paste */}
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-              <span className="text-xs text-white/40 flex-shrink-0">Storyboard ID</span>
-              <span className="flex-1 text-xs text-white/70 font-mono truncate">{storyboardId}</span>
-              <button
-                onClick={handleCopyId}
-                title="Copy storyboard ID"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 text-xs font-medium transition-colors flex-shrink-0"
-              >
-                {copied ? <CheckIcon /> : <CopyIcon />}
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
+            {/* Storyboard ID — collapsed, copy available as fallback */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">
+                  Storyboard ID
+                </p>
+                <button
+                  onClick={handleCopyId}
+                  title="Copy storyboard ID"
+                  className="flex items-center gap-1 text-xs text-white/40 hover:text-white/70 transition-colors"
+                >
+                  {copied ? <CheckIcon /> : <CopyIcon />}
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <span className="block text-xs text-white/50 font-mono truncate">
+                {storyboardId}
+              </span>
             </div>
 
-            {/* Re-export link */}
+            {/* Re-export */}
             <button
               onClick={() => { setState('idle'); setStoryboardId(null) }}
               className="w-full text-xs text-white/30 hover:text-white/50 transition-colors py-1"

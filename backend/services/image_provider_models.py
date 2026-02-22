@@ -14,6 +14,13 @@ class ImageProviderBeatPayload(BaseModel):
     narrator_line: str
     music_style: Optional[str] = None
     style_mode: Optional[str] = "photoreal"
+    # Context fields for cross-beat visual consistency
+    style_anchor: Optional[str] = None
+    character_descriptions: Optional[List[str]] = None
+    previous_beat_context: Optional[str] = None
+    color_palette: Optional[str] = None
+    foreground_elements: Optional[str] = None
+    negative_prompt: Optional[str] = None
     width: Optional[int] = None
     height: Optional[int] = None
     steps: Optional[int] = None

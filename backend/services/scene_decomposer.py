@@ -43,6 +43,7 @@ async def close_client():
         _client = None
 
 _BEAT_FIELD_RULES = """For each beat, return a JSON object with EXACTLY these keys:
+
   beat_number          (integer, starting at 1)
 
   visual_description   (string — what is visible in the frame; be highly descriptive about environment, texture, time of day, weather, architecture, props, depth, and atmosphere)
@@ -438,59 +439,63 @@ Return the revised beat as JSON:"""
 
 def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     """
-    Robustly extract the beats array from Gemini's JSON response.
-    Handles both {"beats": [...]} and a bare [...] array.
+    Robustly extract the full scene object (character_bible + beats) from Gemini's JSON response.
+    Returns {"character_bible": [...], "beats": [...]}.
     """
     # Try direct parse first
     try:
         parsed = json.loads(raw)
-        if isinstance(parsed, dict) and "beats" in parsed:
-            return parsed["beats"]
+        result = _extract_full(parsed)
+        if result:
+            return result
         if isinstance(parsed, list):
-            return parsed
-        if isinstance(parsed, dict):
-            print(f"[DECOMPOSER] Parsed JSON dict but no 'beats' key — keys present: {list(parsed.keys())}")
+            return {"scene_context": {}, "character_bible": [], "beats": parsed}
+        print(f"[DECOMPOSER] Parsed JSON dict but no 'beats' key — keys present: {list(parsed.keys())}")
     except json.JSONDecodeError as e:
         print(f"[DECOMPOSER] json.loads failed ({e}), attempting fallback extraction")
 
-    # Try to extract array and fix common JSON issues
+    # Try to find the outer object and fix common JSON issues
+    obj_start = raw.find("{")
+    obj_end = raw.rfind("}") + 1
+    if obj_start != -1 and obj_end > obj_start:
+        json_str = re.sub(r',\s*([}\]])', r'\1', raw[obj_start:obj_end])
+        try:
+            result = _extract_full(json.loads(json_str))
+            if result:
+                return result
+        except json.JSONDecodeError:
+            pass
+
+    # Fall back to extracting just the beats array
     start = raw.find("[")
     end = raw.rfind("]") + 1
     if start != -1 and end > start:
-        json_str = raw[start:end]
-        
-        # Try parsing as-is first
-        try:
-            return json.loads(json_str)
-        except json.JSONDecodeError:
-            pass
-        
-        # Fix common issues: trailing commas, unescaped quotes in strings
-        # Remove trailing commas before ] or }
-        json_str = re.sub(r',\s*([}\]])', r'\1', json_str)
-        
-        # Try again after fixes
-        try:
-            return json.loads(json_str)
-        except json.JSONDecodeError:
-            pass
-        
-        # Last resort: try to parse individual beat objects
+        for candidate in (raw[start:end], re.sub(r',\s*([}\]])', r'\1', raw[start:end])):
+            try:
+                beats = json.loads(candidate)
+                if isinstance(beats, list):
+                    return {"scene_context": {}, "character_bible": [], "beats": beats}
+            except json.JSONDecodeError:
+                pass
+
+        # Last resort: recover individual beat objects
         beats = []
         beat_pattern = r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}'
-        matches = re.findall(beat_pattern, json_str)
-        for match in matches:
+        for match in re.findall(beat_pattern, raw[start:end]):
             try:
-                # Fix trailing commas in individual objects
-                fixed = re.sub(r',\s*([}\]])', r'\1', match)
-                beat = json.loads(fixed)
+                beat = json.loads(re.sub(r',\s*([}\]])', r'\1', match))
                 if isinstance(beat, dict) and "beat_number" in beat:
                     beats.append(beat)
             except json.JSONDecodeError:
                 continue
-        
+
         if beats:
             print(f"[DECOMPOSER] Recovered {len(beats)} beats from malformed JSON")
-            return beats
+            return {"scene_context": {}, "character_bible": [], "beats": beats}
 
-    raise ValueError(f"Could not parse beats from Gemini response: {raw[:200]}")
+    raise ValueError(f"Could not parse scene from Gemini response: {raw[:200]}")
+
+
+def _parse_beats(raw: str) -> List[Dict[str, Any]]:
+    """Legacy wrapper — use _parse_scene for new code."""
+    return _parse_scene(raw)["beats"]
