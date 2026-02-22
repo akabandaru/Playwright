@@ -52,9 +52,7 @@ For each beat, return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
 
   visual_description   (string — what is visible in the frame; be highly descriptive about environment, texture, time of day, weather, architecture, props, depth, and atmosphere)
-  camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
-                        over-the-shoulder, low angle, high angle, dutch angle,
-                        POV shot, tracking shot)
+    camera_angle         (MUST be one of EXACTLY these: extreme close up, close up, medium shot, full shot, wide shot, long shot)
   mood                 (string — emotional tone of the beat, choose the best match from: happy, sad, tense, calm, melancholic, mysterious, default)
   lighting             (string — lighting style, e.g., harsh, soft, natural, dim, overcast, etc.)
   characters_present   (array of character names in the current beat, only include characters visible in the scene)
@@ -80,6 +78,123 @@ Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
 No markdown, no explanation, no extra keys.
 """
 
+CAMERA_ANGLE_MAP = {
+    "extreme close up": "extreme close-up, face fills frame, 85mm lens, very shallow depth of field",
+    "close up": "close-up portrait, head and shoulders, 85mm lens, shallow depth of field",
+    "medium shot": "medium shot, waist-up, 50mm lens, natural perspective",
+    "full shot": "full body shot, subject clearly framed, 35mm lens",
+    "wide shot": "wide establishing shot, environment dominant, 24mm lens",
+    "long shot": "long shot, subject small in frame, environment dominant, 24mm lens",
+}
+
+_CAMERA_KEYS = set(CAMERA_ANGLE_MAP.keys())
+
+_GENRE_PRESET_PROMPTS = {
+    "none": "Use balanced cinematic visual grammar with no special genre bias.",
+    "noir": """Genre preset: noir.
+- Favor high-contrast chiaroscuro lighting, deep shadows, rain-slick streets/interiors, smoke/haze, and moral ambiguity.
+- Camera language should lean into silhouettes, venetian-blind patterns, reflective surfaces, and suspenseful composition.
+- Narrator tone should feel moody, introspective, and cynical.
+""",
+    "thriller": """Genre preset: thriller.
+- Favor tension-forward visuals: tight framing, uneasy angles, partial reveals, and momentum between beats.
+- Lighting and environment should sustain suspense and uncertainty.
+- Narrator tone should be urgent, ominous, and propulsive.
+""",
+    "romcom": """Genre preset: rom-com.
+- Favor warm, inviting visuals, playful compositions, expressive character interactions, and charming environment details.
+- Use brighter, softer lighting and emotionally light pacing with occasional heartfelt beats.
+- Narrator tone should be witty, affectionate, and hopeful.
+""",
+}
+
+_STYLE_MODE_PROMPTS = {
+    "photoreal": "Style mode: photoreal. Keep environments and character appearance grounded, physically plausible, and cinematically realistic.",
+    "anime": "Style mode: anime. Use anime visual language (clean linework, stylized proportions, expressive framing, cel-shaded look), while preserving scene continuity and camera shot constraints.",
+}
+
+
+def _normalize_genre_preset(genre_preset: str) -> str:
+    value = (genre_preset or "none").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "romcom": "romcom",
+        "romanticcomedy": "romcom",
+        "thriller": "thriller",
+        "noir": "noir",
+        "none": "none",
+        "default": "none",
+    }
+    return aliases.get(value, "none")
+
+
+def _normalize_style_mode(style_mode: str) -> str:
+    value = (style_mode or "photoreal").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "photoreal": "photoreal",
+        "photo": "photoreal",
+        "realistic": "photoreal",
+        "anime": "anime",
+        "cartoon": "anime",
+        "manga": "anime",
+        "none": "photoreal",
+        "default": "photoreal",
+    }
+    return aliases.get(value, "photoreal")
+
+
+def _normalize_camera_angle(camera_angle: str) -> str:
+    text = (camera_angle or "").strip().lower().replace("-", " ")
+
+    direct_aliases = {
+        "extreme close up": "extreme close up",
+        "extreme closeup": "extreme close up",
+        "extreme close": "extreme close up",
+        "ecu": "extreme close up",
+        "close up": "close up",
+        "closeup": "close up",
+        "cu": "close up",
+        "medium shot": "medium shot",
+        "medium": "medium shot",
+        "mid shot": "medium shot",
+        "ms": "medium shot",
+        "full shot": "full shot",
+        "full body shot": "full shot",
+        "wide shot": "wide shot",
+        "wide": "wide shot",
+        "establishing shot": "wide shot",
+        "long shot": "long shot",
+        "ls": "long shot",
+    }
+
+    if text in direct_aliases:
+        return direct_aliases[text]
+
+    if "extreme" in text and "close" in text:
+        return "extreme close up"
+    if "close" in text:
+        return "close up"
+    if "full" in text:
+        return "full shot"
+    if "long" in text:
+        return "long shot"
+    if "wide" in text or "establish" in text:
+        return "wide shot"
+    if "medium" in text or "mid" in text:
+        return "medium shot"
+
+    return "medium shot"
+
+
+def _enforce_camera_angle_map(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    for beat in beats:
+        if not isinstance(beat, dict):
+            continue
+        normalized = _normalize_camera_angle(str(beat.get("camera_angle", "")))
+        if normalized not in _CAMERA_KEYS:
+            normalized = "medium shot"
+        beat["camera_angle"] = normalized
+    return beats
+
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
     """Render the few-shot examples as a readable prompt block."""
     if not examples:
@@ -97,7 +212,11 @@ def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
+async def decompose_scene(
+    screenplay_text: str,
+    genre_preset: str = "none",
+    style_mode: str = "photoreal",
+) -> Dict[str, Any]:
     """
     Decompose a screenplay scene into structured beats.
 
@@ -118,7 +237,14 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
             "tokens_used": int,
         }
     """
-    print("[DECOMPOSER] Starting run...")
+    normalized_genre = _normalize_genre_preset(genre_preset)
+    normalized_style = _normalize_style_mode(style_mode)
+    genre_prompt = _GENRE_PRESET_PROMPTS[normalized_genre]
+    style_prompt = _STYLE_MODE_PROMPTS[normalized_style]
+
+    print(
+        f"[DECOMPOSER] Starting run (genre_preset={normalized_genre}, style_mode={normalized_style})..."
+    )
     run_id = db.start_run(screenplay_text)
     t_start = time.time()
 
@@ -131,6 +257,12 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
         few_shot_block = _build_few_shot_block(examples)
 
         prompt = f"""{_SYSTEM_INSTRUCTION}
+
+    Genre visual grammar guidance:
+    {genre_prompt}
+
+    Style guidance:
+    {style_prompt}
 
 {few_shot_block}
 Now analyze the following scene and return the beat breakdown in the same JSON format.
@@ -158,6 +290,7 @@ Return JSON:"""
 
         # ── 4. Parse response ─────────────────────────────────────────────────
         beats = _parse_beats(raw_text)
+        beats = _enforce_camera_angle_map(beats)
         print(f"[DECOMPOSER] Parsed beats")
 
         # ── 5. Log metrics ────────────────────────────────────────────────────
@@ -191,6 +324,8 @@ Return JSON:"""
         return {
             "run_id": run_id,
             "beats": beats,
+            "genre_preset": normalized_genre,
+            "style_mode": normalized_style,
             "inference_time_seconds": inference_time,
             "beats_extracted": beats_extracted,
             "tokens_used": tokens_used,

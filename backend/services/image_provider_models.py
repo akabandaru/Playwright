@@ -13,6 +13,7 @@ class ImageProviderBeatPayload(BaseModel):
     characters_present: List[str] = Field(default_factory=list)
     narrator_line: str
     music_style: Optional[str] = None
+    style_mode: Optional[str] = "photoreal"
     width: Optional[int] = None
     height: Optional[int] = None
     steps: Optional[int] = None

@@ -11,6 +11,8 @@ const API_URL = "http://localhost:8000";
 
 export default function App() {
   const [script, setScript] = useState("");
+  const [genrePreset, setGenrePreset] = useState("none");
+  const [styleMode, setStyleMode] = useState("photoreal");
   const [beats, setBeats] = useState([]);
   const [images, setImages] = useState([]);
   const [videoUrl, setVideoUrl] = useState(null);
@@ -38,7 +40,7 @@ export default function App() {
       const response = await fetch(`${API_URL}/api/generate-video`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script }),
+        body: JSON.stringify({ script, genre_preset: genrePreset, style_mode: styleMode }),
       });
 
       if (!response.ok) throw new Error("Failed to start pipeline");
@@ -112,7 +114,7 @@ export default function App() {
       setError(err.message || "An error occurred during generation");
       setStage(null);
     }
-  }, [script]);
+  }, [script, genrePreset, styleMode]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,6 +123,10 @@ export default function App() {
       <ScriptInput
         script={script}
         setScript={setScript}
+        genrePreset={genrePreset}
+        setGenrePreset={setGenrePreset}
+        styleMode={styleMode}
+        setStyleMode={setStyleMode}
         onGenerate={runPipeline}
         isGenerating={isGenerating}
       />

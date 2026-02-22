@@ -69,6 +69,8 @@ AUDIO_DIR.mkdir(exist_ok=True)
 
 class ScriptRequest(BaseModel):
     script: str
+    genre_preset: Optional[str] = "none"
+    style_mode: Optional[str] = "photoreal"
 
 
 class Beat(BaseModel):
@@ -116,6 +118,64 @@ async def root():
     return {"message": "Welcome to PLAYWRIGHT API", "version": "1.0.0"}
 
 
+def _normalize_style_mode(style_mode: Optional[str]) -> str:
+    value = (style_mode or "photoreal").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "photoreal": "photoreal",
+        "photo": "photoreal",
+        "realistic": "photoreal",
+        "anime": "anime",
+        "cartoon": "anime",
+        "manga": "anime",
+    }
+    return aliases.get(value, "photoreal")
+
+
+def _normalize_genre_preset(genre_preset: Optional[str]) -> str:
+    value = (genre_preset or "none").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "none": "none",
+        "default": "none",
+        "noir": "noir",
+        "thriller": "thriller",
+        "romcom": "romcom",
+        "romanticcomedy": "romcom",
+    }
+    return aliases.get(value, "none")
+
+
+async def generate_images_for_beats(beats: List[dict], style_mode: str = "photoreal") -> List[dict]:
+    """Generate images for all beats using the image provider."""
+    image_results = []
+    normalized_style = _normalize_style_mode(style_mode)
+    
+    for beat in beats:
+        payload = ImageProviderBeatPayload(
+            beat_number=beat.get("beat_number", 0),
+            visual_description=beat.get("visual_description", ""),
+            camera_angle=beat.get("camera_angle", ""),
+            mood=beat.get("mood", ""),
+            lighting=beat.get("lighting", ""),
+            characters_present=beat.get("characters_present", []),
+            narrator_line=beat.get("narrator_line", ""),
+            music_style=beat.get("music_style") or beat.get("music_recommendation"),
+            style_mode=normalized_style,
+        )
+        
+        result = await generate_beat_image(payload)
+        request_id = result.metadata.get("request_id") or uuid.uuid4().hex
+        filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
+        image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
+        image_url = f"/api/image/{image_path.name}"
+        
+        image_results.append({
+            "beat_number": beat.get("beat_number", 0),
+            "image_url": image_url,
+        })
+    
+    return image_results
+
+
 @app.post("/api/generate-video")
 async def api_generate_video(request: ScriptRequest):
     """
@@ -127,13 +187,19 @@ async def api_generate_video(request: ScriptRequest):
 
     async def generate():
         pipeline_start = time.time()
+        normalized_style = _normalize_style_mode(request.style_mode)
+        normalized_genre = _normalize_genre_preset(request.genre_preset)
         
         try:
             # Stage 1: Analyze script
             print("\n[PIPELINE]: Analyzing script...")
             yield f"data: {json.dumps({'stage': 'analyzing', 'message': 'Analyzing script...'})}\n\n"
             
-            result = await decompose_scene(request.script)
+            result = await decompose_scene(
+                request.script,
+                genre_preset=normalized_genre,
+                style_mode=normalized_style,
+            )
             beats = result["beats"]
             
             yield f"data: {json.dumps({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
@@ -161,6 +227,7 @@ async def api_generate_video(request: ScriptRequest):
                     characters_present=beat.get("characters_present", []),
                     narrator_line=beat.get("narrator_line", ""),
                     music_style=beat.get("music_style") or beat.get("music_recommendation"),
+                    style_mode=normalized_style,
                 )
                 
                 result = await generate_beat_image(payload)

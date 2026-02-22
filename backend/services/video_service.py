@@ -11,7 +11,6 @@ from moviepy import (
     concatenate_videoclips, 
     CompositeAudioClip,
 )
-import numpy as np
 
 TEMP_DIR = Path(__file__).parent.parent / "temp"
 OUTPUT_DIR = Path(__file__).parent.parent / "outputs"
@@ -45,31 +44,6 @@ async def download_image(url: str, client: httpx.AsyncClient) -> str:
         f.write(response.content)
     
     return str(filepath)
-
-def ken_burns_effect(clip, zoom_start=1.0, zoom_end=1.05):
-    """Apply Ken Burns zoom effect to a clip."""
-    w, h = clip.size
-    duration = clip.duration
-    
-    def zoom_frame(get_frame, t):
-        frame = get_frame(t)
-        progress = t / duration
-        current_zoom = zoom_start + (zoom_end - zoom_start) * progress
-        
-        new_w = int(w * current_zoom)
-        new_h = int(h * current_zoom)
-        
-        from PIL import Image
-        img = Image.fromarray(frame)
-        img_resized = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
-        
-        left = (new_w - w) // 2
-        top = (new_h - h) // 2
-        img_cropped = img_resized.crop((left, top, left + w, top + h))
-        
-        return np.array(img_cropped)
-    
-    return clip.transform(zoom_frame)
 
 async def render_video(
     beats: List[Dict[str, Any]],
@@ -112,8 +86,6 @@ async def render_video(
         
         image_clip = ImageClip(image_path, duration=duration)
         image_clip = image_clip.resized((1280, 720))
-        
-        image_clip = ken_burns_effect(image_clip, zoom_start=1.0, zoom_end=1.05)
         
         if audio_clip:
             image_clip = image_clip.with_audio(audio_clip)

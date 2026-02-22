@@ -20,7 +20,28 @@ I never do.
 
 RED AND BLUE LIGHTS flood through the windows. Marcus smiles—but it doesn't reach his eyes.`
 
-export default function ScriptInput({ script, setScript, onGenerate, isGenerating }) {
+const GENRE_PRESETS = [
+  { value: 'none', label: 'None (Balanced)' },
+  { value: 'noir', label: 'Noir' },
+  { value: 'thriller', label: 'Thriller' },
+  { value: 'romcom', label: 'Rom-Com' },
+]
+
+const STYLE_MODES = [
+  { value: 'photoreal', label: 'Photoreal' },
+  { value: 'anime', label: 'Anime' },
+]
+
+export default function ScriptInput({
+  script,
+  setScript,
+  genrePreset,
+  setGenrePreset,
+  styleMode,
+  setStyleMode,
+  onGenerate,
+  isGenerating,
+}) {
   const handleLoadExample = () => {
     setScript(EXAMPLE_SCENE)
   }
@@ -47,15 +68,49 @@ export default function ScriptInput({ script, setScript, onGenerate, isGeneratin
           value={script}
           onChange={(e) => setScript(e.target.value)}
           placeholder="Paste your screenplay or scene here..."
-          className="w-full min-h-[200px] bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/30 resize-y font-mono text-sm leading-relaxed transition-all"
+          className="w-full min-h-50 bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/30 resize-y font-mono text-sm leading-relaxed transition-all"
         />
-        
+
+        <div className="mt-4 grid gap-3 rounded-xl border border-white/10 bg-black/30 p-3 md:grid-cols-2">
+          <div className="flex items-center justify-between gap-3">
+            <label htmlFor="genre-preset" className="text-sm text-white/70">Genre Preset</label>
+            <select
+              id="genre-preset"
+              value={genrePreset}
+              onChange={(e) => setGenrePreset(e.target.value)}
+              className="bg-black/50 border border-white/15 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-accent-gold/50"
+            >
+              {GENRE_PRESETS.map((preset) => (
+                <option key={preset.value} value={preset.value}>
+                  {preset.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <label htmlFor="style-mode" className="text-sm text-white/70">Style</label>
+            <select
+              id="style-mode"
+              value={styleMode}
+              onChange={(e) => setStyleMode(e.target.value)}
+              className="bg-black/50 border border-white/15 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-accent-gold/50"
+            >
+              {STYLE_MODES.map((mode) => (
+                <option key={mode.value} value={mode.value}>
+                  {mode.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <motion.button
           onClick={onGenerate}
           disabled={isGenerating || !script.trim()}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="mt-4 w-full py-4 bg-gradient-to-r from-accent-gold to-accent-teal text-background font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-lg hover:shadow-accent-gold/20"
+          className="mt-4 w-full py-4 bg-linear-to-r from-accent-gold to-accent-teal text-background font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:shadow-lg hover:shadow-accent-gold/20"
         >
           {isGenerating ? (
             <span className="flex items-center justify-center gap-2">
