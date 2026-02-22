@@ -71,6 +71,7 @@ class ScriptRequest(BaseModel):
     script: str
     genre_preset: Optional[str] = "none"
     style_mode: Optional[str] = "photoreal"
+    voice_id: Optional[str] = None
 
 
 class Beat(BaseModel):
@@ -232,7 +233,7 @@ async def api_generate_video(request: ScriptRequest):
             yield f"data: {json.dumps({'stage': 'generating', 'message': 'Generating visuals and narration...'})}\n\n"
             
             # Start voice generation in background
-            voice_task = asyncio.create_task(generate_voices_and_sfx(beats))
+            voice_task = asyncio.create_task(generate_voices_and_sfx(beats, voice_id=request.voice_id))
             
             # Generate images one by one and stream each as it completes
             for i, beat in enumerate(beats):
