@@ -267,15 +267,14 @@ def _build_beat_frame(beat: Dict[str, Any], index: int) -> Dict[str, Any]:
 
     return {
         "type": "FRAME",
-        # Frame name is "Beat N" — no mood suffix so the template patch lookup
-        # (which splits on space and reads index [1]) works reliably.
         "name": f"Beat {beat_num}",
         "x": x,
         "y": y,
         "width": FRAME_W,
         "height": FRAME_H,
         "clipsContent": True,
-        # Comic panel: near-black background, 4px inside border stroke
+        # imageUrl at top level so the plugin can find it without walking children
+        "imageUrl": image_url,
         "fills": [{"type": "SOLID", "color": {"r": 0.051, "g": 0.051, "b": 0.051}}],
         "strokes": [{"type": "SOLID", "color": {"r": 0, "g": 0, "b": 0}}],
         "strokeWeight": BORDER_W,
@@ -497,6 +496,35 @@ def _find_image_container(node: Dict[str, Any]) -> Optional[Dict[str, Any]]:
             best_area = area
             best = child
     return best
+
+
+def _find_upload_placeholder(image_container: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """
+    Find the upload placeholder overlay inside an image container.
+    This is the child named 'Label' that shows 'Upload Image / or drag & drop'.
+    It needs to be hidden once a real image is applied.
+    """
+    for child in image_container.get("children", []):
+        if child.get("name") == "Label":
+            return child
+    return None
+
+
+def _find_text_node_in_wrapper(wrapper: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """
+    Given a FRAME wrapper (e.g. the 'label' or 'meta' frame), find the first
+    TEXT node inside it. Handles both flat (TEXT direct child) and nested layouts.
+    """
+    if wrapper.get("type") == "TEXT":
+        return wrapper
+    for child in wrapper.get("children", []):
+        if child.get("type") == "TEXT":
+            return child
+        # One more level deep
+        for grandchild in child.get("children", []):
+            if grandchild.get("type") == "TEXT":
+                return grandchild
+    return None
 
 
 def _collect_template_panels(page: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -771,6 +799,7 @@ async def _build_template_patch_payload(
 
     panels = _collect_template_panels(target_page)
 
+    used_slots: set = set()
     patches = []
     for beat in beats:
         beat_num  = beat.get("beat_number", 1)
@@ -788,28 +817,66 @@ async def _build_template_patch_payload(
             logger.warning("Beat %d has no template slot (template has %d panel(s))", beat_num, len(panels))
             continue
 
+        used_slots.add(slot_idx)
         panel      = panels[slot_idx]
         img_node   = _find_image_container(panel)
         label_node = _find_node_by_name(panel, "label")
         meta_node  = _find_node_by_name(panel, "meta")
 
+        # The upload placeholder ('Label') sits inside the image container and
+        # must be hidden once a real image fill is applied.
+        placeholder_node = _find_upload_placeholder(img_node) if img_node else None
+
+        # label/meta may be FRAME wrappers — find the inner TEXT node for editing.
+        label_text_node = _find_text_node_in_wrapper(label_node) if label_node else None
+        meta_text_node  = _find_text_node_in_wrapper(meta_node)  if meta_node  else None
+
         patches.append({
-            "beat_number":   beat_num,
-            "frame_node_id": panel["id"],
-            "image_node_id": img_node["id"]   if img_node   else "",
-            "label_node_id": label_node["id"] if label_node else "",
-            "meta_node_id":  meta_node["id"]  if meta_node  else "",
-            "imageUrl":      image_url,
-            "label":         narrator,
-            "meta":          meta_text,
+            "beat_number":         beat_num,
+            "frame_node_id":       panel["id"],
+            "image_node_id":       img_node["id"]          if img_node          else "",
+            "placeholder_node_id": placeholder_node["id"]  if placeholder_node  else "",
+            "label_node_id":       (label_text_node["id"]  if label_text_node
+                                    else label_node["id"]   if label_node else ""),
+            "meta_node_id":        (meta_text_node["id"]   if meta_text_node
+                                    else meta_node["id"]    if meta_node  else ""),
+            "imageUrl":            image_url,
+            "label":               narrator,
+            "meta":                meta_text,
+        })
+
+    # Build list of unused panel slots so the plugin can fill them with a
+    # background colour and hide the upload placeholder.
+    unused_panels = []
+    for idx, panel in enumerate(panels):
+        if idx in used_slots:
+            continue
+        img_node         = _find_image_container(panel)
+        placeholder_node = _find_upload_placeholder(img_node) if img_node else None
+        label_node       = _find_node_by_name(panel, "label")
+        meta_node        = _find_node_by_name(panel, "meta")
+        label_text_node  = _find_text_node_in_wrapper(label_node) if label_node else None
+        meta_text_node   = _find_text_node_in_wrapper(meta_node)  if meta_node  else None
+        unused_panels.append({
+            # beat_number lets the plugin find the frame by name ("Beat N")
+            # even when the template has been copied to a different file.
+            "beat_number":         idx + 1,
+            "frame_node_id":       panel["id"],
+            "image_node_id":       img_node["id"]          if img_node          else "",
+            "placeholder_node_id": placeholder_node["id"]  if placeholder_node  else "",
+            "label_node_id":       (label_text_node["id"]  if label_text_node
+                                    else label_node["id"]   if label_node else ""),
+            "meta_node_id":        (meta_text_node["id"]   if meta_text_node
+                                    else meta_node["id"]    if meta_node  else ""),
         })
 
     plugin_payload = {
         "storyboard_id": storyboard_id,
         "file_name":     file_name,
         "page_name":     page_name,
-        "mode":          "patch_template",   # tells the plugin to update existing nodes
+        "mode":          "patch_template",
         "patches":       patches,
+        "unused_panels": unused_panels,
     }
 
     upsert_storyboard(

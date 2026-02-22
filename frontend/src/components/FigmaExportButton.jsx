@@ -33,13 +33,9 @@ const ExternalLinkIcon = () => (
   </svg>
 )
 
-// ── Open Figma with the plugin pre-filled via deep link ──────────────────────
-// The figma://run deep link works for dev plugins when Figma desktop is open.
-// It passes the storyboard_id directly so the plugin auto-starts the import.
-function openFigmaWithPlugin(storyboardId) {
-  const pluginData = JSON.stringify({ storyboard_id: storyboardId, api_url: API_URL })
-  const deepLink = `figma://run?pluginId=playwright-storyboard-exporter&pluginData=${encodeURIComponent(pluginData)}`
-  window.location.href = deepLink
+// ── Open Figma.com in a new tab ───────────────────────────────────────────────
+function openFigmaWithPlugin() {
+  window.open('https://www.figma.com/files/recent', '_blank', 'noopener,noreferrer')
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -91,7 +87,7 @@ export default function FigmaExportButton({ beats, disabled }) {
   }
 
   const handleOpenFigma = () => {
-    openFigmaWithPlugin(storyboardId)
+    openFigmaWithPlugin()
   }
 
   return (
@@ -153,12 +149,8 @@ export default function FigmaExportButton({ beats, disabled }) {
             </button>
 
             <p className="text-xs text-white/40 text-center leading-relaxed px-2">
-              Figma will open with the plugin pre-filled. Click{' '}
-              <span className="text-white/60">Import Storyboard</span> to populate your template.
-              <br />
-              <span className="text-white/30">
-                If the plugin doesn't open automatically: Plugins → Development → PLAYWRIGHT Storyboard
-              </span>
+              Opens Figma in a new tab. Copy the Storyboard ID below, then run the{' '}
+              <span className="text-white/60">PLAYWRIGHT Storyboard</span> plugin and paste it in.
             </p>
 
             {/* Storyboard ID — collapsed, copy available as fallback */}

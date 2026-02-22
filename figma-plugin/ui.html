@@ -249,6 +249,18 @@
     Cancel
   </button>
 
+  <!-- Divider -->
+  <div style="display:flex;align-items:center;gap:8px;margin:14px 0 10px;">
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+    <span style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Setup</span>
+    <div style="flex:1;height:1px;background:var(--border);"></div>
+  </div>
+
+  <button class="btn btn-secondary" id="btn-setup-template" onclick="setupTemplate()" style="width:100%;font-size:11px;">
+    <span>📐</span> Create Storyboard Template in This File
+  </button>
+  <div id="setup-status" style="display:none;font-size:10px;color:var(--text-muted);margin-top:6px;text-align:center;"></div>
+
   <!-- Log -->
   <div class="section" style="margin-top:12px;">
     <div class="section-label">Log</div>
@@ -366,6 +378,18 @@
     document.getElementById('btn-cancel').style.display = 'none';
   }
 
+  // ── Setup template ───────────────────────────────────────────────────────
+  function setupTemplate() {
+    const apiUrl = document.getElementById('api-url').value.trim().replace(/\/$/, '');
+    const btn    = document.getElementById('btn-setup-template');
+    const status = document.getElementById('setup-status');
+    btn.disabled = true;
+    status.style.display = 'block';
+    status.textContent   = 'Creating template…';
+    log('Creating 12-panel storyboard template in this file…');
+    parent.postMessage({ pluginMessage: { type: 'SETUP_TEMPLATE', apiUrl } }, '*');
+  }
+
   // ── Messages from code.js ─────────────────────────────────────────────────
   window.onmessage = async (event) => {
     const msg = event.data.pluginMessage;
@@ -457,6 +481,47 @@
         log(`Error: ${msg.error}`, 'error');
         reset();
         break;
+
+      case 'TEMPLATE_DONE': {
+        log(`Template created — ${msg.panelCount} panels, file key: <b>${msg.fileKey || '(draft)'}</b>`, 'ok');
+        const status = document.getElementById('setup-status');
+        if (status) {
+          status.textContent = msg.fileKey
+            ? `✓ Template ready. File key: ${msg.fileKey}`
+            : '✓ Template created (draft file — open in browser to get file key)';
+          status.style.color = 'var(--success)';
+        }
+        // If we have a file key and an apiUrl, register it with the backend
+        if (msg.fileKey && msg.apiUrl) {
+          try {
+            const resp = await fetch(`${msg.apiUrl}/api/figma-template`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ file_key: msg.fileKey }),
+            });
+            if (resp.ok) {
+              log('Template file key saved to backend — future imports will patch this file.', 'ok');
+              if (status) status.textContent += ' · Registered with backend ✓';
+            } else {
+              log('Template created but could not register with backend (update FIGMA_TEMPLATE_FILE_KEY manually).', 'warn');
+            }
+          } catch (e) {
+            log('Template created. Set FIGMA_TEMPLATE_FILE_KEY=' + msg.fileKey + ' in your .env to use it.', 'warn');
+          }
+        } else if (!msg.fileKey) {
+          log('Draft file detected — copy the file key from the Figma URL and set FIGMA_TEMPLATE_FILE_KEY in .env.', 'warn');
+        }
+        document.getElementById('btn-setup-template').disabled = false;
+        break;
+      }
+
+      case 'TEMPLATE_ERROR': {
+        log(`Template creation failed: ${msg.error}`, 'error');
+        const status = document.getElementById('setup-status');
+        if (status) { status.textContent = '✗ Failed'; status.style.color = 'var(--error)'; }
+        document.getElementById('btn-setup-template').disabled = false;
+        break;
+      }
     }
   };
 </script>

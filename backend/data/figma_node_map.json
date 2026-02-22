@@ -5251,5 +5251,1525 @@
         }
       ]
     }
+  },
+  "6e433197-074c-4000-8713-b55631c430de": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 02:52",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T07:52:03.691264+00:00",
+    "updated_at": "2026-02-22T08:01:25.649151+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "60:1151",
+        "image_node_id": "60:1154",
+        "label_node_id": "60:1152",
+        "meta_node_id": "60:1167",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:01:25.614676+00:00"
+      },
+      "2": {
+        "frame_node_id": "60:1169",
+        "image_node_id": "60:1172",
+        "label_node_id": "60:1170",
+        "meta_node_id": "60:1185",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:01:25.627247+00:00"
+      },
+      "3": {
+        "frame_node_id": "60:1187",
+        "image_node_id": "60:1190",
+        "label_node_id": "",
+        "meta_node_id": "",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:01:25.638256+00:00"
+      },
+      "4": {
+        "frame_node_id": "60:1205",
+        "image_node_id": "60:1208",
+        "label_node_id": "",
+        "meta_node_id": "",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:01:25.649143+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "6e433197-074c-4000-8713-b55631c430de",
+      "file_name": "PLAYWRIGHT — 2026-02-22 02:52",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "60:1151",
+          "image_node_id": "60:1154",
+          "label_node_id": "60:1152",
+          "meta_node_id": "60:1167",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_80b35630-a1ae-4ac6-b6d8-12734e17391a.png",
+          "label": "The city never slept, but tonight, it felt like it was holding its breath, waiting for the next shoe to drop.",
+          "meta": "wide shot  ·  chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "60:1169",
+          "image_node_id": "60:1172",
+          "label_node_id": "60:1170",
+          "meta_node_id": "60:1185",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_1eaadaa8-38b6-4abb-aa94-c04284baf45b.png",
+          "label": "Every step was a gamble, every shadow a potential trap. He ran not from, but towards, a reckoning he knew was coming.",
+          "meta": "medium shot  ·  high-contrast, wet reflections"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "60:1187",
+          "image_node_id": "60:1190",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_1935098e-a19d-40cc-a334-9c2eb28f0058.png",
+          "label": "He carried the weight of the city on his shoulders, and tonight, the only way out was through the storm, not around it.",
+          "meta": "close up  ·  hard, dramatic backlight"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "60:1205",
+          "image_node_id": "60:1208",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_7627d6a3-dcb9-4cfd-9e45-fb72aecc3027.png",
+          "label": "The chase was far from over, but for now, he had bought himself another breath, another beat in the city's dark heart.",
+          "meta": "full shot  ·  silhouetted, atmospheric haze"
+        }
+      ]
+    }
+  },
+  "5c22a713-b0e7-4cf5-9eac-a1dd556b6da9": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:11",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T08:11:32.681994+00:00",
+    "updated_at": "2026-02-22T08:12:53.991830+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "60:1151",
+        "image_node_id": "60:1154",
+        "label_node_id": "60:1153",
+        "meta_node_id": "60:1168",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:12:53.933426+00:00"
+      },
+      "2": {
+        "frame_node_id": "60:1169",
+        "image_node_id": "60:1172",
+        "label_node_id": "60:1171",
+        "meta_node_id": "60:1186",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:12:53.947887+00:00"
+      },
+      "3": {
+        "frame_node_id": "60:1187",
+        "image_node_id": "60:1190",
+        "label_node_id": "",
+        "meta_node_id": "",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:12:53.960834+00:00"
+      },
+      "4": {
+        "frame_node_id": "60:1205",
+        "image_node_id": "60:1208",
+        "label_node_id": "",
+        "meta_node_id": "",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:12:53.972028+00:00"
+      },
+      "5": {
+        "frame_node_id": "60:1223",
+        "image_node_id": "60:1226",
+        "label_node_id": "60:1225",
+        "meta_node_id": "60:1240",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:12:53.982260+00:00"
+      },
+      "6": {
+        "frame_node_id": "60:1241",
+        "image_node_id": "60:1244",
+        "label_node_id": "60:1243",
+        "meta_node_id": "60:1258",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:12:53.991824+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "5c22a713-b0e7-4cf5-9eac-a1dd556b6da9",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:11",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "60:1151",
+          "image_node_id": "60:1154",
+          "placeholder_node_id": "60:1155",
+          "label_node_id": "60:1153",
+          "meta_node_id": "60:1168",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "60:1169",
+          "image_node_id": "60:1172",
+          "placeholder_node_id": "60:1173",
+          "label_node_id": "60:1171",
+          "meta_node_id": "60:1186",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "60:1187",
+          "image_node_id": "60:1190",
+          "placeholder_node_id": "60:1191",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "60:1205",
+          "image_node_id": "60:1208",
+          "placeholder_node_id": "60:1209",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "60:1223",
+          "image_node_id": "60:1226",
+          "placeholder_node_id": "60:1227",
+          "label_node_id": "60:1225",
+          "meta_node_id": "60:1240",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "60:1241",
+          "image_node_id": "60:1244",
+          "placeholder_node_id": "60:1245",
+          "label_node_id": "60:1243",
+          "meta_node_id": "60:1258",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ]
+    }
+  },
+  "717b8b59-bb23-49e3-933f-46ca315be326": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:20",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T08:20:37.111358+00:00",
+    "updated_at": "2026-02-22T08:26:57.461306+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "3:3",
+        "image_node_id": "3:4",
+        "label_node_id": "3:10",
+        "meta_node_id": "3:6",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:26:57.409989+00:00"
+      },
+      "2": {
+        "frame_node_id": "3:11",
+        "image_node_id": "3:12",
+        "label_node_id": "3:18",
+        "meta_node_id": "3:14",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:26:57.424924+00:00"
+      },
+      "3": {
+        "frame_node_id": "3:19",
+        "image_node_id": "3:20",
+        "label_node_id": "3:26",
+        "meta_node_id": "3:22",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:26:57.434533+00:00"
+      },
+      "4": {
+        "frame_node_id": "3:27",
+        "image_node_id": "3:28",
+        "label_node_id": "3:34",
+        "meta_node_id": "3:30",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:26:57.443747+00:00"
+      },
+      "5": {
+        "frame_node_id": "3:35",
+        "image_node_id": "3:36",
+        "label_node_id": "3:42",
+        "meta_node_id": "3:38",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:26:57.452448+00:00"
+      },
+      "6": {
+        "frame_node_id": "3:43",
+        "image_node_id": "3:44",
+        "label_node_id": "3:50",
+        "meta_node_id": "3:46",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:26:57.461301+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "717b8b59-bb23-49e3-933f-46ca315be326",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:20",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "60:1151",
+          "image_node_id": "60:1154",
+          "placeholder_node_id": "60:1155",
+          "label_node_id": "60:1153",
+          "meta_node_id": "60:1168",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "60:1169",
+          "image_node_id": "60:1172",
+          "placeholder_node_id": "60:1173",
+          "label_node_id": "60:1171",
+          "meta_node_id": "60:1186",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "60:1187",
+          "image_node_id": "60:1190",
+          "placeholder_node_id": "60:1191",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "60:1205",
+          "image_node_id": "60:1208",
+          "placeholder_node_id": "60:1209",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "60:1223",
+          "image_node_id": "60:1226",
+          "placeholder_node_id": "60:1227",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "60:1241",
+          "image_node_id": "60:1244",
+          "placeholder_node_id": "60:1245",
+          "label_node_id": "",
+          "meta_node_id": "",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "frame_node_id": "60:1259",
+          "image_node_id": "60:1262",
+          "placeholder_node_id": "60:1263",
+          "label_node_id": "60:1261",
+          "meta_node_id": "60:1276"
+        },
+        {
+          "frame_node_id": "60:1277",
+          "image_node_id": "60:1280",
+          "placeholder_node_id": "60:1281",
+          "label_node_id": "60:1279",
+          "meta_node_id": "60:1294"
+        },
+        {
+          "frame_node_id": "60:1295",
+          "image_node_id": "60:1298",
+          "placeholder_node_id": "60:1299",
+          "label_node_id": "60:1297",
+          "meta_node_id": "60:1312"
+        },
+        {
+          "frame_node_id": "60:1313",
+          "image_node_id": "60:1316",
+          "placeholder_node_id": "60:1317",
+          "label_node_id": "60:1315",
+          "meta_node_id": "60:1330"
+        },
+        {
+          "frame_node_id": "60:1331",
+          "image_node_id": "60:1334",
+          "placeholder_node_id": "60:1335",
+          "label_node_id": "60:1333",
+          "meta_node_id": "60:1348"
+        },
+        {
+          "frame_node_id": "60:1349",
+          "image_node_id": "60:1352",
+          "placeholder_node_id": "60:1353",
+          "label_node_id": "60:1351",
+          "meta_node_id": "60:1366"
+        }
+      ]
+    }
+  },
+  "64f05b6a-8b77-4ee5-8db0-8eca8a70af07": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:31",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T08:31:07.248130+00:00",
+    "updated_at": "2026-02-22T08:31:54.395910+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:2",
+        "image_node_id": "1:3",
+        "label_node_id": "1:9",
+        "meta_node_id": "1:5",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:31:54.338043+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:10",
+        "image_node_id": "1:11",
+        "label_node_id": "1:17",
+        "meta_node_id": "1:13",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:31:54.352324+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:18",
+        "image_node_id": "1:19",
+        "label_node_id": "1:25",
+        "meta_node_id": "1:21",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:31:54.362692+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:26",
+        "image_node_id": "1:27",
+        "label_node_id": "1:33",
+        "meta_node_id": "1:29",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:31:54.373502+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:34",
+        "image_node_id": "1:35",
+        "label_node_id": "1:41",
+        "meta_node_id": "1:37",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:31:54.384277+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:42",
+        "image_node_id": "1:43",
+        "label_node_id": "1:49",
+        "meta_node_id": "1:45",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:31:54.395894+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "64f05b6a-8b77-4ee5-8db0-8eca8a70af07",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:31",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
+  },
+  "a2ad69d5-d912-4e6c-b76e-46da2045be16": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:36",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T08:36:49.319803+00:00",
+    "updated_at": "2026-02-22T08:38:51.881240+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "2:331",
+        "image_node_id": "2:332",
+        "label_node_id": "2:338",
+        "meta_node_id": "2:334",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:38:51.837523+00:00"
+      },
+      "2": {
+        "frame_node_id": "2:339",
+        "image_node_id": "2:340",
+        "label_node_id": "2:346",
+        "meta_node_id": "2:342",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:38:51.846176+00:00"
+      },
+      "3": {
+        "frame_node_id": "2:347",
+        "image_node_id": "2:348",
+        "label_node_id": "2:354",
+        "meta_node_id": "2:350",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:38:51.855889+00:00"
+      },
+      "4": {
+        "frame_node_id": "2:355",
+        "image_node_id": "2:356",
+        "label_node_id": "2:362",
+        "meta_node_id": "2:358",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:38:51.864690+00:00"
+      },
+      "5": {
+        "frame_node_id": "2:363",
+        "image_node_id": "2:364",
+        "label_node_id": "2:370",
+        "meta_node_id": "2:366",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:38:51.873138+00:00"
+      },
+      "6": {
+        "frame_node_id": "2:371",
+        "image_node_id": "2:372",
+        "label_node_id": "2:378",
+        "meta_node_id": "2:374",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:38:51.881237+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "a2ad69d5-d912-4e6c-b76e-46da2045be16",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:36",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
+  },
+  "0554bf07-b737-4647-9e1b-72fde8bf5568": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:44",
+    "page_id": "0:1",
+    "page_name": "Storyboard Template",
+    "created_at": "2026-02-22T08:44:02.337702+00:00",
+    "updated_at": "2026-02-22T08:45:27.901108+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:5",
+        "image_node_id": "1:6",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:14",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:45:27.848516+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:17",
+        "image_node_id": "1:18",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:26",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:45:27.858643+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:29",
+        "image_node_id": "1:30",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:38",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:45:27.870314+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:41",
+        "image_node_id": "1:42",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:50",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:45:27.881458+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:53",
+        "image_node_id": "1:54",
+        "label_node_id": "1:64",
+        "meta_node_id": "1:62",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:45:27.891737+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:65",
+        "image_node_id": "1:66",
+        "label_node_id": "1:76",
+        "meta_node_id": "1:74",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:45:27.901101+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "0554bf07-b737-4647-9e1b-72fde8bf5568",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:44",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "beat_number": 7,
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "beat_number": 8,
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "beat_number": 9,
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "beat_number": 10,
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "beat_number": 11,
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "beat_number": 12,
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
+  },
+  "a97bf201-9888-4767-84a3-38109f98e3aa": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:52",
+    "page_id": "0:1",
+    "page_name": "Storyboard Template",
+    "created_at": "2026-02-22T08:52:42.750257+00:00",
+    "updated_at": "2026-02-22T08:53:54.602341+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:5",
+        "image_node_id": "1:6",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:14",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:53:54.546852+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:17",
+        "image_node_id": "1:18",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:26",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:53:54.560496+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:29",
+        "image_node_id": "1:30",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:38",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:53:54.571392+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:41",
+        "image_node_id": "1:42",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:50",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:53:54.581443+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:53",
+        "image_node_id": "1:54",
+        "label_node_id": "1:64",
+        "meta_node_id": "1:62",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:53:54.592514+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:65",
+        "image_node_id": "1:66",
+        "label_node_id": "1:76",
+        "meta_node_id": "1:74",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:53:54.602336+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "a97bf201-9888-4767-84a3-38109f98e3aa",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:52",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "beat_number": 7,
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "beat_number": 8,
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "beat_number": 9,
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "beat_number": 10,
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "beat_number": 11,
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "beat_number": 12,
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
+  },
+  "94ce4e96-4c09-4ab1-ac67-aad0d16e0faf": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 03:55",
+    "page_id": "0:1",
+    "page_name": "Storyboard Template",
+    "created_at": "2026-02-22T08:55:53.346376+00:00",
+    "updated_at": "2026-02-22T08:56:20.626294+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:5",
+        "image_node_id": "1:6",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:14",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T08:56:20.570829+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:17",
+        "image_node_id": "1:18",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:26",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T08:56:20.584606+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:29",
+        "image_node_id": "1:30",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:38",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T08:56:20.594917+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:41",
+        "image_node_id": "1:42",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:50",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T08:56:20.605719+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:53",
+        "image_node_id": "1:54",
+        "label_node_id": "1:64",
+        "meta_node_id": "1:62",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T08:56:20.616371+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:65",
+        "image_node_id": "1:66",
+        "label_node_id": "1:76",
+        "meta_node_id": "1:74",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T08:56:20.626290+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "94ce4e96-4c09-4ab1-ac67-aad0d16e0faf",
+      "file_name": "PLAYWRIGHT — 2026-02-22 03:55",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_3e94bf3e-edbc-4cd4-b253-4f83accb3e4f.png",
+          "label": "The city, a concrete beast, had a way of chewing up its kings and spitting them out, forgotten in the rain.",
+          "meta": "wide shot  ·  harsh, high-contrast chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_f27e2c86-bee3-4a4f-835c-de16441e76b7.png",
+          "label": "Justice, or something like it, often arrived cloaked in shadow, carrying its own brand of inconvenient truth.",
+          "meta": "long shot  ·  backlighting, deep silhouettes"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_04935246-ef04-4841-9f4e-b53715307892.png",
+          "label": "He had built an empire on bluster, but here, in the cold, wet dark, the only currency was fear.",
+          "meta": "extreme close up  ·  high-contrast, reflective surfaces"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_a72c4478-865a-4e90-b985-126f2230e406.png",
+          "label": "Some battles aren't fought with words or ballots, but with the raw, undeniable force of a long-silenced truth.",
+          "meta": "medium shot  ·  dynamic, flag colors pop"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_af453d55-9244-4493-aabd-3af20da30e66.png",
+          "label": "The rain, impartial, washed away the grime of the city, and with it, perhaps, the last vestiges of his grand illusion.",
+          "meta": "full shot  ·  dim, overcast, reflective"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_b102365d-6472-4d93-beef-81e246270807.png",
+          "label": "The night, a silent accomplice, swallowed their footsteps, leaving only the rain to tell its own, unvarnished story.",
+          "meta": "wide shot  ·  fading light, reflective surfaces"
+        }
+      ],
+      "unused_panels": [
+        {
+          "beat_number": 7,
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "beat_number": 8,
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "beat_number": 9,
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "beat_number": 10,
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "beat_number": 11,
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "beat_number": 12,
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
+  },
+  "74b6cdec-3189-4de8-ba5b-2016cdd04833": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 04:11",
+    "page_id": "0:1",
+    "page_name": "Storyboard Template",
+    "created_at": "2026-02-22T09:11:10.733843+00:00",
+    "updated_at": "2026-02-22T09:11:41.493377+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:5",
+        "image_node_id": "1:6",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:14",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T09:11:41.410123+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:17",
+        "image_node_id": "1:18",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:26",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T09:11:41.419945+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:29",
+        "image_node_id": "1:30",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:38",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T09:11:41.430043+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:41",
+        "image_node_id": "1:42",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:50",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T09:11:41.442373+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:53",
+        "image_node_id": "1:54",
+        "label_node_id": "1:64",
+        "meta_node_id": "1:62",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T09:11:41.454649+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:65",
+        "image_node_id": "1:66",
+        "label_node_id": "1:76",
+        "meta_node_id": "1:74",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T09:11:41.464395+00:00"
+      },
+      "7": {
+        "frame_node_id": "1:77",
+        "image_node_id": "1:78",
+        "label_node_id": "1:88",
+        "meta_node_id": "1:86",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-22T09:11:41.473723+00:00"
+      },
+      "8": {
+        "frame_node_id": "1:89",
+        "image_node_id": "1:90",
+        "label_node_id": "1:100",
+        "meta_node_id": "1:98",
+        "beat_number": 8,
+        "last_synced_at": "2026-02-22T09:11:41.483732+00:00"
+      },
+      "9": {
+        "frame_node_id": "1:101",
+        "image_node_id": "1:102",
+        "label_node_id": "1:112",
+        "meta_node_id": "1:110",
+        "beat_number": 9,
+        "last_synced_at": "2026-02-22T09:11:41.493375+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "74b6cdec-3189-4de8-ba5b-2016cdd04833",
+      "file_name": "PLAYWRIGHT — 2026-02-22 04:11",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_27ec832d-c632-49a2-b4e8-8e3993dca5f2.png",
+          "label": "In the heart of the mountain, a titan fell, not by choice, but by the relentless will of the Bat.",
+          "meta": "medium shot  ·  harsh, high contrast"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_883e054b-41b4-4239-9d30-a61616948336.png",
+          "label": "A flurry of blows, each meant to break, but meeting only an unyielding, almost indifferent resolve.",
+          "meta": "close up  ·  dynamic, water-reflected"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_1661ee2b-0653-4e09-bf48-bb77d263f88f.png",
+          "label": "A flicker of hesitation, a moment of doubt, and the hunter found himself suddenly, violently, disarmed.",
+          "meta": "medium shot  ·  high contrast"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_fb929ed5-148c-45cf-8908-baefd69474b6.png",
+          "label": "From the torrent, a titan emerged, his voice a chilling pronouncement of inevitable dominance.",
+          "meta": "full shot  ·  backlit by waterfall, powerful silhouette"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96",
+          "imageUrl": "http://localhost:8000/api/image/beat_5_59054d07-ca5f-42c6-8bc7-a6b760875cad.png",
+          "label": "In a desperate gambit, the Bat sought refuge in the very element he believed was his to command.",
+          "meta": "medium shot  ·  dim, almost dark"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114",
+          "imageUrl": "http://localhost:8000/api/image/beat_6_05d09876-d798-4bec-9d9c-2f8855c80e7b.png",
+          "label": "He knew the darkness. He had worn it like a second skin since his very first breath.",
+          "meta": "full shot  ·  extremely dim, high contrast on edges"
+        },
+        {
+          "beat_number": 7,
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132",
+          "imageUrl": "http://localhost:8000/api/image/beat_7_80786214-ccc6-4641-afa3-871df3db4487.png",
+          "label": "A phantom in the gloom, he sought to exploit the very advantage he believed was his alone.",
+          "meta": "wide shot  ·  extremely dim, chiaroscuro"
+        },
+        {
+          "beat_number": 8,
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150",
+          "imageUrl": "http://localhost:8000/api/image/beat_8_5884ec5f-6f2a-4327-afa5-8580add5bc40.png",
+          "label": "The hunter became the hunted, caught in a grip that promised no release, only oblivion.",
+          "meta": "medium shot  ·  extremely dim, brief flash of movement"
+        },
+        {
+          "beat_number": 9,
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168",
+          "imageUrl": "http://localhost:8000/api/image/beat_9_cc51d22c-728f-43d7-92cb-ab3ee36de1bf.png",
+          "label": "Each blow a hammer, each impact a fracture, as the symbol of Gotham began to crumble.",
+          "meta": "close up  ·  dim, with brief, sharp glints on impacts"
+        }
+      ],
+      "unused_panels": [
+        {
+          "beat_number": 10,
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "beat_number": 11,
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "beat_number": 12,
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
   }
 }

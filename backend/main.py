@@ -688,6 +688,51 @@ async def api_delete_figma_mapping(storyboard_id: str):
     return {"deleted": True, "storyboard_id": storyboard_id}
 
 
+class FigmaTemplateRequest(BaseModel):
+    file_key: str
+
+
+@app.post("/api/figma-template")
+async def api_set_figma_template(request: FigmaTemplateRequest):
+    """
+    Save a Figma template file key to the .env file so future exports
+    patch into that template. Called by the plugin after it creates a
+    new template via the 'Setup Template' button.
+    """
+    file_key = request.file_key.strip()
+    if not file_key:
+        raise HTTPException(status_code=400, detail="file_key is required")
+
+    env_path = Path(__file__).parent / ".env"
+    try:
+        lines = env_path.read_text().splitlines() if env_path.exists() else []
+        updated = False
+        new_lines = []
+        for line in lines:
+            if line.startswith("FIGMA_TEMPLATE_FILE_KEY=") or line.startswith("#FIGMA_TEMPLATE_FILE_KEY="):
+                new_lines.append(f"FIGMA_TEMPLATE_FILE_KEY={file_key}")
+                updated = True
+            else:
+                new_lines.append(line)
+        if not updated:
+            new_lines.append(f"FIGMA_TEMPLATE_FILE_KEY={file_key}")
+        env_path.write_text("\n".join(new_lines) + "\n")
+
+        # Also update the running process environment so it takes effect immediately
+        os.environ["FIGMA_TEMPLATE_FILE_KEY"] = file_key
+
+        return {"saved": True, "file_key": file_key}
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Could not write .env: {exc}")
+
+
+@app.get("/api/figma-template")
+async def api_get_figma_template():
+    """Return the currently configured Figma template file key."""
+    key = os.getenv("FIGMA_TEMPLATE_FILE_KEY", "").strip()
+    return {"file_key": key or None}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
