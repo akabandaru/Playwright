@@ -63,6 +63,8 @@ IMAGES_DIR = OUTPUT_DIR / "images"
 IMAGES_DIR.mkdir(exist_ok=True)
 VIDEOS_DIR = OUTPUT_DIR / "videos"
 VIDEOS_DIR.mkdir(exist_ok=True)
+AUDIO_DIR = Path(__file__).parent / "temp"
+AUDIO_DIR.mkdir(exist_ok=True)
 
 
 class ScriptRequest(BaseModel):
@@ -112,36 +114,6 @@ class FigmaPluginMappingRequest(BaseModel):
 @app.get("/")
 async def root():
     return {"message": "Welcome to PLAYWRIGHT API", "version": "1.0.0"}
-
-
-async def generate_images_for_beats(beats: List[dict]) -> List[dict]:
-    """Generate images for all beats using the image provider."""
-    image_results = []
-    
-    for beat in beats:
-        payload = ImageProviderBeatPayload(
-            beat_number=beat.get("beat_number", 0),
-            visual_description=beat.get("visual_description", ""),
-            camera_angle=beat.get("camera_angle", ""),
-            mood=beat.get("mood", ""),
-            lighting=beat.get("lighting", ""),
-            characters_present=beat.get("characters_present", []),
-            narrator_line=beat.get("narrator_line", ""),
-            music_style=beat.get("music_style") or beat.get("music_recommendation"),
-        )
-        
-        result = await generate_beat_image(payload)
-        request_id = result.metadata.get("request_id") or uuid.uuid4().hex
-        filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
-        image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
-        image_url = f"/api/image/{image_path.name}"
-        
-        image_results.append({
-            "beat_number": beat.get("beat_number", 0),
-            "image_url": image_url,
-        })
-    
-    return image_results
 
 
 @app.post("/api/generate-video")
@@ -209,6 +181,13 @@ async def api_generate_video(request: ScriptRequest):
             # Wait for voice generation to complete
             audio_results = await voice_task
             
+            # Attach audio paths to beats
+            audio_map = {a["beat_number"]: a.get("audio_path") for a in audio_results if a.get("audio_path")}
+            for beat in beats:
+                beat_num = beat.get("beat_number", 0)
+                if beat_num in audio_map:
+                    beat["audio_path"] = audio_map[beat_num]
+            
             # Get music recommendation from first beat that has one
             music_rec = None
             for beat in beats:
@@ -265,61 +244,34 @@ async def api_generate_video(request: ScriptRequest):
         }
     )
 
-
-@app.get("/api/export-figma/{storyboard_id}/mapping")
-async def api_get_figma_mapping(storyboard_id: str):
-    """
-    Retrieve the full Figma node mapping for a storyboard.
-
-    Returns file_key, file_url, and per-beat node IDs (frame, image, label, meta).
-    Useful for debugging or for the plugin to verify registered nodes.
-    """
-    try:
-        return get_node_mapping(storyboard_id)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.get("/api/export-figma/{storyboard_id}/payload")
-async def api_get_figma_payload(storyboard_id: str):
-    """
-    Return the plugin payload for a storyboard.
-
-    Called by the PLAYWRIGHT Figma plugin to fetch the frame layout and
-    image data it needs to create the storyboard file client-side.
-    Only available for storyboards exported in plugin_payload mode.
-    """
-    try:
-        return get_plugin_payload(storyboard_id)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-
-
-@app.get("/api/export-figma")
-async def api_list_figma_mappings():
-    """
-    List all storyboards that have been exported to Figma.
-
-    Returns a summary (file_key, file_url, beat_count, timestamps) for each.
-    """
-    return get_all_mappings()
-
-
-@app.delete("/api/export-figma/{storyboard_id}/mapping")
-async def api_delete_figma_mapping(storyboard_id: str):
-    """
-    Delete the Figma node mapping for a storyboard.
-
-    Does NOT delete the Figma file itself — only removes the local mapping record.
-    """
-    deleted = remove_storyboard_mapping(storyboard_id)
-    if not deleted:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No mapping found for storyboard '{storyboard_id}'",
+async def generate_images_for_beats(beats: List[dict]) -> List[dict]:
+    """Generate images for all beats using the image provider."""
+    image_results = []
+    
+    for beat in beats:
+        payload = ImageProviderBeatPayload(
+            beat_number=beat.get("beat_number", 0),
+            visual_description=beat.get("visual_description", ""),
+            camera_angle=beat.get("camera_angle", ""),
+            mood=beat.get("mood", ""),
+            lighting=beat.get("lighting", ""),
+            characters_present=beat.get("characters_present", []),
+            narrator_line=beat.get("narrator_line", ""),
+            music_style=beat.get("music_style") or beat.get("music_recommendation"),
         )
-    return {"deleted": True, "storyboard_id": storyboard_id}
-
+        
+        result = await generate_beat_image(payload)
+        request_id = result.metadata.get("request_id") or uuid.uuid4().hex
+        filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
+        image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
+        image_url = f"/api/image/{image_path.name}"
+        
+        image_results.append({
+            "beat_number": beat.get("beat_number", 0),
+            "image_url": image_url,
+        })
+    
+    return image_results
 
 @app.get("/api/video/{filename}")
 async def api_get_video(filename: str):
@@ -335,7 +287,6 @@ async def api_get_video(filename: str):
         filename=filename,
     )
 
-
 @app.get("/api/image/{filename}")
 async def api_get_image(filename: str):
     """Serve generated image files for frontend preview."""
@@ -350,7 +301,30 @@ async def api_get_image(filename: str):
         filename=filename,
     )
 
+@app.get("/api/audio/{filepath:path}")
+async def api_get_audio(filepath: str):
+    """Serve generated audio files for frontend preview."""
+    # Handle both full paths and just filenames
+    if filepath.startswith("/"):
+        audio_path = Path(filepath)
+    else:
+        audio_path = AUDIO_DIR / filepath
+    
+    # Also check in the path directly if it's an absolute path
+    if not audio_path.exists() and "/" in filepath:
+        audio_path = Path(filepath)
 
+    if not audio_path.exists():
+        raise HTTPException(status_code=404, detail=f"Audio not found: {filepath}")
+
+    return FileResponse(
+        path=str(audio_path),
+        media_type="audio/mpeg",
+        filename=audio_path.name,
+    )
+
+
+# For Figma Plugin
 @app.post("/api/export-figma")
 async def api_export_figma(request: FigmaExportRequest):
     """
@@ -426,6 +400,60 @@ async def api_register_plugin_mapping(
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/export-figma/{storyboard_id}/mapping")
+async def api_get_figma_mapping(storyboard_id: str):
+    """
+    Retrieve the full Figma node mapping for a storyboard.
+
+    Returns file_key, file_url, and per-beat node IDs (frame, image, label, meta).
+    Useful for debugging or for the plugin to verify registered nodes.
+    """
+    try:
+        return get_node_mapping(storyboard_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/api/export-figma/{storyboard_id}/payload")
+async def api_get_figma_payload(storyboard_id: str):
+    """
+    Return the plugin payload for a storyboard.
+
+    Called by the PLAYWRIGHT Figma plugin to fetch the frame layout and
+    image data it needs to create the storyboard file client-side.
+    Only available for storyboards exported in plugin_payload mode.
+    """
+    try:
+        return get_plugin_payload(storyboard_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/api/export-figma")
+async def api_list_figma_mappings():
+    """
+    List all storyboards that have been exported to Figma.
+
+    Returns a summary (file_key, file_url, beat_count, timestamps) for each.
+    """
+    return get_all_mappings()
+
+
+@app.delete("/api/export-figma/{storyboard_id}/mapping")
+async def api_delete_figma_mapping(storyboard_id: str):
+    """
+    Delete the Figma node mapping for a storyboard.
+
+    Does NOT delete the Figma file itself — only removes the local mapping record.
+    """
+    deleted = remove_storyboard_mapping(storyboard_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No mapping found for storyboard '{storyboard_id}'",
+        )
+    return {"deleted": True, "storyboard_id": storyboard_id}
 
 
 if __name__ == "__main__":

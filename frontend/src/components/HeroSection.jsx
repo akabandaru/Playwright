@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
     <motion.section
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className="text-center py-16 px-4"
     >
       <motion.h1
@@ -18,16 +18,16 @@ export default function HeroSection() {
           PLAYWRIGHT
         </span>
       </motion.h1>
-      
+
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
         className="text-xl md:text-2xl text-white/60 font-light tracking-wide"
       >
-        From script to screen in seconds
+        From script to screen in minutes
       </motion.p>
-      
+
       <motion.div
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
@@ -35,5 +35,5 @@ export default function HeroSection() {
         className="w-32 h-0.5 bg-gradient-to-r from-accent-gold to-accent-teal mx-auto mt-8"
       />
     </motion.section>
-  )
+  );
 }

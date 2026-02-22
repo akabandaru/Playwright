@@ -32,7 +32,7 @@ export default function App() {
     setFigmaUrl(null);
     setMusicRecommendation(null);
     setStageMessage("");
-    setStage("analyzing"); // Show progress immediately
+    setStage("analyzing");
 
     try {
       const response = await fetch(`${API_URL}/api/generate-video`, {
@@ -58,7 +58,7 @@ export default function App() {
             try {
               const data = JSON.parse(line.slice(6));
               console.log("SSE data:", data);
-              
+
               setStage(data.stage);
               if (data.message) {
                 setStageMessage(data.message);

@@ -6,12 +6,7 @@ const STAGES = [
   { id: "rendering", label: "Rendering Video", icon: "🎥" },
 ];
 
-const STAGE_ORDER = [
-  "analyzing",
-  "generating",
-  "rendering",
-  "complete",
-];
+const STAGE_ORDER = ["analyzing", "generating", "rendering", "complete"];
 
 export default function PipelineProgress({ stage, message }) {
   const currentIndex = STAGE_ORDER.indexOf(stage);
@@ -41,10 +36,8 @@ export default function PipelineProgress({ stage, message }) {
         )}
 
         <div className="relative">
-          {/* Background line */}
           <div className="absolute top-6 left-0 right-0 h-1 bg-white/10 rounded-full" />
 
-          {/* Animated progress line */}
           <motion.div
             className="absolute top-6 left-0 h-1 bg-gradient-to-r from-accent-gold to-accent-teal rounded-full"
             initial={{ width: "0%" }}
@@ -52,7 +45,6 @@ export default function PipelineProgress({ stage, message }) {
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
 
-          {/* Stage nodes */}
           <div className="relative flex justify-between">
             {STAGES.map((s, index) => {
               const stageIndex = STAGE_ORDER.indexOf(s.id);
