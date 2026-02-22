@@ -6,21 +6,9 @@
   "ui": "ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["http://localhost:8000", "https://*.vercel.app"]
+    "allowedDomains": ["https://*.vercel.app"],
+    "devAllowedDomains": ["http://localhost:8000"],
+    "reasoning": "Fetches storyboard beat data and images from the PLAYWRIGHT backend to populate Figma frames."
   },
-  "parameters": [
-    {
-      "name": "Storyboard ID",
-      "key": "storyboard_id",
-      "description": "The PLAYWRIGHT storyboard ID to import",
-      "allowFreeform": true
-    },
-    {
-      "name": "API URL",
-      "key": "api_url",
-      "description": "Backend URL (default: http://localhost:8000)",
-      "allowFreeform": true,
-      "optional": true
-    }
-  ]
+  "parameterOnly": false
 }

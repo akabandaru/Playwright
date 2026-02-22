@@ -63,6 +63,10 @@ logger = logging.getLogger(__name__)
 
 FIGMA_API_URL = "https://api.figma.com/v1"
 
+# Base URL the Figma plugin sandbox will use to fetch images.
+# Override with BACKEND_PUBLIC_URL in .env when deploying.
+BACKEND_BASE_URL = os.getenv("BACKEND_PUBLIC_URL", "http://localhost:8000").rstrip("/")
+
 # Layout constants
 FRAME_W = 1280
 FRAME_H = 720
@@ -233,6 +237,9 @@ def _build_beat_frame(beat: Dict[str, Any], index: int) -> Dict[str, Any]:
     lighting = beat.get("lighting", "")
     narrator = beat.get("narrator_line", "")
     image_url = beat.get("imageUrl") or beat.get("image_url") or ""
+    # Ensure the image URL is absolute so the Figma plugin sandbox can fetch it
+    if image_url and not image_url.startswith("http"):
+        image_url = BACKEND_BASE_URL + image_url
 
     return {
         "type": "FRAME",
@@ -356,9 +363,19 @@ async def create_figma_storyboard(
                 exc,
             )
 
-        return await _export_to_existing_file(
+        result = await _export_to_existing_file(
             client, beats, sid, resolved_key, file_name
         )
+        # If every beat failed (REST API doesn't support writes), fall back to
+        # plugin payload so the frontend still gets a usable storyboard_id.
+        if result.get("framesCreated", 0) == 0 and result.get("errors"):
+            logger.warning(
+                "Direct-patch produced 0 frames and %d error(s) — "
+                "falling back to plugin payload mode.",
+                len(result["errors"]),
+            )
+            return _build_plugin_payload(beats, sid, file_name)
+        return result
 
 
 async def _patch_frame_visibility(

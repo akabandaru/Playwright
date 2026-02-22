@@ -1013,5 +1013,620 @@
         "last_synced_at": "2026-02-21T21:48:00.543334+00:00"
       }
     }
+  },
+  "7d4ed5e2-e336-4047-88a4-5f47e8728166": {
+    "file_key": "Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_url": "https://www.figma.com/file/Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_name": "PLAYWRIGHT — 2026-02-21 18:06",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-21T23:06:23.030079+00:00",
+    "updated_at": "2026-02-21T23:06:27.677177+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "6:7",
+        "image_node_id": "6:8",
+        "label_node_id": "6:12",
+        "meta_node_id": "6:13",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-21T23:06:23.910301+00:00"
+      },
+      "2": {
+        "frame_node_id": "6:124",
+        "image_node_id": "6:125",
+        "label_node_id": "6:126",
+        "meta_node_id": "6:127",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-21T23:06:24.672668+00:00"
+      },
+      "3": {
+        "frame_node_id": "6:129",
+        "image_node_id": "6:130",
+        "label_node_id": "6:131",
+        "meta_node_id": "6:132",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-21T23:06:25.419776+00:00"
+      },
+      "4": {
+        "frame_node_id": "6:134",
+        "image_node_id": "6:135",
+        "label_node_id": "6:136",
+        "meta_node_id": "6:137",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-21T23:06:26.063694+00:00"
+      },
+      "5": {
+        "frame_node_id": "6:139",
+        "image_node_id": "6:140",
+        "label_node_id": "6:141",
+        "meta_node_id": "6:142",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-21T23:06:26.833733+00:00"
+      },
+      "6": {
+        "frame_node_id": "6:144",
+        "image_node_id": "6:145",
+        "label_node_id": "6:146",
+        "meta_node_id": "6:147",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-21T23:06:27.363072+00:00"
+      },
+      "7": {
+        "frame_node_id": "6:149",
+        "image_node_id": "6:150",
+        "label_node_id": "6:151",
+        "meta_node_id": "6:152",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-21T23:06:27.677164+00:00"
+      }
+    }
+  },
+  "4a4fcb0f-55f7-42c4-b222-392c6004d040": {
+    "file_key": "Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_url": "https://www.figma.com/file/Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_name": "PLAYWRIGHT — 2026-02-21 18:18",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-21T23:18:29.864896+00:00",
+    "updated_at": "2026-02-21T23:18:33.581703+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "6:7",
+        "image_node_id": "6:8",
+        "label_node_id": "6:12",
+        "meta_node_id": "6:13",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-21T23:18:30.865760+00:00"
+      },
+      "2": {
+        "frame_node_id": "6:124",
+        "image_node_id": "6:125",
+        "label_node_id": "6:126",
+        "meta_node_id": "6:127",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-21T23:18:31.628458+00:00"
+      },
+      "3": {
+        "frame_node_id": "6:129",
+        "image_node_id": "6:130",
+        "label_node_id": "6:131",
+        "meta_node_id": "6:132",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-21T23:18:32.364842+00:00"
+      },
+      "4": {
+        "frame_node_id": "6:134",
+        "image_node_id": "6:135",
+        "label_node_id": "6:136",
+        "meta_node_id": "6:137",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-21T23:18:32.972297+00:00"
+      },
+      "5": {
+        "frame_node_id": "6:139",
+        "image_node_id": "6:140",
+        "label_node_id": "6:141",
+        "meta_node_id": "6:142",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-21T23:18:33.581684+00:00"
+      }
+    }
+  },
+  "7108d305-428c-4105-b422-25ef426361c3": {
+    "file_key": "Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_url": "https://www.figma.com/file/Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_name": "PLAYWRIGHT — 2026-02-21 18:39",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-21T23:39:30.905226+00:00",
+    "updated_at": "2026-02-21T23:39:36.902222+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "6:7",
+        "image_node_id": "6:8",
+        "label_node_id": "6:12",
+        "meta_node_id": "6:13",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-21T23:39:31.526535+00:00"
+      },
+      "2": {
+        "frame_node_id": "6:124",
+        "image_node_id": "6:125",
+        "label_node_id": "6:126",
+        "meta_node_id": "6:127",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-21T23:39:32.320091+00:00"
+      },
+      "3": {
+        "frame_node_id": "6:129",
+        "image_node_id": "6:130",
+        "label_node_id": "6:131",
+        "meta_node_id": "6:132",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-21T23:39:32.988130+00:00"
+      },
+      "4": {
+        "frame_node_id": "6:134",
+        "image_node_id": "6:135",
+        "label_node_id": "6:136",
+        "meta_node_id": "6:137",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-21T23:39:33.510076+00:00"
+      },
+      "5": {
+        "frame_node_id": "6:139",
+        "image_node_id": "6:140",
+        "label_node_id": "6:141",
+        "meta_node_id": "6:142",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-21T23:39:34.272090+00:00"
+      },
+      "6": {
+        "frame_node_id": "6:144",
+        "image_node_id": "6:145",
+        "label_node_id": "6:146",
+        "meta_node_id": "6:147",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-21T23:39:34.980396+00:00"
+      },
+      "7": {
+        "frame_node_id": "6:149",
+        "image_node_id": "6:150",
+        "label_node_id": "6:151",
+        "meta_node_id": "6:152",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-21T23:39:35.645745+00:00"
+      },
+      "8": {
+        "frame_node_id": "6:154",
+        "image_node_id": "6:155",
+        "label_node_id": "6:156",
+        "meta_node_id": "6:157",
+        "beat_number": 8,
+        "last_synced_at": "2026-02-21T23:39:36.234262+00:00"
+      },
+      "9": {
+        "frame_node_id": "6:159",
+        "image_node_id": "6:160",
+        "label_node_id": "6:161",
+        "meta_node_id": "6:162",
+        "beat_number": 9,
+        "last_synced_at": "2026-02-21T23:39:36.902190+00:00"
+      }
+    }
+  },
+  "f40bf494-bee9-4890-bd6a-05b7dbd53fe6": {
+    "file_key": "Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_url": "https://www.figma.com/file/Xac6Y6Y2Gz8AJCBZwtcwXU",
+    "file_name": "PLAYWRIGHT — 2026-02-21 18:48",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-21T23:48:36.997562+00:00",
+    "updated_at": "2026-02-21T23:48:42.316959+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "6:7",
+        "image_node_id": "6:8",
+        "label_node_id": "6:12",
+        "meta_node_id": "6:13",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-21T23:48:37.768667+00:00"
+      },
+      "2": {
+        "frame_node_id": "6:124",
+        "image_node_id": "6:125",
+        "label_node_id": "6:126",
+        "meta_node_id": "6:127",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-21T23:48:38.376450+00:00"
+      },
+      "3": {
+        "frame_node_id": "6:129",
+        "image_node_id": "6:130",
+        "label_node_id": "6:131",
+        "meta_node_id": "6:132",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-21T23:48:39.094306+00:00"
+      },
+      "4": {
+        "frame_node_id": "6:134",
+        "image_node_id": "6:135",
+        "label_node_id": "6:136",
+        "meta_node_id": "6:137",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-21T23:48:39.858763+00:00"
+      },
+      "5": {
+        "frame_node_id": "6:139",
+        "image_node_id": "6:140",
+        "label_node_id": "6:141",
+        "meta_node_id": "6:142",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-21T23:48:40.654573+00:00"
+      },
+      "6": {
+        "frame_node_id": "6:144",
+        "image_node_id": "6:145",
+        "label_node_id": "6:146",
+        "meta_node_id": "6:147",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-21T23:48:41.636406+00:00"
+      },
+      "7": {
+        "frame_node_id": "6:149",
+        "image_node_id": "6:150",
+        "label_node_id": "6:151",
+        "meta_node_id": "6:152",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-21T23:48:42.316931+00:00"
+      }
+    }
+  },
+  "8e6b39ce-49b1-4778-9ac6-919223218598": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-21 18:58",
+    "page_id": "0:1",
+    "page_name": "Storyboard",
+    "created_at": "2026-02-21T23:58:44.533202+00:00",
+    "updated_at": "2026-02-22T00:10:00.161820+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "5:55",
+        "image_node_id": "5:56",
+        "label_node_id": "5:57",
+        "meta_node_id": "5:58",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T00:10:00.137696+00:00"
+      },
+      "2": {
+        "frame_node_id": "5:59",
+        "image_node_id": "5:60",
+        "label_node_id": "5:61",
+        "meta_node_id": "5:62",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T00:10:00.146945+00:00"
+      },
+      "3": {
+        "frame_node_id": "5:63",
+        "image_node_id": "5:64",
+        "label_node_id": "5:65",
+        "meta_node_id": "5:66",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T00:10:00.154425+00:00"
+      },
+      "4": {
+        "frame_node_id": "5:67",
+        "image_node_id": "5:68",
+        "label_node_id": "5:69",
+        "meta_node_id": "5:70",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T00:10:00.161811+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "8e6b39ce-49b1-4778-9ac6-919223218598",
+      "file_name": "PLAYWRIGHT — 2026-02-21 18:58",
+      "page_name": "Storyboard",
+      "canvas_width": 4080,
+      "frames": [
+        {
+          "type": "FRAME",
+          "name": "Beat 1 — tense",
+          "x": 80,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "/api/image/beat_1_e538c8f0-7ddd-4536-ae45-62df3fadecde.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "In places like this, the past clung to the air like the dust, waiting for someone to disturb it.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · harsh shadows",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 2 — mysterious",
+          "x": 1400,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "/api/image/beat_2_05fa0fcf-8e1f-4a36-b9aa-31c3f7390e3e.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "Some men are born in shadow, and some choose to make it their home, waiting for the light to find them.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · low-key dramatic",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 3 — tense",
+          "x": 2720,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "/api/image/beat_3_2116a788-6892-46a9-91d7-2e1499a2c98a.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "She had learned long ago that the most dangerous battles were often fought in the silence between words.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · low-key dramatic",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 4 — tense",
+          "x": 80,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "/api/image/beat_4_398c7522-cb68-4ecf-a5a7-bc6c33568b90.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The game had changed, but the players remained. And some smiles hid more than they revealed.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · flashing police lights",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }

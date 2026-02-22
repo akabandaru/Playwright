@@ -47,8 +47,12 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:5174",
+        # Figma plugin sandbox runs with a null origin — must be allowed for
+        # code.js fetch() calls to reach the backend.
+        "null",
     ],
-    allow_credentials=True,
+    allow_origin_regex=r"https://.*\.figma\.com",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

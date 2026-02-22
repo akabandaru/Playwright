@@ -36,11 +36,21 @@ async def close_client():
         _client = None
 
 _SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
-Your job is to break a screenplay scene into 4-8 distinct visual beats suitable for storyboarding.
+Your job is to break a screenplay scene into distinct visual beats suitable for storyboarding.
+
+Return a top-level JSON object with keys:
+    character_bible       (array of objects with keys: name, description)
+    beats                 (array of beat objects)
+
+For each character in character_bible:
+    - Use canonical character names as they appear in the script
+    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
+        clothing palette, signature accessory, and cinematic style notes
+    - Keep each description 180-260 characters and physically specific
 
 For each beat return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
-  visual_description   (string — what is visible in the frame, a description of the actors and the environment, keep primary actor's description consistent for each beat)
+    visual_description   (string — what is visible in the frame; be highly descriptive about environment, texture, time of day, weather, architecture, props, depth, and atmosphere)
   camera_angle         (one of: wide shot, medium shot, close-up, extreme close-up,
                         over-the-shoulder, low angle, high angle, dutch angle,
                         POV shot, tracking shot)
@@ -60,11 +70,17 @@ For each beat return a JSON object with EXACTLY these keys:
                         - Weather (rain, wind, thunder, etc.)
                         - Spatial feeling (echoing hall, tight room, open field)
                         - Emotional tone through sound (ominous rumble, soft rain, bustling city sounds, etc.)
-  narrator_line        (string — cinematic voiceover, 100-150 characters, make it descriptive of the scene and very vague)
+    narrator_line        (string — cinematic voiceover, 100-150 characters, make it descriptive of the scene and very vague)
   music_style          (string — music style/feel for this beat)
 
-Return ONLY a valid JSON object: {"beats": [ ... ]}
-No markdown, no explanation, no extra keys."""
+Critical continuity and environment rules:
+    - Reuse character_bible details whenever a character appears in a beat.
+    - Ensure each visual_description has rich environmental detail first, then character action.
+    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic.
+
+Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
+No markdown, no explanation, no extra keys.
+"""
 
 
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
@@ -130,13 +146,13 @@ Return JSON:"""
         # ── 3. Call Gemini ────────────────────────────────────────────────────
         print("[DECOMPOSER] Calling Gemini API...")
         response = await _get_client().aio.models.generate_content(
-            model="gemini-2.5-flash-lite",
+            model="gemini-2.5-flash",
             contents=prompt,
             config=types.GenerateContentConfig(
                 temperature=0.5,
                 top_p=0.9,
                 top_k=40,
-                max_output_tokens=1200,
+                max_output_tokens=8192,
                 response_mime_type="application/json",
             ),
         )
@@ -202,8 +218,10 @@ def _parse_beats(raw: str) -> List[Dict[str, Any]]:
             return parsed["beats"]
         if isinstance(parsed, list):
             return parsed
-    except json.JSONDecodeError:
-        pass
+        if isinstance(parsed, dict):
+            print(f"[DECOMPOSER] Parsed JSON dict but no 'beats' key — keys present: {list(parsed.keys())}")
+    except json.JSONDecodeError as e:
+        print(f"[DECOMPOSER] json.loads failed ({e}), attempting fallback extraction")
 
     # Try to extract array and fix common JSON issues
     start = raw.find("[")

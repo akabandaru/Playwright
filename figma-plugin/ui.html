@@ -320,10 +320,13 @@
   }
 
   // ── Main import flow ──────────────────────────────────────────────────────
+  let _pendingApiUrl = null;
+  let _pendingSid    = null;
+
   async function startImport() {
     cancelled = false;
-    const apiUrl   = document.getElementById('api-url').value.trim().replace(/\/$/, '');
-    const sid      = document.getElementById('storyboard-id').value.trim();
+    const apiUrl = document.getElementById('api-url').value.trim().replace(/\/$/, '');
+    const sid    = document.getElementById('storyboard-id').value.trim();
 
     if (!sid) { log('Please enter a storyboard_id.', 'warn'); return; }
 
@@ -335,38 +338,18 @@
     document.getElementById('beat-preview').classList.remove('visible');
     setProgress(5);
 
-    log(`Fetching payload for storyboard <b>${sid}</b>…`);
+    log('Fetching payload for storyboard <b>' + sid + '</b>\u2026');
 
-    // ── Step 1: fetch the plugin payload from the backend ──────────────────
-    let payload;
-    try {
-      const resp = await fetch(`${apiUrl}/api/export-figma/${sid}/payload`);
-      if (!resp.ok) {
-        const err = await resp.json().catch(() => ({ detail: resp.statusText }));
-        throw new Error(err.detail || resp.statusText);
-      }
-      payload = await resp.json();
-    } catch (e) {
-      log(`Failed to fetch payload: ${e.message}`, 'error');
-      reset();
-      return;
-    }
-
-    const frames = payload.frames || [];
-    log(`Payload received — ${frames.length} beat(s), file: "${payload.file_name}"`, 'ok');
-    renderChips(frames);
-    setProgress(15);
-
-    if (cancelled) { reset(); return; }
-
-    // ── Step 2: tell the plugin sandbox to create the Figma nodes ──────────
+    // ── Step 1: ask code.js to fetch the payload (UI iframe is CSP-blocked) ─
+    _pendingApiUrl = apiUrl;
+    _pendingSid    = sid;
     parent.postMessage({
       pluginMessage: {
-        type: 'CREATE_STORYBOARD',
-        payload,
-        apiUrl,
+        type: 'FETCH_PAYLOAD',
+        url: apiUrl + '/api/export-figma/' + sid + '/payload',
       }
     }, '*');
+    // Execution continues in window.onmessage → FETCH_PAYLOAD_RESULT
   }
 
   function cancelImport() {
@@ -387,6 +370,30 @@
     if (!msg) return;
 
     switch (msg.type) {
+      // Payload fetched by code.js sandbox on our behalf
+      case 'FETCH_PAYLOAD_RESULT': {
+        const payload = msg.payload;
+        const frames  = payload.frames || [];
+        log('Payload received \u2014 ' + frames.length + ' beat(s), file: "' + payload.file_name + '"', 'ok');
+        renderChips(frames);
+        setProgress(15);
+        if (cancelled) { reset(); return; }
+        parent.postMessage({
+          pluginMessage: {
+            type: 'CREATE_STORYBOARD',
+            payload,
+            apiUrl: _pendingApiUrl,
+          }
+        }, '*');
+        break;
+      }
+
+      case 'FETCH_PAYLOAD_ERROR': {
+        log('Failed to fetch payload: ' + msg.error, 'error');
+        reset();
+        break;
+      }
+
       // Deep-link pre-fill: populate fields and auto-start import
       case 'PREFILL': {
         const sidEl = document.getElementById('storyboard-id');
