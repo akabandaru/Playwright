@@ -230,13 +230,6 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
         safe_thread(generate_music, scene_description, mood, narration_length, music_style)
     )
 
-    sfx_length = get_mp3_length(sfx_path) * 1000
-    music_length = get_mp3_length(music_path) * 1000
-
-    print(f"Length of narration: {narration_length} milliseconds")
-    print(f"Length of sound effects: {sfx_length} milliseconds")
-    print(f"Length of music: {music_length} milliseconds")
-
     # Step 3: Mix narration with sound effects
     output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
 
