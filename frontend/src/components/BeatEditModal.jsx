@@ -51,12 +51,13 @@ export default function BeatEditModal({
       if (!res.ok) throw new Error("Failed to reimagine beat");
       const data = await res.json();
 
+      const cacheBustedAudio = data.audio_url ? `${data.audio_url}?v=${Date.now()}` : data.audio_url;
       const revised = {
         ...beat,
         ...data.beat,
         ...(data.imageUrl && { imageUrl: data.imageUrl, image_url: data.imageUrl }),
         ...(data.audio_path && { audio_path: data.audio_path }),
-        ...(data.audio_url && { audio_url: data.audio_url }),
+        ...(data.audio_url && { audio_url: cacheBustedAudio }),
       };
 
       onBeatUpdated(index, revised);
@@ -104,10 +105,11 @@ export default function BeatEditModal({
       });
       if (!res.ok) throw new Error("Failed to regenerate narrator");
       const data = await res.json();
+      const cacheBusted = data.audio_url ? `${data.audio_url}?v=${Date.now()}` : data.audio_url;
       onBeatUpdated(index, {
         ...updatedBeat,
         audio_path: data.audio_path,
-        audio_url: data.audio_url,
+        audio_url: cacheBusted,
       });
     } catch (err) {
       console.error("Regenerate narrator error:", err);

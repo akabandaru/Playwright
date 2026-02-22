@@ -12605,5 +12605,155 @@
         }
       ]
     }
+  },
+  "d52fbf43-18cc-427e-be91-d077582a639f": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 05:40",
+    "page_id": "0:1",
+    "page_name": "Storyboard Template",
+    "created_at": "2026-02-22T10:40:22.691251+00:00",
+    "updated_at": "2026-02-22T10:41:11.324608+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:5",
+        "image_node_id": "1:6",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:14",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T10:41:11.292050+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:17",
+        "image_node_id": "1:18",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:26",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T10:41:11.308802+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:29",
+        "image_node_id": "1:30",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:38",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T10:41:11.324599+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "d52fbf43-18cc-427e-be91-d077582a639f",
+      "file_name": "PLAYWRIGHT — 2026-02-22 05:40",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "86:7",
+          "image_node_id": "86:10",
+          "placeholder_node_id": "86:11",
+          "label_node_id": "86:9",
+          "meta_node_id": "86:24",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_65814f91-5bf6-4cb2-91a1-a046986d0a4a.png",
+          "label": "Some places hold their secrets in the silence. This one screamed them into the dark, a desolate monument to forgotten industry and lingering dread.",
+          "meta": "wide shot  ·  dim"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "86:25",
+          "image_node_id": "86:28",
+          "placeholder_node_id": "86:29",
+          "label_node_id": "86:27",
+          "meta_node_id": "86:42",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_c646020c-c35f-4e2a-8b0d-3216b7b11ce7.png",
+          "label": "She knew he was here. But he doesn't like her so he ran away.",
+          "meta": "medium shot  ·  flashlight beam"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "86:43",
+          "image_node_id": "86:46",
+          "placeholder_node_id": "86:47",
+          "label_node_id": "86:45",
+          "meta_node_id": "86:60",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_f8f94211-4d58-49ff-8e7d-f97ca2b3701c.png",
+          "label": "The hunter and the hunted. Two sides of the same coin, meeting in the desolate heart of a forgotten place, where only shadows understood their silent, desperate language.",
+          "meta": "close up  ·  high contrast"
+        }
+      ],
+      "unused_panels": [
+        {
+          "beat_number": 4,
+          "frame_node_id": "86:61",
+          "image_node_id": "86:64",
+          "placeholder_node_id": "86:65",
+          "label_node_id": "86:63",
+          "meta_node_id": "86:78"
+        },
+        {
+          "beat_number": 5,
+          "frame_node_id": "86:79",
+          "image_node_id": "86:82",
+          "placeholder_node_id": "86:83",
+          "label_node_id": "86:81",
+          "meta_node_id": "86:96"
+        },
+        {
+          "beat_number": 6,
+          "frame_node_id": "86:97",
+          "image_node_id": "86:100",
+          "placeholder_node_id": "86:101",
+          "label_node_id": "86:99",
+          "meta_node_id": "86:114"
+        },
+        {
+          "beat_number": 7,
+          "frame_node_id": "86:115",
+          "image_node_id": "86:118",
+          "placeholder_node_id": "86:119",
+          "label_node_id": "86:117",
+          "meta_node_id": "86:132"
+        },
+        {
+          "beat_number": 8,
+          "frame_node_id": "86:133",
+          "image_node_id": "86:136",
+          "placeholder_node_id": "86:137",
+          "label_node_id": "86:135",
+          "meta_node_id": "86:150"
+        },
+        {
+          "beat_number": 9,
+          "frame_node_id": "86:151",
+          "image_node_id": "86:154",
+          "placeholder_node_id": "86:155",
+          "label_node_id": "86:153",
+          "meta_node_id": "86:168"
+        },
+        {
+          "beat_number": 10,
+          "frame_node_id": "86:169",
+          "image_node_id": "86:172",
+          "placeholder_node_id": "86:173",
+          "label_node_id": "86:171",
+          "meta_node_id": "86:186"
+        },
+        {
+          "beat_number": 11,
+          "frame_node_id": "86:187",
+          "image_node_id": "86:190",
+          "placeholder_node_id": "86:191",
+          "label_node_id": "86:189",
+          "meta_node_id": "86:204"
+        },
+        {
+          "beat_number": 12,
+          "frame_node_id": "86:205",
+          "image_node_id": "86:208",
+          "placeholder_node_id": "86:209",
+          "label_node_id": "86:207",
+          "meta_node_id": "86:222"
+        }
+      ]
+    }
   }
 }
