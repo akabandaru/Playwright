@@ -118,7 +118,32 @@ async def root():
     return {"message": "Welcome to PLAYWRIGHT API", "version": "1.0.0"}
 
 
-<<<<<<< HEAD
+def _normalize_style_mode(style_mode: Optional[str]) -> str:
+    value = (style_mode or "photoreal").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "photoreal": "photoreal",
+        "photo": "photoreal",
+        "realistic": "photoreal",
+        "anime": "anime",
+        "cartoon": "anime",
+        "manga": "anime",
+    }
+    return aliases.get(value, "photoreal")
+
+
+def _normalize_genre_preset(genre_preset: Optional[str]) -> str:
+    value = (genre_preset or "none").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "none": "none",
+        "default": "none",
+        "noir": "noir",
+        "thriller": "thriller",
+        "romcom": "romcom",
+        "romanticcomedy": "romcom",
+    }
+    return aliases.get(value, "none")
+
+
 def _assign_character_seeds(beats: list[dict]) -> dict[str, int]:
     """
     Assign one stable seed per character name, derived deterministically from
@@ -180,8 +205,6 @@ def _build_diffusion_prompt(
     parts: list[str] = []
 
     # ── 1. Character physical descriptions FIRST (highest model weight) ───────
-    # Placing these before the scene description makes the model anchor on
-    # character appearance before interpreting the environment.
     for name in beat.get("characters_present", []):
         desc = char_desc_map.get(name, "").strip()
         if desc:
@@ -242,36 +265,7 @@ def _build_negative_prompt(scene_context: dict, beat: dict) -> Optional[str]:
     return combined if combined else None
 
 
-async def generate_images_for_beats(beats: List[dict]) -> List[dict]:
-=======
-def _normalize_style_mode(style_mode: Optional[str]) -> str:
-    value = (style_mode or "photoreal").strip().lower().replace("-", "").replace("_", "")
-    aliases = {
-        "photoreal": "photoreal",
-        "photo": "photoreal",
-        "realistic": "photoreal",
-        "anime": "anime",
-        "cartoon": "anime",
-        "manga": "anime",
-    }
-    return aliases.get(value, "photoreal")
-
-
-def _normalize_genre_preset(genre_preset: Optional[str]) -> str:
-    value = (genre_preset or "none").strip().lower().replace("-", "").replace("_", "")
-    aliases = {
-        "none": "none",
-        "default": "none",
-        "noir": "noir",
-        "thriller": "thriller",
-        "romcom": "romcom",
-        "romanticcomedy": "romcom",
-    }
-    return aliases.get(value, "none")
-
-
 async def generate_images_for_beats(beats: List[dict], style_mode: str = "photoreal") -> List[dict]:
->>>>>>> main
     """Generate images for all beats using the image provider."""
     image_results = []
     normalized_style = _normalize_style_mode(style_mode)
@@ -312,6 +306,15 @@ async def api_generate_video(request: ScriptRequest):
     if not request.script.strip():
         raise HTTPException(status_code=400, detail="Script cannot be empty")
 
+    def _sse_json(obj) -> str:
+        """json.dumps with a fallback encoder that stringifies non-serializable types (e.g. PosixPath)."""
+        from pathlib import PurePath
+        def _default(o):
+            if isinstance(o, PurePath):
+                return str(o)
+            raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+        return json.dumps(obj, default=_default)
+
     async def generate():
         pipeline_start = time.time()
         normalized_style = _normalize_style_mode(request.style_mode)
@@ -320,7 +323,7 @@ async def api_generate_video(request: ScriptRequest):
         try:
             # Stage 1: Analyze script
             print("\n[PIPELINE]: Analyzing script...")
-            yield f"data: {json.dumps({'stage': 'analyzing', 'message': 'Analyzing script...'})}\n\n"
+            yield f"data: {_sse_json({'stage': 'analyzing', 'message': 'Analyzing script...'})}\n\n"
             
             result = await decompose_scene(
                 request.script,
@@ -351,11 +354,11 @@ async def api_generate_video(request: ScriptRequest):
             if char_seeds:
                 print(f"[PIPELINE] Character seeds: { {n: s for n, s in char_seeds.items()} }")
 
-            yield f"data: {json.dumps({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
+            yield f"data: {_sse_json({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
             
             # Stage 2: Generate visuals and narration in parallel
             print("[PIPELINE]: Generating visuals and narration (parallel)...")
-            yield f"data: {json.dumps({'stage': 'generating', 'message': 'Generating visuals and narration...'})}\n\n"
+            yield f"data: {_sse_json({'stage': 'generating', 'message': 'Generating visuals and narration...'})}\n\n"
             
             # Start voice generation in background
             voice_task = asyncio.create_task(generate_voices_and_sfx(beats))
@@ -374,7 +377,7 @@ async def api_generate_video(request: ScriptRequest):
                 seed_source = present[0] if present else "scene"
                 print(f"  Prompt ({len(diffusion_prompt)} chars): {diffusion_prompt[:120]}...")
                 print(f"  Seed: {beat_seed} (from: {seed_source}) | Camera: {beat.get('camera_angle', '')} | Mood: {beat.get('mood', '')}")
-                yield f"data: {json.dumps({'stage': 'generating', 'message': f'Generating image {i+1} of {len(beats)}...'})}\n\n"
+                yield f"data: {_sse_json({'stage': 'generating', 'message': f'Generating image {i+1} of {len(beats)}...'})}\n\n"
 
                 payload = ImageProviderBeatPayload(
                     beat_number=beat.get("beat_number", 0),
@@ -385,21 +388,18 @@ async def api_generate_video(request: ScriptRequest):
                     characters_present=beat.get("characters_present", []),
                     narrator_line=beat.get("narrator_line", ""),
                     music_style=beat.get("music_style") or beat.get("music_recommendation"),
-<<<<<<< HEAD
                     negative_prompt=negative,
                     steps=20,
                     guidance_scale=7.0,
                     seed=beat_seed,
-=======
                     style_mode=normalized_style,
->>>>>>> main
                 )
                 
                 result = await generate_beat_image(payload)
                 request_id = result.metadata.get("request_id") or uuid.uuid4().hex
                 filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
                 image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
-                image_url = f"/api/image/{image_path.name}"
+                image_url = f"/api/image/{str(image_path.name)}"
                 
                 print(f"  ✓ Image saved: {image_url}")
                 
@@ -408,13 +408,13 @@ async def api_generate_video(request: ScriptRequest):
                 beat["image_url"] = image_url
 
                 # Stream the updated beat immediately
-                yield f"data: {json.dumps({'stage': 'generating', 'message': f'Image {i+1} of {len(beats)} complete', 'beatUpdate': {'index': i, 'beat': beat}})}\n\n"
+                yield f"data: {_sse_json({'stage': 'generating', 'message': f'Image {i+1} of {len(beats)} complete', 'beatUpdate': {'index': i, 'beat': beat}})}\n\n"
             
             # Wait for voice generation to complete
             audio_results = await voice_task
             
-            # Attach audio paths to beats
-            audio_map = {a["beat_number"]: a.get("audio_path") for a in audio_results if a.get("audio_path")}
+            # Attach audio paths to beats (str() guards against PosixPath values)
+            audio_map = {a["beat_number"]: str(a.get("audio_path", "")) for a in audio_results if a.get("audio_path")}
             for beat in beats:
                 beat_num = beat.get("beat_number", 0)
                 if beat_num in audio_map:
@@ -427,11 +427,11 @@ async def api_generate_video(request: ScriptRequest):
                     music_rec = beat.get("music_recommendation") or beat.get("music_style")
                     break
 
-            yield f"data: {json.dumps({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
+            yield f"data: {_sse_json({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
             
             # Stage 3: Render video
             print("[PIPELINE]: Rendering video...")
-            yield f"data: {json.dumps({'stage': 'rendering', 'message': 'Rendering video...'})}\n\n"
+            yield f"data: {_sse_json({'stage': 'rendering', 'message': 'Rendering video...'})}\n\n"
             
             video_result = await render_video(beats=beats, audio_files=audio_results)
             print(f"[PIPELINE] complete")
@@ -457,14 +457,14 @@ async def api_generate_video(request: ScriptRequest):
             print(f"[PIPELINE] COMPLETE in {pipeline_latency:.2f}s - Video: {video_url}\n")
             
             # Final result
-            yield f"data: {json.dumps({'stage': 'complete', 'message': 'Video ready!', 'videoUrl': video_url, 'beats': beats, 'duration': video_result.get('duration', 0), 'pipelineTime': pipeline_latency})}\n\n"
+            yield f"data: {_sse_json({'stage': 'complete', 'message': 'Video ready!', 'videoUrl': video_url, 'beats': beats, 'duration': video_result.get('duration', 0), 'pipelineTime': pipeline_latency})}\n\n"
             
         except Exception as e:
             print(f"[PIPELINE] ERROR: {str(e)}")
             import traceback
             traceback.print_exc()
             end_run("FAILED")
-            yield f"data: {json.dumps({'stage': 'error', 'message': str(e)})}\n\n"
+            yield f"data: {_sse_json({'stage': 'error', 'message': str(e)})}\n\n"
 
     return StreamingResponse(
         generate(),

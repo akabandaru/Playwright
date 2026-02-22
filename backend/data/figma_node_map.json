@@ -4044,5 +4044,1121 @@
         }
       ]
     }
+  },
+  "37b48439-7fcc-4907-80a1-7119ef6d3f11": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-21 23:52",
+    "page_id": "0:1",
+    "page_name": "Storyboard",
+    "created_at": "2026-02-22T04:52:39.630857+00:00",
+    "updated_at": "2026-02-22T06:22:58.270851+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:8",
+        "image_node_id": "1:9",
+        "label_node_id": "1:10",
+        "meta_node_id": "1:12",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T06:22:58.270836+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "37b48439-7fcc-4907-80a1-7119ef6d3f11",
+      "file_name": "PLAYWRIGHT — 2026-02-21 23:52",
+      "page_name": "Storyboard",
+      "canvas_width": 3024,
+      "frames": [
+        {
+          "type": "FRAME",
+          "name": "Beat 1",
+          "x": 60,
+          "y": 60,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_1_b9d2b9a5-73b1-4612-ac58-c29ee90bb0ee.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "Some moments transcend the game itself. A force of nature, suspended in air, rewriting the laws of gravity.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#01",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "full shot  ·  dynamic arena lighting",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "23ea1e77-c64a-43e0-9578-f9ee16f2b671": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 01:40",
+    "page_id": "0:1",
+    "page_name": "Storyboard",
+    "created_at": "2026-02-22T06:40:10.198360+00:00",
+    "updated_at": "2026-02-22T06:40:33.881628+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "2:2",
+        "image_node_id": "2:3",
+        "label_node_id": "2:4",
+        "meta_node_id": "2:6",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T06:40:33.831169+00:00"
+      },
+      "2": {
+        "frame_node_id": "2:7",
+        "image_node_id": "2:8",
+        "label_node_id": "2:9",
+        "meta_node_id": "2:11",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T06:40:33.841834+00:00"
+      },
+      "3": {
+        "frame_node_id": "2:12",
+        "image_node_id": "2:13",
+        "label_node_id": "2:14",
+        "meta_node_id": "2:16",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T06:40:33.851897+00:00"
+      },
+      "4": {
+        "frame_node_id": "2:17",
+        "image_node_id": "2:18",
+        "label_node_id": "2:19",
+        "meta_node_id": "2:21",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T06:40:33.861617+00:00"
+      },
+      "5": {
+        "frame_node_id": "2:22",
+        "image_node_id": "2:23",
+        "label_node_id": "2:24",
+        "meta_node_id": "2:26",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T06:40:33.871342+00:00"
+      },
+      "6": {
+        "frame_node_id": "2:27",
+        "image_node_id": "2:28",
+        "label_node_id": "2:29",
+        "meta_node_id": "2:31",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T06:40:33.881625+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "23ea1e77-c64a-43e0-9578-f9ee16f2b671",
+      "file_name": "PLAYWRIGHT — 2026-02-22 01:40",
+      "page_name": "Storyboard",
+      "canvas_width": 3024,
+      "frames": [
+        {
+          "type": "FRAME",
+          "name": "Beat 1",
+          "x": 60,
+          "y": 60,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_1_af4cdd99-b69a-4349-b865-c5b08820906c.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "Some connections, no matter how complicated, just refuse to break. And some chases, well, they're just an excuse to meet again.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#01",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "wide shot  ·  soft",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 2",
+          "x": 1032,
+          "y": 60,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_2_5878ef91-37cc-47eb-8f9e-5046b903d7c0.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "She knew he was there. The real question was, did he know she knew, and was he ready for their next act?",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#02",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "close up  ·  soft",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 3",
+          "x": 2004,
+          "y": 60,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_3_9d399d32-f33b-47e3-b2b2-41a68abe8001.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "He always did have a flair for the dramatic, especially when caught in the act of being charmingly elusive.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#03",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "medium shot  ·  soft",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 4",
+          "x": 60,
+          "y": 792,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_4_80d107f1-dce9-49b6-b96c-a1b817463ada.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "Some people just can't resist a good chase, especially when it's mutual and the stakes are delightfully unclear.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#04",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "close up  ·  soft",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 5",
+          "x": 1032,
+          "y": 792,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_5_7eb95d6a-2aa8-42e4-a549-6bcaa73789ee.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "She always had a trick up her sleeve, and he, bless his heart, always fell for it, every single time.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#05",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "medium shot  ·  dynamic",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 6",
+          "x": 2004,
+          "y": 792,
+          "width": 960,
+          "height": 720,
+          "clipsContent": true,
+          "fills": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0.051,
+                "g": 0.051,
+                "b": 0.051
+              }
+            }
+          ],
+          "strokes": [
+            {
+              "type": "SOLID",
+              "color": {
+                "r": 0,
+                "g": 0,
+                "b": 0
+              }
+            }
+          ],
+          "strokeWeight": 4,
+          "strokeAlign": "INSIDE",
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 4,
+              "y": 4,
+              "width": 952,
+              "height": 712,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_6_f65d9f51-f3ad-47c2-b77a-c3a7bf37d887.png"
+                }
+              ]
+            },
+            {
+              "type": "RECTANGLE",
+              "name": "caption_bg",
+              "x": 4,
+              "y": 648,
+              "width": 952,
+              "height": 64,
+              "fills": [
+                {
+                  "type": "SOLID",
+                  "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                  },
+                  "opacity": 0.82
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 18,
+              "y": 656,
+              "width": 924,
+              "height": 48,
+              "characters": "He should have known. She never truly came alone, not when it mattered most, or when a grand gesture was required.",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 15,
+                "fontWeight": 600,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.1
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "beat_number",
+              "x": 14,
+              "y": 12,
+              "width": 60,
+              "height": 28,
+              "characters": "#06",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 700,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 0,
+                      "a": 1
+                    }
+                  }
+                ],
+                "letterSpacing": 0.5
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 706,
+              "y": 12,
+              "width": 240,
+              "height": 28,
+              "characters": "wide shot  ·  vibrant",
+              "style": {
+                "fontFamily": "Inter",
+                "fontSize": 11,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.8
+                    }
+                  }
+                ],
+                "textAlignHorizontal": "RIGHT",
+                "letterSpacing": 0.3
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }
