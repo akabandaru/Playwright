@@ -114,15 +114,6 @@ export default function StoryboardGrid({
                 )}
               </div>
 
-              {/* Visual description */}
-              {(beat.visual_description || beat.visualDescription) && (
-                <div className="p-4 border-t border-white/5">
-                  <p className="text-white/60 text-xs leading-relaxed">
-                    {beat.visual_description || beat.visualDescription}
-                  </p>
-                </div>
-              )}
-
               {/* Narrator line */}
               {(beat.narrator_line || beat.narratorLine) && (
                 <div className="p-4 border-t border-white/5">
