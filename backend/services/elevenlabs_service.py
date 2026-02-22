@@ -1,5 +1,7 @@
 import os
 import asyncio
+import logging
+import shutil
 from urllib import response
 import httpx
 import uuid
@@ -7,7 +9,14 @@ from pathlib import Path
 from typing import List, Dict, Any
 from elevenlabs.client import ElevenLabs
 from elevenlabs.play import play
-from pydub import AudioSegment
+try:
+    from pydub import AudioSegment
+    _audio_segment_import_error = None
+except Exception as exc:
+    AudioSegment = None
+    _audio_segment_import_error = exc
+
+logger = logging.getLogger(__name__)
 
 ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1"
 MODEL_ID = "eleven_monolingual_v1"
@@ -152,6 +161,9 @@ def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, 
     """
     Mix narration with background sound effects (from ElevenLabs).
     """
+    if AudioSegment is None:
+        raise RuntimeError(f"pydub/audio backend unavailable: {_audio_segment_import_error}")
+
     # Load narration
     narration = AudioSegment.from_mp3(narration_path) + narration_volume
     sfx = AudioSegment.from_mp3(sfx_path) + sfx_volume
@@ -177,6 +189,16 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
     async with httpx.AsyncClient() as client:
         narration = await generate_single_voice(screenplay_text, beat_number, voice_id, client)
 
+    if AudioSegment is None:
+        logger.warning(
+            "Audio backend unavailable; using narration-only audio for beat=%s detail=%s",
+            beat_number,
+            str(_audio_segment_import_error),
+        )
+        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
+        shutil.copyfile(narration["audio_path"], output_path)
+        return str(output_path)
+
     narration_length = get_mp3_length(narration['audio_path']) * 1000
     # Step 2: Generate sound effects based on the scene description
     scene_description = scene_description = f"""
@@ -187,28 +209,37 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
         No voices. Background ambience only.
         """  
     # Custom description for sound effects
-    sfx_path = await generate_sound_effects(scene_description)
-    sfx_length = get_mp3_length(sfx_path) * 1000
+    try:
+        sfx_path = await generate_sound_effects(scene_description)
+        sfx_length = get_mp3_length(sfx_path) * 1000
 
-    print(f"Length of narration: {narration_length} milliseconds")
-    print(f"Length of sound effects: {sfx_length} milliseconds")
+        print(f"Length of narration: {narration_length} milliseconds")
+        print(f"Length of sound effects: {sfx_length} milliseconds")
 
-    music_path = await generate_music(
-        scene_description,
-        mood,
-        narration_length,
-        music_style,
-    )
+        music_path = await generate_music(
+            scene_description,
+            mood,
+            narration_length,
+            music_style,
+        )
 
+        # Step 3: Mix narration with sound effects
+        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
+        final_audio_path = mix_narration_with_sfx(narration['audio_path'], sfx_path, music_path, output_path)
 
-    # Step 3: Mix narration with sound effects
-    output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
-    final_audio_path = mix_narration_with_sfx(narration['audio_path'], sfx_path, music_path, output_path)
+        final_length = get_mp3_length(final_audio_path)
+        print(f"Length of final mixed audio: {final_length} milliseconds")
 
-    final_length = get_mp3_length(final_audio_path)
-    print(f"Length of final mixed audio: {final_length} milliseconds")
-
-    return final_audio_path
+        return final_audio_path
+    except Exception as exc:
+        logger.warning(
+            "SFX/music mix unavailable for beat=%s, using narration-only audio. detail=%s",
+            beat_number,
+            str(exc),
+        )
+        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
+        shutil.copyfile(narration["audio_path"], output_path)
+        return str(output_path)
 
 async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Generate voice audio and sound effects for all narrator lines in parallel with mood-based voices."""
@@ -245,6 +276,9 @@ async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str,
 
 def get_mp3_length(mp3_path: str) -> float:
     """Return the length (duration) of an MP3 file in seconds."""
+    if AudioSegment is None:
+        return 0.0
+
     # Load the MP3 file
     audio = AudioSegment.from_mp3(mp3_path)
     

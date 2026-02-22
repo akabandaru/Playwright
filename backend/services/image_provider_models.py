@@ -13,6 +13,7 @@ class ImageProviderBeatPayload(BaseModel):
     characters_present: List[str] = Field(default_factory=list)
     narrator_line: str
     music_style: Optional[str] = None
+<<<<<<< HEAD
     # Context fields for cross-beat visual consistency
     style_anchor: Optional[str] = None
     character_descriptions: Optional[List[str]] = None
@@ -20,6 +21,9 @@ class ImageProviderBeatPayload(BaseModel):
     color_palette: Optional[str] = None
     foreground_elements: Optional[str] = None
     negative_prompt: Optional[str] = None
+=======
+    style_mode: Optional[str] = "photoreal"
+>>>>>>> main
     width: Optional[int] = None
     height: Optional[int] = None
     steps: Optional[int] = None

@@ -1,4 +1,7 @@
 import { motion } from "framer-motion";
+import AudioPlayer from "./AudioPlayer";
+
+const API_URL = "http://localhost:8000";
 
 export default function StoryboardGrid({ beats }) {
   if (!beats || beats.length === 0) return null;
@@ -37,7 +40,7 @@ export default function StoryboardGrid({ beats }) {
                   src={
                     beat.imageUrl.startsWith("http")
                       ? beat.imageUrl
-                      : `http://localhost:8000${beat.imageUrl}`
+                      : `${API_URL}${beat.imageUrl}`
                   }
                   alt={`Beat ${index + 1}`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -61,6 +64,7 @@ export default function StoryboardGrid({ beats }) {
                 {index + 1}
               </div>
 
+              {/* Badges */}
               <div className="absolute top-3 right-3 flex flex-col gap-2">
                 {(beat.camera_angle || beat.cameraAngle) && (
                   <span className="badge-gold text-[10px]">
@@ -78,6 +82,7 @@ export default function StoryboardGrid({ beats }) {
               </div>
             </div>
 
+            {/* Visual description */}
             {(beat.visual_description || beat.visualDescription) && (
               <div className="p-4 border-t border-white/5">
                 <p className="text-white/60 text-xs leading-relaxed">
@@ -86,11 +91,19 @@ export default function StoryboardGrid({ beats }) {
               </div>
             )}
 
+            {/* Narrator line */}
             {(beat.narrator_line || beat.narratorLine) && (
               <div className="p-4 border-t border-white/5">
                 <p className="text-white/70 text-sm font-serif italic leading-relaxed">
                   "{beat.narrator_line || beat.narratorLine}"
                 </p>
+              </div>
+            )}
+
+            {/* Audio player */}
+            {beat.audio_path && (
+              <div className="p-4 border-t border-white/5">
+                <AudioPlayer audioPath={beat.audio_path} />
               </div>
             )}
           </motion.div>

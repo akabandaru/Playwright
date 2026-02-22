@@ -39,76 +39,162 @@ _SYSTEM_INSTRUCTION = """You are a professional storyboard director and AI image
 
 Your job: break a screenplay scene into distinct visual beats. Each beat becomes one generated image.
 
-Return ONLY valid JSON with EXACTLY these keys: scene_context, character_bible, beats.
+Return a top-level JSON object with keys:
+    character_bible       (array of objects with keys: name, description)
+    beats                 (array of beat objects)
 
-━━━ SCENE CONTEXT (defined once, applied to every beat) ━━━
+For each character in character_bible:
+    - Use canonical character names as they appear in the script
+    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
+        clothing palette, signature accessory, and cinematic style notes
+    - Keep each description 180-260 characters and physically specific
 
-  genre         — e.g. "neo-noir thriller", "gritty crime drama", "sci-fi action", "psychological horror", "period romance"
-  era           — time period + world: e.g. "present-day Gotham City", "1970s New York City", "near-future 2049 Los Angeles", "medieval fantasy"
-  film_stock    — camera look: e.g. "Kodak 5219 35mm grain", "ARRI Alexa desaturated digital", "Super 8 warm overexposed", "RED Dragon 8K"
-  color_grade   — dominant palette: e.g. "teal-orange blockbuster grade", "cold blue-grey desaturated", "warm golden-hour amber", "high-contrast monochrome"
-  visual_style  — name a SPECIFIC FILM whose look matches: e.g. "The Dark Knight (2008)", "Blade Runner 2049", "No Country for Old Men", "Heat (1995)", "Mad Max: Fury Road", "Sicario", "Drive (2011)", "Prisoners (2013)"
-  negative_space — what to avoid in every frame: e.g. "no cartoon style, no anime, no bright cheerful colors, no CGI look, no smiling faces"
+For each beat, return a JSON object with EXACTLY these keys:
+  beat_number          (integer, starting at 1)
 
-━━━ CHARACTER BIBLE ━━━
+  visual_description   (string — what is visible in the frame; be highly descriptive about environment, texture, time of day, weather, architecture, props, depth, and atmosphere)
+    camera_angle         (MUST be one of EXACTLY these: extreme close up, close up, medium shot, full shot, wide shot, long shot)
+  mood                 (string — emotional tone of the beat, choose the best match from: happy, sad, tense, calm, melancholic, mysterious, default)
+  lighting             (string — lighting style, e.g., harsh, soft, natural, dim, overcast, etc.)
+  characters_present   (array of character names in the current beat, only include characters visible in the scene)
+  visuals              - Describe ONLY background ambiance and environmental sound effects; the output will be used to generate fitting sound effects for the scene.
+                        - Include layered atmospheric sounds (weather, environment, room tone, distant movement, texture).
+                        - Avoid dialogue, narration, or character voices unless explicitly described.
+                        - Avoid music unless explicitly described in the prompt.
+                        - Be specific, vivid, and immersive. Limit to 350 characters maximum.
+                        - Focus on: 
+                          - Environment (indoor/outdoor, room size, or space type),
+                          - Weather (rain, wind, thunder, etc.),
+                          - Spatial feeling (e.g., echoing hall, open field, tight room),
+                          - Emotional tone through sound (e.g., ominous rumble, bustling city, soft rain).
+  narrator_line        (string — a cinematic voiceover, 100-150 characters)
+  music_style          (string — music style or feel for this beat, e.g., ambient, orchestral, dark, melancholic, tense, etc.)
 
-  name          — exact name from the script
-  description   — 180-260 chars. Physical specifics ONLY: age, build, skin tone (e.g. "deep brown", "pale freckled", "warm olive"), hair, face, outfit with colors/materials, one signature item.
-                  Example: "JOKER, 35-40, lean wiry build, pale white greasepaint skin, smeared red lipstick grin, green-dyed messy hair, purple wool suit jacket over green vest, silver switchblade in hand"
+Critical continuity and environment rules:
+    - Reuse character_bible details whenever a character appears in a beat.
+    - Ensure each visual_description has rich environmental detail first, then character action.
+    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic.
 
-━━━ BEAT FIELDS ━━━
-
-  beat_number   — integer starting at 1
-
-  visual_description — THE ONLY FIELD SENT TO THE IMAGE MODEL. Write it as a dense, comma-separated prompt.
-                  
-                  STRUCTURE (in this order):
-                  1. Shot type: "extreme close-up", "wide establishing shot", "low angle medium shot", "dutch angle"
-                  2. Subject + action: what is happening, using character names and specific verbs
-                  3. Environment: materials and textures — "cracked concrete pillars", "neon-lit rain-slicked asphalt", "oak-paneled boardroom with fluorescent overhead", "rusted chain-link fence"
-                  4. Lighting: directional and specific — "single overhead fluorescent casting harsh downward shadows", "sodium streetlight from camera-left", "golden magic-hour backlight rim"
-                  5. Atmosphere: "light fog", "dust motes in shaft of light", "rain streaking the air", "cigarette smoke curling"
-                  6. Style anchor: end with the specific film name from visual_style + film_stock + color_grade
-                  
-                  CRITICAL RULES:
-                  • 250-400 characters. Every word is a model instruction.
-                  • Embed the character's full physical description from character_bible inline — the model needs it every time
-                  • Use named film references FLUX knows: "cinematic still from The Dark Knight", "in the style of Blade Runner 2049", "reminiscent of Heat 1995 shootout scene"
-                  • Use specific material words: "brushed steel", "cracked asphalt", "worn leather", "neon-soaked glass", "raw concrete"
-                  • AVOID: vague adjectives ("nice", "beautiful"), abstract emotions, narrative context the model can't visualize
-                  • Every beat must look like the SAME film — same color grade, same film stock, same world
-
-  camera_angle  — one of: wide shot, medium shot, close-up, extreme close-up, over-the-shoulder, low angle, high angle, dutch angle, POV shot, tracking shot
-
-  mood          — happy, sad, tense, calm, melancholic, mysterious, default
-
-  lighting      — specific and directional (used for audio/display): e.g. "single practical lamp casting long shadows", "overcast diffused daylight through frosted glass"
-
-  color_palette — dominant colors in THIS frame: e.g. "deep navy shadows, amber skin tones, rust jacket, grey concrete floor"
-
-  foreground_elements — depth cue in immediate foreground: e.g. "rain-slicked cobblestones blurred in extreme foreground", "out-of-focus chain-link fence", "candle flame sharp, face soft behind"
-                  Use "" if the subject IS the foreground
-
-  characters_present — array of character names visible (must match character_bible names exactly)
-
-  visuals       — background ambiance + environmental sounds for AUDIO GENERATION ONLY. No dialogue, no music. Max 350 chars.
-
-  narrator_line — cinematic voiceover, 100-150 characters. Poetic but grounded.
-
-  music_style   — specific: "Hans Zimmer low drone sparse piano", "80s synth noir pulse", "sparse acoustic guitar melancholic fingerpicking"
-
-  negative_prompt_hints — frame-specific things to avoid: e.g. "no smiling, no bright colors, no visible logos, no modern cars"
-
-━━━ CONTINUITY RULES ━━━
-1. visual_description MUST end with the specific film name + film_stock + color_grade — this makes every frame look like the same movie
-2. Embed each character's full bible description inline in visual_description every time they appear
-3. Environment evolves logically — rain in beat 1 means rain in beat 2 unless the script changes it
-4. color_palette per beat is a specific instance of scene_context.color_grade — same palette, different composition
-5. No generic filler: no "nice room", "city street", "walks forward" — every detail must be specific and visual
-
-Return ONLY valid JSON: {"scene_context": {...}, "character_bible": [...], "beats": [...]}
+Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
 No markdown, no explanation, no extra keys.
 """
+
+CAMERA_ANGLE_MAP = {
+    "extreme close up": "extreme close-up, face fills frame, 85mm lens, very shallow depth of field",
+    "close up": "close-up portrait, head and shoulders, 85mm lens, shallow depth of field",
+    "medium shot": "medium shot, waist-up, 50mm lens, natural perspective",
+    "full shot": "full body shot, subject clearly framed, 35mm lens",
+    "wide shot": "wide establishing shot, environment dominant, 24mm lens",
+    "long shot": "long shot, subject small in frame, environment dominant, 24mm lens",
+}
+
+_CAMERA_KEYS = set(CAMERA_ANGLE_MAP.keys())
+
+_GENRE_PRESET_PROMPTS = {
+    "none": "Use balanced cinematic visual grammar with no special genre bias.",
+    "noir": """Genre preset: noir.
+- Favor high-contrast chiaroscuro lighting, deep shadows, rain-slick streets/interiors, smoke/haze, and moral ambiguity.
+- Camera language should lean into silhouettes, venetian-blind patterns, reflective surfaces, and suspenseful composition.
+- Narrator tone should feel moody, introspective, and cynical.
+""",
+    "thriller": """Genre preset: thriller.
+- Favor tension-forward visuals: tight framing, uneasy angles, partial reveals, and momentum between beats.
+- Lighting and environment should sustain suspense and uncertainty.
+- Narrator tone should be urgent, ominous, and propulsive.
+""",
+    "romcom": """Genre preset: rom-com.
+- Favor warm, inviting visuals, playful compositions, expressive character interactions, and charming environment details.
+- Use brighter, softer lighting and emotionally light pacing with occasional heartfelt beats.
+- Narrator tone should be witty, affectionate, and hopeful.
+""",
+}
+
+_STYLE_MODE_PROMPTS = {
+    "photoreal": "Style mode: photoreal. Keep environments and character appearance grounded, physically plausible, and cinematically realistic.",
+    "anime": "Style mode: anime. Use anime visual language (clean linework, stylized proportions, expressive framing, cel-shaded look), while preserving scene continuity and camera shot constraints.",
+}
+
+
+def _normalize_genre_preset(genre_preset: str) -> str:
+    value = (genre_preset or "none").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "romcom": "romcom",
+        "romanticcomedy": "romcom",
+        "thriller": "thriller",
+        "noir": "noir",
+        "none": "none",
+        "default": "none",
+    }
+    return aliases.get(value, "none")
+
+
+def _normalize_style_mode(style_mode: str) -> str:
+    value = (style_mode or "photoreal").strip().lower().replace("-", "").replace("_", "")
+    aliases = {
+        "photoreal": "photoreal",
+        "photo": "photoreal",
+        "realistic": "photoreal",
+        "anime": "anime",
+        "cartoon": "anime",
+        "manga": "anime",
+        "none": "photoreal",
+        "default": "photoreal",
+    }
+    return aliases.get(value, "photoreal")
+
+
+def _normalize_camera_angle(camera_angle: str) -> str:
+    text = (camera_angle or "").strip().lower().replace("-", " ")
+
+    direct_aliases = {
+        "extreme close up": "extreme close up",
+        "extreme closeup": "extreme close up",
+        "extreme close": "extreme close up",
+        "ecu": "extreme close up",
+        "close up": "close up",
+        "closeup": "close up",
+        "cu": "close up",
+        "medium shot": "medium shot",
+        "medium": "medium shot",
+        "mid shot": "medium shot",
+        "ms": "medium shot",
+        "full shot": "full shot",
+        "full body shot": "full shot",
+        "wide shot": "wide shot",
+        "wide": "wide shot",
+        "establishing shot": "wide shot",
+        "long shot": "long shot",
+        "ls": "long shot",
+    }
+
+    if text in direct_aliases:
+        return direct_aliases[text]
+
+    if "extreme" in text and "close" in text:
+        return "extreme close up"
+    if "close" in text:
+        return "close up"
+    if "full" in text:
+        return "full shot"
+    if "long" in text:
+        return "long shot"
+    if "wide" in text or "establish" in text:
+        return "wide shot"
+    if "medium" in text or "mid" in text:
+        return "medium shot"
+
+    return "medium shot"
+
+
+def _enforce_camera_angle_map(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    for beat in beats:
+        if not isinstance(beat, dict):
+            continue
+        normalized = _normalize_camera_angle(str(beat.get("camera_angle", "")))
+        if normalized not in _CAMERA_KEYS:
+            normalized = "medium shot"
+        beat["camera_angle"] = normalized
+    return beats
 
 def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
     """Render the few-shot examples as a readable prompt block."""
@@ -127,7 +213,11 @@ def _build_few_shot_block(examples: List[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
+async def decompose_scene(
+    screenplay_text: str,
+    genre_preset: str = "none",
+    style_mode: str = "photoreal",
+) -> Dict[str, Any]:
     """
     Decompose a screenplay scene into structured beats.
 
@@ -148,7 +238,14 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
             "tokens_used": int,
         }
     """
-    print("[DECOMPOSER] Starting run...")
+    normalized_genre = _normalize_genre_preset(genre_preset)
+    normalized_style = _normalize_style_mode(style_mode)
+    genre_prompt = _GENRE_PRESET_PROMPTS[normalized_genre]
+    style_prompt = _STYLE_MODE_PROMPTS[normalized_style]
+
+    print(
+        f"[DECOMPOSER] Starting run (genre_preset={normalized_genre}, style_mode={normalized_style})..."
+    )
     run_id = db.start_run(screenplay_text)
     t_start = time.time()
 
@@ -161,6 +258,12 @@ async def decompose_scene(screenplay_text: str) -> Dict[str, Any]:
         few_shot_block = _build_few_shot_block(examples)
 
         prompt = f"""{_SYSTEM_INSTRUCTION}
+
+    Genre visual grammar guidance:
+    {genre_prompt}
+
+    Style guidance:
+    {style_prompt}
 
 {few_shot_block}
 Now analyze the following scene and return the beat breakdown in the same JSON format.
@@ -187,11 +290,9 @@ Return JSON:"""
         print(f"[DECOMPOSER] Gemini responded")
 
         # ── 4. Parse response ─────────────────────────────────────────────────
-        parsed_result = _parse_scene(raw_text)
-        beats = parsed_result["beats"]
-        character_bible = parsed_result.get("character_bible", [])
-        scene_context = parsed_result.get("scene_context", {})
-        print(f"[DECOMPOSER] Parsed {len(beats)} beats, {len(character_bible)} characters in bible, scene_context keys: {list(scene_context.keys())}")
+        beats = _parse_beats(raw_text)
+        beats = _enforce_camera_angle_map(beats)
+        print(f"[DECOMPOSER] Parsed beats")
 
         # ── 5. Log metrics ────────────────────────────────────────────────────
         inference_time = round(time.time() - t_start, 3)
@@ -224,8 +325,8 @@ Return JSON:"""
         return {
             "run_id": run_id,
             "beats": beats,
-            "character_bible": character_bible,
-            "scene_context": scene_context,
+            "genre_preset": normalized_genre,
+            "style_mode": normalized_style,
             "inference_time_seconds": inference_time,
             "beats_extracted": beats_extracted,
             "tokens_used": tokens_used,
