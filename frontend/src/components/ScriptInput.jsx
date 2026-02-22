@@ -32,6 +32,14 @@ const STYLE_MODES = [
   { value: 'anime', label: 'Anime' },
 ]
 
+const VOICE_OPTIONS = [
+  { value: 'NIPHfiR4kB4aHfvaKvYb', label: 'Molly (Happy)' },
+  { value: 'k9073AMdU5sAUtPMH1il', label: 'Jeff (Sad)' },
+  { value: 'aYIHaVW2uuV2iGj07rJH', label: 'John (Tense)' },
+  { value: '4JVOFy4SLQs9my0OLhEw', label: 'Luca (Calm)' },
+  { value: 'auq43ws1oslv0tO4BDa7', label: 'Adam (Melancholic / Mysterious)' },
+]
+
 export default function ScriptInput({
   script,
   setScript,
@@ -39,6 +47,8 @@ export default function ScriptInput({
   setGenrePreset,
   styleMode,
   setStyleMode,
+  selectedVoice,
+  setSelectedVoice,
   onGenerate,
   isGenerating,
 }) {
@@ -71,14 +81,16 @@ export default function ScriptInput({
           className="w-full min-h-50 bg-black/40 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 focus:outline-none focus:border-accent-gold/50 focus:ring-1 focus:ring-accent-gold/30 resize-y font-mono text-sm leading-relaxed transition-all"
         />
 
-        <div className="mt-4 grid gap-3 rounded-xl border border-white/10 bg-black/30 p-3 md:grid-cols-2">
-          <div className="flex items-center justify-between gap-3">
-            <label htmlFor="genre-preset" className="text-sm text-white/70">Genre Preset</label>
+        <div className="mt-4 grid gap-4 rounded-xl border border-white/10 bg-black/30 p-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="genre-preset" className="text-xs uppercase tracking-wide text-white/60">
+              Genre Preset
+            </label>
             <select
               id="genre-preset"
               value={genrePreset}
               onChange={(e) => setGenrePreset(e.target.value)}
-              className="bg-black/50 border border-white/15 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-accent-gold/50"
+              className="w-full bg-black/50 border border-white/15 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-gold/50"
             >
               {GENRE_PRESETS.map((preset) => (
                 <option key={preset.value} value={preset.value}>
@@ -88,17 +100,37 @@ export default function ScriptInput({
             </select>
           </div>
 
-          <div className="flex items-center justify-between gap-3">
-            <label htmlFor="style-mode" className="text-sm text-white/70">Style</label>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="style-mode" className="text-xs uppercase tracking-wide text-white/60">
+              Style
+            </label>
             <select
               id="style-mode"
               value={styleMode}
               onChange={(e) => setStyleMode(e.target.value)}
-              className="bg-black/50 border border-white/15 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-accent-gold/50"
+              className="w-full bg-black/50 border border-white/15 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-gold/50"
             >
               {STYLE_MODES.map((mode) => (
                 <option key={mode.value} value={mode.value}>
                   {mode.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="voice-select" className="text-xs uppercase tracking-wide text-white/60">
+              Narrator Voice
+            </label>
+            <select
+              id="voice-select"
+              value={selectedVoice}
+              onChange={(e) => setSelectedVoice(e.target.value)}
+              className="w-full bg-black/50 border border-white/15 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-gold/50"
+            >
+              {VOICE_OPTIONS.map((voice) => (
+                <option key={voice.value} value={voice.value}>
+                  {voice.label}
                 </option>
               ))}
             </select>

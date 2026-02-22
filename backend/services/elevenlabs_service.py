@@ -2,6 +2,7 @@ import os
 import asyncio
 import httpx
 import uuid
+from typing import Optional
 from pathlib import Path
 from typing import List, Dict, Any
 from elevenlabs.client import ElevenLabs
@@ -16,6 +17,13 @@ except Exception as exc:
 ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1"
 MODEL_ID = "eleven_monolingual_v1"
 
+VOICE_OPTIONS = [
+    {"id": "NIPHfiR4kB4aHfvaKvYb", "name": "Molly", "mood": "Happy"},
+    {"id": "k9073AMdU5sAUtPMH1il", "name": "Jeff", "mood": "Sad"},
+    {"id": "aYIHaVW2uuV2iGj07rJH", "name": "John", "mood": "Tense"},
+    {"id": "4JVOFy4SLQs9my0OLhEw", "name": "Luca", "mood": "Calm"},
+    {"id": "auq43ws1oslv0tO4BDa7", "name": "Adam", "mood": "Melancholic / Mysterious / Default"},
+]
 # Define mood -> voice mapping
 MOOD_VOICE_MAP = {
     "happy": "NIPHfiR4kB4aHfvaKvYb",   # Molly
@@ -31,7 +39,6 @@ TEMP_DIR = Path(__file__).parent.parent / "temp"
 TEMP_DIR.mkdir(exist_ok=True)
 
 elevenlabs = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"),)
-
 
 async def generate_single_voice(
     text: str,
@@ -153,7 +160,7 @@ def generate_music(scene_description: str, mood: str, length_ms: int, music_styl
     return str(music_path)
 
 
-def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, output_path: str, target_narration_db: float = -18.0, sfx_offset_db: float = -6.0, music_offset_db: float = -10.0):
+def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, output_path: str, target_narration_db: float = -18.0, sfx_offset_db: float = -10.0, music_offset_db: float = -6.0):
     """
     Mix narration with background sound effects (from ElevenLabs).
     """
@@ -182,7 +189,7 @@ def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, 
     music = fit_to_length(music, len(narration))
 
     # Layering order matters
-    mixed = music.overlay(sfx)
+    mixed = sfx.overlay(music)
     mixed = mixed.overlay(narration)
 
     mixed.export(output_path, format="mp3")
@@ -209,7 +216,6 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
         Cinematic background ambience.
         Scene: {visuals}.
         Mood: {mood}.
-        Narrator line: {screenplay_text}.
         No voices. Background ambience only.
         """  
     async def safe_thread(func, *args):
@@ -248,9 +254,9 @@ async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: i
     final_length = await asyncio.to_thread(get_mp3_length, final_audio_path)
     print(f"Length of final mixed audio: {final_length} milliseconds")
 
-    return final_audio_path
+    return str(final_audio_path)
 
-async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+async def generate_voices_and_sfx(beats: List[Dict[str, Any]], voice_id: Optional[str] = None) -> List[Dict[str, Any]]:
     """Generate voice audio and sound effects for all narrator lines in parallel with mood-based voices."""
     semaphore = asyncio.Semaphore(2)  # Limit concurrency to avoid rate limits
 
@@ -262,8 +268,8 @@ async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str,
                 beat_number = beat.get("beat_number")
                 mood = beat.get("mood", "default").lower()
                 music_style = beat.get("music_style", "cinematic")
-                voice_id = MOOD_VOICE_MAP["default"] # MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
-                return await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style, client)
+                selected_voice = voice_id or MOOD_VOICE_MAP["default"]
+                return await generate_scene_audio(text, visuals, beat_number, selected_voice, mood, music_style, client)
 
         filtered_beats = [b for b in beats if b.get("narrator_line")]
         tasks = [safe_generate(b) for b in filtered_beats]

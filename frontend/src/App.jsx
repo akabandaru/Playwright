@@ -21,6 +21,7 @@ export default function App() {
   const [stageMessage, setStageMessage] = useState("");
   const [error, setError] = useState(null);
   const [musicRecommendation, setMusicRecommendation] = useState(null);
+  const [selectedVoice, setSelectedVoice] = useState('auq43ws1oslv0tO4BDa7')
 
   const isGenerating = stage !== null && stage !== "complete";
 
@@ -40,7 +41,7 @@ export default function App() {
       const response = await fetch(`${API_URL}/api/generate-video`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script, genre_preset: genrePreset, style_mode: styleMode }),
+        body: JSON.stringify({ script, genre_preset: genrePreset, style_mode: styleMode, voice_id: selectedVoice }),
       });
 
       if (!response.ok) throw new Error("Failed to start pipeline");
@@ -114,7 +115,7 @@ export default function App() {
       setError(err.message || "An error occurred during generation");
       setStage(null);
     }
-  }, [script, genrePreset, styleMode]);
+  }, [script, genrePreset, styleMode, selectedVoice]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -127,6 +128,8 @@ export default function App() {
         setGenrePreset={setGenrePreset}
         styleMode={styleMode}
         setStyleMode={setStyleMode}
+        selectedVoice={selectedVoice}
+        setSelectedVoice={setSelectedVoice}
         onGenerate={runPipeline}
         isGenerating={isGenerating}
       />
