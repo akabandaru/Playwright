@@ -137,39 +137,65 @@ async def verify_and_inspect(file_key: str) -> dict:
 
 
 def _print_instructions():
-    _section("HOW TO CREATE THE PLAYWRIGHT TEMPLATE FILE")
+    _section("PLAYWRIGHT COMIC BOOK TEMPLATE — LAYER SPEC")
     print("""
-  You need a Figma file with frames named "Beat 1", "Beat 2", … "Beat 12".
-  Each frame should have three child layers:
+  Your Figma template must have 12 frames in a 3-column × 4-row grid.
+  Each frame must match this exact structure (layer names are case-sensitive):
 
-    ┌─────────────────────────────────────────┐
-    │  Frame: "Beat 1"  (1280 × 720)          │
-    │  ├─ Rectangle: "image_fill"  (1280×720) │  ← image goes here
-    │  ├─ Text:      "label"                  │  ← narrator line
-    │  └─ Text:      "meta"                   │  ← camera · lighting
-    └─────────────────────────────────────────┘
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  Frame: "Beat 1"   960 × 720 px                                 │
+  │  Fill: #0D0D0D  │  Stroke: 4px inside #000000                   │
+  │                                                                  │
+  │  ├─ RECTANGLE  "image_fill"    x:4   y:4    952 × 712 px        │
+  │  │   Fill: #1A1A2E (replaced by storyboard image on import)     │
+  │  │                                                               │
+  │  ├─ RECTANGLE  "caption_bg"   x:4   y:648   952 × 64 px        │
+  │  │   Fill: #000000 at 82% opacity                               │
+  │  │                                                               │
+  │  ├─ TEXT  "label"             x:18  y:656   924 × 48 px         │
+  │  │   Inter 15px SemiBold, #FFFFFF — narrator line               │
+  │  │                                                               │
+  │  ├─ TEXT  "beat_number"       x:14  y:12     60 × 28 px         │
+  │  │   Inter 14px Bold, #FFFF00 — badge "#01" … "#12"             │
+  │  │                                                               │
+  │  └─ TEXT  "meta"              x:706 y:12    240 × 28 px         │
+  │      Inter 11px Medium, #FFFFFF 80% opacity, right-aligned      │
+  │      camera angle · lighting — e.g. "wide shot · natural"       │
+  └─────────────────────────────────────────────────────────────────┘
 
-  QUICK STEPS (takes ~2 minutes):
+  GRID LAYOUT  (3 cols × 4 rows, 12px gutters, 60px outer padding)
   ─────────────────────────────────────────────────────────────────────
-  1. Open Figma desktop app (or figma.com)
-  2. Create a new file  →  File > New design file
-  3. Rename the page to "Storyboard"  (double-click the page tab)
-  4. For each beat slot (1 to 12):
-       a. Press F  →  draw a frame  →  set W=1280, H=720 in the right panel
-       b. Name the frame "Beat 1"  (double-click the layer name)
-       c. Inside the frame, draw a rectangle covering the full frame
-          Name it "image_fill"
-       d. Add a text layer near the bottom  →  name it "label"
-       e. Add a text layer near the top-right  →  name it "meta"
-       f. Repeat for Beat 2, Beat 3, … Beat 12
-  5. Arrange the frames in a 3-column grid (optional but looks nice)
-  6. Copy the file URL from your browser:
-       https://www.figma.com/file/XXXXXXXXXXX/PLAYWRIGHT-Template
-                                  ^^^^^^^^^^^
-                                  This is your file key
+  Beat 1  Beat 2  Beat 3
+  Beat 4  Beat 5  Beat 6
+  Beat 7  Beat 8  Beat 9
+  Beat 10 Beat 11 Beat 12
 
-  TIP: You can also duplicate an existing frame 12 times and rename each one.
-  TIP: The child layer names (image_fill / label / meta) are case-sensitive.
+  Column positions (x):  60 / 1032 / 2004
+  Row positions    (y):  60 / 792  / 1524 / 2256
+
+  CRITICAL NAMING RULES
+  ─────────────────────────────────────────────────────────────────────
+  • Page name:         Storyboard          (exact, case-sensitive)
+  • Frame names:       Beat 1 … Beat 12    (just "Beat N", no suffix)
+  • image_fill layer:  "image_fill"        (the import tool patches this)
+  • label layer:       "label"             (narrator text)
+  • meta layer:        "meta"              (camera · lighting)
+  • caption_bg and beat_number can have any name — they are decorative
+
+  QUICK STEPS
+  ─────────────────────────────────────────────────────────────────────
+  1. Open Figma  →  File > New design file
+  2. Rename the page to "Storyboard"
+  3. Create Beat 1 frame (F key → draw → set W=960, H=720)
+  4. Add the 5 child layers above with exact names and positions
+  5. Duplicate the frame 11 times, rename Beat 2 … Beat 12
+     Update the beat_number text in each (#01 … #12)
+  6. Arrange in a 3-column grid with 12px gaps, 60px outer padding
+  7. Copy the file URL and paste it below
+
+  TIP: Use Figma's Auto Layout or the grid plugin to space panels quickly.
+  TIP: The import tool only requires image_fill, label, and meta to be
+       named correctly — caption_bg and beat_number are purely visual.
   ─────────────────────────────────────────────────────────────────────
 """)
 

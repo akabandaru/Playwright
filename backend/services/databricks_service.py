@@ -198,11 +198,11 @@ def get_few_shot_examples(limit: int = 3) -> List[Dict[str, Any]]:
 
     Returns a list of dicts with keys: genre, scene, beats
     """
-    # rows = _fetch_few_shot_from_databricks(limit)
-    rows = _fetch_few_shot_from_csv(limit)
-    if rows is None:
+    rows = _fetch_few_shot_from_databricks(limit)
+    if not rows:
+        print("[DATABRICKS] SQL unavailable or returned no rows — using CSV fallback")
         rows = _fetch_few_shot_from_csv(limit)
-    return rows
+    return rows or []
 
 
 def _fetch_few_shot_from_databricks(limit: int) -> Optional[List[Dict[str, Any]]]:

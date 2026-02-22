@@ -1628,5 +1628,2421 @@
         }
       ]
     }
+  },
+  "baedc3b4-e8b4-4933-a9d8-856470b0d028": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-21 21:30",
+    "page_id": "0:1",
+    "page_name": "Storyboard",
+    "created_at": "2026-02-22T02:30:23.308755+00:00",
+    "updated_at": "2026-02-22T02:30:57.279607+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:2",
+        "image_node_id": "1:3",
+        "label_node_id": "1:4",
+        "meta_node_id": "1:5",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T02:30:57.163602+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:6",
+        "image_node_id": "1:7",
+        "label_node_id": "1:8",
+        "meta_node_id": "1:9",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T02:30:57.173141+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:10",
+        "image_node_id": "1:11",
+        "label_node_id": "1:12",
+        "meta_node_id": "1:13",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T02:30:57.181833+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:14",
+        "image_node_id": "1:15",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:17",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T02:30:57.190182+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:18",
+        "image_node_id": "1:19",
+        "label_node_id": "1:20",
+        "meta_node_id": "1:21",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T02:30:57.198172+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:22",
+        "image_node_id": "1:23",
+        "label_node_id": "1:24",
+        "meta_node_id": "1:25",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T02:30:57.205776+00:00"
+      },
+      "7": {
+        "frame_node_id": "1:26",
+        "image_node_id": "1:27",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:29",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-22T02:30:57.212899+00:00"
+      },
+      "8": {
+        "frame_node_id": "1:30",
+        "image_node_id": "1:31",
+        "label_node_id": "1:32",
+        "meta_node_id": "1:33",
+        "beat_number": 8,
+        "last_synced_at": "2026-02-22T02:30:57.220471+00:00"
+      },
+      "9": {
+        "frame_node_id": "1:34",
+        "image_node_id": "1:35",
+        "label_node_id": "1:36",
+        "meta_node_id": "1:37",
+        "beat_number": 9,
+        "last_synced_at": "2026-02-22T02:30:57.228127+00:00"
+      },
+      "10": {
+        "frame_node_id": "1:38",
+        "image_node_id": "1:39",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:41",
+        "beat_number": 10,
+        "last_synced_at": "2026-02-22T02:30:57.235589+00:00"
+      },
+      "11": {
+        "frame_node_id": "1:42",
+        "image_node_id": "1:43",
+        "label_node_id": "1:44",
+        "meta_node_id": "1:45",
+        "beat_number": 11,
+        "last_synced_at": "2026-02-22T02:30:57.243304+00:00"
+      },
+      "12": {
+        "frame_node_id": "1:46",
+        "image_node_id": "1:47",
+        "label_node_id": "1:48",
+        "meta_node_id": "1:49",
+        "beat_number": 12,
+        "last_synced_at": "2026-02-22T02:30:57.250605+00:00"
+      },
+      "13": {
+        "frame_node_id": "1:50",
+        "image_node_id": "1:51",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:53",
+        "beat_number": 13,
+        "last_synced_at": "2026-02-22T02:30:57.258515+00:00"
+      },
+      "14": {
+        "frame_node_id": "1:54",
+        "image_node_id": "1:55",
+        "label_node_id": "1:56",
+        "meta_node_id": "1:57",
+        "beat_number": 14,
+        "last_synced_at": "2026-02-22T02:30:57.266537+00:00"
+      },
+      "15": {
+        "frame_node_id": "1:58",
+        "image_node_id": "1:59",
+        "label_node_id": "1:60",
+        "meta_node_id": "1:61",
+        "beat_number": 15,
+        "last_synced_at": "2026-02-22T02:30:57.272893+00:00"
+      },
+      "16": {
+        "frame_node_id": "1:62",
+        "image_node_id": "1:63",
+        "label_node_id": "1:64",
+        "meta_node_id": "1:65",
+        "beat_number": 16,
+        "last_synced_at": "2026-02-22T02:30:57.279594+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "baedc3b4-e8b4-4933-a9d8-856470b0d028",
+      "file_name": "PLAYWRIGHT — 2026-02-21 21:30",
+      "page_name": "Storyboard",
+      "canvas_width": 4080,
+      "frames": [
+        {
+          "type": "FRAME",
+          "name": "Beat 1 — tense",
+          "x": 80,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_1_70d6e173-5734-4f7f-bda5-68101e93d12b.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The final stand. A universe's fate balanced on a knife's edge, amidst the ashes of what once was a sanctuary.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · dramatic",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 2 — tense",
+          "x": 1400,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_2_cf826b79-c250-45a8-bc43-0e6abe44c08b.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "Victory seemed within his grasp, a universe bending to his will, the ultimate power his to command, finally.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · dim, with glowing stones",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 3 — triumphant",
+          "x": 2720,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_3_b3eec31c-7063-41e9-8702-a1288668fff2.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A declaration of absolute power, a final, chilling statement of his unyielding resolve, echoing into the void.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · dramatic, with stone glow",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 4 — mysterious",
+          "x": 80,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_4_4907d89a-a1c6-4547-9c85-bcb15293eb5a.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The universe held its breath. A moment suspended, where the expected outcome defied all logic, a cruel twist.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "extreme close-up · dim, with fading stone glow",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 5 — hopeful",
+          "x": 1400,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_5_fea796a2-439a-42ee-9688-13dba25c52d9.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "In the shadow of despair, a flicker of impossible hope ignited, a final, desperate gamble for all existence.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · bright, glowing stones",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 6 — determined",
+          "x": 2720,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_6_79deaedf-32ec-41f6-bf6c-ccde264d9779.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A final declaration, not of power, but of identity. The ultimate sacrifice, for everything he held dear.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · intense glow from stones",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 7 — awe",
+          "x": 80,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_7_d0d0ae33-07bf-4af0-95bd-a1d0bf4b11e4.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The universe exhaled. A silent wave of cosmic retribution swept across the battlefield, cleansing the terror.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · overwhelming bright light, then fading",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 8 — realization",
+          "x": 1400,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_8_4b4c7e23-aa2f-49d1-b327-9318477fec65.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The Mad Titan, once so absolute, now understood the true cost of inevitability. His reign was over.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · fading light, then natural",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 9 — sad",
+          "x": 2720,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_9_37750044-12e2-4098-9187-69aa9e072c97.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The weight of a universe saved, a burden too heavy for even the strongest of wills to bear alone.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · dim, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 10 — sad",
+          "x": 80,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_10_33bd737f-b44c-47e8-bdb1-fafaf0e0533c.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A young hero's plea, a desperate hope clinging to the fading light of his mentor, a final, earnest wish.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · dim, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 11 — sad",
+          "x": 1400,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_11_0b78764b-1325-4404-9f41-7a829d2e6f48.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The brilliant mind, once so vibrant, now struggled against the encroaching darkness, a final, weary struggle.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · dim, with flickering light",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 12 — heartbreaking",
+          "x": 2720,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_12_6f0e45cb-6b1a-42c3-b66c-0107acecf080.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A promise of peace, a final act of love, allowing a weary soul to find its ultimate, well-deserved repose.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · soft, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 13 — peaceful",
+          "x": 80,
+          "y": 3280,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_13_cf1a011b-2881-42a0-9681-74bc0353229b.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "In the quiet, a lifetime of understanding passed between them, a silent farewell, a final, profound peace.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · soft, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 14 — finality",
+          "x": 1400,
+          "y": 3280,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_14_93f0199a-05aa-404b-8a1b-9a9068789e36.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The light that powered a hero, that ignited a revolution, now extinguished, leaving only darkness and memory.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "extreme close-up · fading light to darkness",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 15 — profound sadness",
+          "x": 2720,
+          "y": 3280,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_15_f5aa1858-d736-4b42-9ba6-73acbe7ace6e.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A universe saved, but at a cost. The man who dared to be Iron Man, now a legend, an enduring echo.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "high angle · overcast, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 16 — reflective",
+          "x": 80,
+          "y": 4080,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_16_03fe13c9-10fd-4c89-ac12-24c68f7680ed.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The sound of a snap, once a harbinger of doom, now a resonant testament to an ultimate, selfless act.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "tracking shot · overcast, somber",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "fa0af1b5-77e8-4e79-b9bc-b5140142d14e": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-21 22:16",
+    "page_id": "0:1",
+    "page_name": "Storyboard",
+    "created_at": "2026-02-22T03:16:10.391366+00:00",
+    "updated_at": "2026-02-22T03:16:25.268416+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "1:2",
+        "image_node_id": "1:3",
+        "label_node_id": "1:4",
+        "meta_node_id": "1:5",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T03:16:25.163519+00:00"
+      },
+      "2": {
+        "frame_node_id": "1:6",
+        "image_node_id": "1:7",
+        "label_node_id": "1:8",
+        "meta_node_id": "1:9",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T03:16:25.174501+00:00"
+      },
+      "3": {
+        "frame_node_id": "1:10",
+        "image_node_id": "1:11",
+        "label_node_id": "1:12",
+        "meta_node_id": "1:13",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T03:16:25.184932+00:00"
+      },
+      "4": {
+        "frame_node_id": "1:14",
+        "image_node_id": "1:15",
+        "label_node_id": "1:16",
+        "meta_node_id": "1:17",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T03:16:25.194825+00:00"
+      },
+      "5": {
+        "frame_node_id": "1:18",
+        "image_node_id": "1:19",
+        "label_node_id": "1:20",
+        "meta_node_id": "1:21",
+        "beat_number": 5,
+        "last_synced_at": "2026-02-22T03:16:25.202692+00:00"
+      },
+      "6": {
+        "frame_node_id": "1:22",
+        "image_node_id": "1:23",
+        "label_node_id": "1:24",
+        "meta_node_id": "1:25",
+        "beat_number": 6,
+        "last_synced_at": "2026-02-22T03:16:25.211770+00:00"
+      },
+      "7": {
+        "frame_node_id": "1:26",
+        "image_node_id": "1:27",
+        "label_node_id": "1:28",
+        "meta_node_id": "1:29",
+        "beat_number": 7,
+        "last_synced_at": "2026-02-22T03:16:25.219305+00:00"
+      },
+      "8": {
+        "frame_node_id": "1:30",
+        "image_node_id": "1:31",
+        "label_node_id": "1:32",
+        "meta_node_id": "1:33",
+        "beat_number": 8,
+        "last_synced_at": "2026-02-22T03:16:25.227911+00:00"
+      },
+      "9": {
+        "frame_node_id": "1:34",
+        "image_node_id": "1:35",
+        "label_node_id": "1:36",
+        "meta_node_id": "1:37",
+        "beat_number": 9,
+        "last_synced_at": "2026-02-22T03:16:25.235387+00:00"
+      },
+      "10": {
+        "frame_node_id": "1:38",
+        "image_node_id": "1:39",
+        "label_node_id": "1:40",
+        "meta_node_id": "1:41",
+        "beat_number": 10,
+        "last_synced_at": "2026-02-22T03:16:25.244387+00:00"
+      },
+      "11": {
+        "frame_node_id": "1:42",
+        "image_node_id": "1:43",
+        "label_node_id": "1:44",
+        "meta_node_id": "1:45",
+        "beat_number": 11,
+        "last_synced_at": "2026-02-22T03:16:25.252910+00:00"
+      },
+      "12": {
+        "frame_node_id": "1:46",
+        "image_node_id": "1:47",
+        "label_node_id": "1:48",
+        "meta_node_id": "1:49",
+        "beat_number": 12,
+        "last_synced_at": "2026-02-22T03:16:25.261040+00:00"
+      },
+      "13": {
+        "frame_node_id": "1:50",
+        "image_node_id": "1:51",
+        "label_node_id": "1:52",
+        "meta_node_id": "1:53",
+        "beat_number": 13,
+        "last_synced_at": "2026-02-22T03:16:25.268408+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "fa0af1b5-77e8-4e79-b9bc-b5140142d14e",
+      "file_name": "PLAYWRIGHT — 2026-02-21 22:16",
+      "page_name": "Storyboard",
+      "canvas_width": 4080,
+      "frames": [
+        {
+          "type": "FRAME",
+          "name": "Beat 1 — tense",
+          "x": 80,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_1_9e3acf4e-9148-4873-8a9e-83a9f8e15810.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The final stand. A symphony of chaos, where worlds converged and destinies were forged in fire.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · flickering firelight, distant energy blasts",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 2 — tense",
+          "x": 1400,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_2_52897395-0a0c-459a-8b71-6cdef0c8fbe4.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "Victory, for a moment, was his. A titan's will, bending reality to his monstrous desire.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · harsh, flickering firelight from camera-right",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 3 — tense",
+          "x": 2720,
+          "y": 80,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_3_a203a602-682d-4d7e-bf98-eda4c84bbd6d.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The universe held its breath, as the final pieces of an ancient puzzle fell into place.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · intense, multicolored glow from the stones",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 4 — tense",
+          "x": 80,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_4_020eca2e-05f2-451b-9b5a-0fa5cd5a2efb.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The words hung in the air, a declaration of ultimate power, a promise of oblivion.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "low angle · backlit by the stones' glow and distant fires",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 5 — mysterious",
+          "x": 1400,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_5_e22c2486-ba9c-400f-9e77-c6a26c006e5f.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A single beat of silence. A pause in the grand design. Something was amiss.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "extreme close-up · subtle, uneven light, casting shifting shadows",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 6 — tense",
+          "x": 2720,
+          "y": 880,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_6_f9de416d-d218-4edf-839f-ec56d0d564ea.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The power, so absolute, had vanished. A trick of fate, or a deeper, darker magic.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · dim, reflecting the lack of power, casting shadows",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 7 — tense",
+          "x": 80,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_7_27a9eef7-7163-4cc6-b318-388f79d48cf9.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "From the brink of defeat, a flicker of hope. A final, desperate gambit.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · intense, multicolored glow from the stones, rim lighting Tony",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 8 — tense",
+          "x": 1400,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_8_34d94dfd-cc13-40e1-b20f-5b3097e2648c.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A gaze that held the weight of a universe, a silent promise of sacrifice.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "close-up · strong, internal glow from the stones, casting colored light on his face",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 9 — tense",
+          "x": 2720,
+          "y": 1680,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_9_3111ffff-a27c-4a43-aa94-ed53e50c96dd.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "A name, a legacy, a final, defining act. The ultimate price for ultimate power.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium close-up · overwhelming glow from the stones, illuminating Tony's face and the surrounding smoke",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 10 — tense",
+          "x": 80,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_10_fdad7b2d-439d-4847-9afb-2572afd99822.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The universe held its breath, then exhaled. A single, impossible moment of cosmic reckoning.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "extreme close-up · overwhelming, multicolored energy burst, blinding light",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 11 — calm",
+          "x": 1400,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_11_eecf7a43-0573-4ca2-8379-2196f306557c.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "An army, erased. A tide of destruction, turned back by a single, impossible act.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · ethereal, fading light as bodies dissolve, dust motes catching the light",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 12 — melancholic",
+          "x": 2720,
+          "y": 2480,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_12_f8687b47-ed1a-42dc-99bf-e9277b6985a4.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "The architect of ruin, undone by the very power he sought. His inevitable end.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "medium shot · diffused, fading light, dust motes catching the light",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "FRAME",
+          "name": "Beat 13 — calm",
+          "x": 80,
+          "y": 3280,
+          "width": 1280,
+          "height": 720,
+          "clipsContent": true,
+          "children": [
+            {
+              "type": "RECTANGLE",
+              "name": "image_fill",
+              "x": 0,
+              "y": 0,
+              "width": 1280,
+              "height": 720,
+              "fills": [
+                {
+                  "type": "IMAGE",
+                  "scaleMode": "FILL",
+                  "imageUrl": "http://localhost:8000/api/image/beat_13_81b53852-ea03-4adc-8325-17dd5d09a64f.png"
+                }
+              ]
+            },
+            {
+              "type": "TEXT",
+              "name": "label",
+              "x": 24,
+              "y": 644,
+              "width": 1232,
+              "height": 60,
+              "characters": "And then, silence. The war was over. The universe, forever changed, breathed again.",
+              "style": {
+                "fontSize": 18,
+                "fontWeight": 500,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 1
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "TEXT",
+              "name": "meta",
+              "x": 1020,
+              "y": 16,
+              "width": 244,
+              "height": 32,
+              "characters": "wide shot · overcast, diffused daylight, casting long, soft shadows",
+              "style": {
+                "fontSize": 13,
+                "fontWeight": 400,
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 1,
+                      "g": 1,
+                      "b": 1,
+                      "a": 0.75
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
   }
 }

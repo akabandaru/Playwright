@@ -67,15 +67,33 @@ FIGMA_API_URL = "https://api.figma.com/v1"
 # Override with BACKEND_PUBLIC_URL in .env when deploying.
 BACKEND_BASE_URL = os.getenv("BACKEND_PUBLIC_URL", "http://localhost:8000").rstrip("/")
 
-# Layout constants
-FRAME_W = 1280
-FRAME_H = 720
-GRID_COLS = 3
-GRID_GAP_X = 40
-GRID_GAP_Y = 80  # extra vertical space for beat labels below frames
-LABEL_H = 60
-META_H = 32
-CANVAS_PAD = 80
+# Layout constants — comic book panel grid (3 cols × 4 rows = 12 panels)
+FRAME_W      = 960    # panel width  (matches Figma template)
+FRAME_H      = 720    # panel height (matches Figma template)
+GRID_COLS    = 3      # 3 columns → 4 rows for 12 beats
+GRID_GAP_X   = 12     # tight comic-book gutter between columns
+GRID_GAP_Y   = 12     # tight comic-book gutter between rows
+CANVAS_PAD   = 60     # outer page margin on all sides
+BORDER_W     = 4      # panel border inset (image_fill offset)
+# Child layer geometry — derived from template spec
+IMAGE_X      = BORDER_W          # 4
+IMAGE_Y      = BORDER_W          # 4
+IMAGE_W      = FRAME_W - BORDER_W * 2   # 952
+IMAGE_H      = FRAME_H - BORDER_W * 2   # 712
+CAPTION_Y    = 648    # caption_bg top-y
+CAPTION_H    = 64     # caption_bg height  (648 + 64 = 712 = bottom of image)
+LABEL_X      = 18     # label text x
+LABEL_Y      = 656    # label text y  (caption_bg y + 8)
+LABEL_W      = 924    # label text width
+LABEL_H      = 48     # label text height
+META_X       = 706    # meta text x  (top-right)
+META_Y       = 12     # meta text y
+META_W       = 240    # meta text width
+META_H       = 28     # meta text height
+BEAT_NUM_X   = 14     # beat_number badge x
+BEAT_NUM_Y   = 12     # beat_number badge y
+BEAT_NUM_W   = 60     # beat_number badge width
+BEAT_NUM_H   = 28     # beat_number badge height
 
 
 # ---------------------------------------------------------------------------
@@ -227,36 +245,50 @@ async def _resolve_image(
 
 def _build_beat_frame(beat: Dict[str, Any], index: int) -> Dict[str, Any]:
     """
-    Build the JSON representation of a single beat frame for the plugin payload.
-    This mirrors the node structure the companion Figma plugin will create.
+    Build the JSON payload for a single comic-book panel.
+
+    Layer stack (bottom → top), matching the Figma template exactly:
+      image_fill   — full-bleed image rectangle, inset 4px
+      caption_bg   — semi-opaque black bar behind the narrator text
+      label        — narrator line text (Inter 15px SemiBold, white)
+      beat_number  — yellow badge top-left (#01 … #12)
+      meta         — camera · lighting text top-right (Inter 11px Medium)
     """
     x, y = _frame_position(index)
     beat_num = beat.get("beat_number", index + 1)
-    mood = beat.get("mood", "default")
-    camera = beat.get("camera_angle", "")
+    camera   = beat.get("camera_angle", "")
     lighting = beat.get("lighting", "")
     narrator = beat.get("narrator_line", "")
     image_url = beat.get("imageUrl") or beat.get("image_url") or ""
-    # Ensure the image URL is absolute so the Figma plugin sandbox can fetch it
     if image_url and not image_url.startswith("http"):
         image_url = BACKEND_BASE_URL + image_url
 
+    meta_text = f"{camera}  ·  {lighting}" if (camera or lighting) else ""
+
     return {
         "type": "FRAME",
-        "name": f"Beat {beat_num} — {mood}",
+        # Frame name is "Beat N" — no mood suffix so the template patch lookup
+        # (which splits on space and reads index [1]) works reliably.
+        "name": f"Beat {beat_num}",
         "x": x,
         "y": y,
         "width": FRAME_W,
         "height": FRAME_H,
         "clipsContent": True,
+        # Comic panel: near-black background, 4px inside border stroke
+        "fills": [{"type": "SOLID", "color": {"r": 0.051, "g": 0.051, "b": 0.051}}],
+        "strokes": [{"type": "SOLID", "color": {"r": 0, "g": 0, "b": 0}}],
+        "strokeWeight": BORDER_W,
+        "strokeAlign": "INSIDE",
         "children": [
+            # ── image_fill: full-bleed image, inset by border width ───────────
             {
                 "type": "RECTANGLE",
                 "name": "image_fill",
-                "x": 0,
-                "y": 0,
-                "width": FRAME_W,
-                "height": FRAME_H,
+                "x": IMAGE_X,
+                "y": IMAGE_Y,
+                "width": IMAGE_W,
+                "height": IMAGE_H,
                 "fills": [
                     {
                         "type": "IMAGE",
@@ -265,32 +297,68 @@ def _build_beat_frame(beat: Dict[str, Any], index: int) -> Dict[str, Any]:
                     }
                 ],
             },
+            # ── caption_bg: semi-opaque black bar behind narrator text ────────
+            {
+                "type": "RECTANGLE",
+                "name": "caption_bg",
+                "x": IMAGE_X,
+                "y": CAPTION_Y,
+                "width": IMAGE_W,
+                "height": CAPTION_H,
+                "fills": [
+                    {"type": "SOLID", "color": {"r": 0, "g": 0, "b": 0}, "opacity": 0.82}
+                ],
+            },
+            # ── label: narrator line inside the caption box ───────────────────
             {
                 "type": "TEXT",
                 "name": "label",
-                "x": 24,
-                "y": FRAME_H - LABEL_H - 16,
-                "width": FRAME_W - 48,
+                "x": LABEL_X,
+                "y": LABEL_Y,
+                "width": LABEL_W,
                 "height": LABEL_H,
                 "characters": narrator,
                 "style": {
-                    "fontSize": 18,
-                    "fontWeight": 500,
+                    "fontFamily": "Inter",
+                    "fontSize": 15,
+                    "fontWeight": 600,
                     "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 1}}],
+                    "letterSpacing": 0.1,
                 },
             },
+            # ── beat_number: yellow badge top-left ────────────────────────────
+            {
+                "type": "TEXT",
+                "name": "beat_number",
+                "x": BEAT_NUM_X,
+                "y": BEAT_NUM_Y,
+                "width": BEAT_NUM_W,
+                "height": BEAT_NUM_H,
+                "characters": f"#{beat_num:02d}",
+                "style": {
+                    "fontFamily": "Inter",
+                    "fontSize": 14,
+                    "fontWeight": 700,
+                    "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 0, "a": 1}}],
+                    "letterSpacing": 0.5,
+                },
+            },
+            # ── meta: camera · lighting, top-right ───────────────────────────
             {
                 "type": "TEXT",
                 "name": "meta",
-                "x": FRAME_W - 260,
-                "y": 16,
-                "width": 244,
+                "x": META_X,
+                "y": META_Y,
+                "width": META_W,
                 "height": META_H,
-                "characters": f"{camera} · {lighting}",
+                "characters": meta_text,
                 "style": {
-                    "fontSize": 13,
-                    "fontWeight": 400,
-                    "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 0.75}}],
+                    "fontFamily": "Inter",
+                    "fontSize": 11,
+                    "fontWeight": 500,
+                    "fills": [{"type": "SOLID", "color": {"r": 1, "g": 1, "b": 1, "a": 0.80}}],
+                    "textAlignHorizontal": "RIGHT",
+                    "letterSpacing": 0.3,
                 },
             },
         ],

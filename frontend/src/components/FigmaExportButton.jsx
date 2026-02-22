@@ -33,14 +33,19 @@ const ExternalLinkIcon = () => (
   </svg>
 )
 
-// ── Build the figma:// deep link URL ─────────────────────────────────────────
-function buildDeepLink(storyboardId, apiUrl) {
-  // Figma deep link format:
-  //   figma://run?pluginId=<id>&pluginData=<json>
-  // When the user clicks this in a browser, macOS opens Figma desktop and
-  // launches the plugin with the pluginData available as figma.pluginData.
-  const pluginData = JSON.stringify({ storyboard_id: storyboardId, api_url: apiUrl })
-  return `figma://run?pluginId=playwright-storyboard-exporter&pluginData=${encodeURIComponent(pluginData)}`
+// ── Open Figma desktop app ────────────────────────────────────────────────────
+// figma://run deep links only work for published Community plugins.
+// For a dev plugin the reliable path is: copy the storyboard ID, open Figma,
+// then run the plugin manually (Plugins → Development → PLAYWRIGHT Storyboard).
+function openFigmaDesktop() {
+  // Try to open Figma desktop via the figma:// scheme.
+  // If Figma desktop is installed this will focus it; otherwise it falls back
+  // to the web app.
+  window.location.href = 'figma://'
+  // Fallback: open Figma web after a short delay in case desktop didn't open
+  setTimeout(() => {
+    window.open('https://www.figma.com', '_blank')
+  }, 1500)
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -92,8 +97,6 @@ export default function FigmaExportButton({ beats, disabled }) {
     }
   }
 
-  const deepLink = storyboardId ? buildDeepLink(storyboardId, API_URL) : '#'
-
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-4 space-y-3">
       <AnimatePresence mode="wait">
@@ -133,7 +136,7 @@ export default function FigmaExportButton({ beats, disabled }) {
           </motion.div>
         )}
 
-        {/* ── Ready: deep link + copy fallback ────────────────────────────── */}
+        {/* ── Ready: two-step copy + open flow ────────────────────────────── */}
         {state === 'ready' && (
           <motion.div
             key="ready"
@@ -142,38 +145,47 @@ export default function FigmaExportButton({ beats, disabled }) {
             exit={{ opacity: 0, y: -8 }}
             className="space-y-3"
           >
-            {/* Primary CTA — opens Figma desktop and launches the plugin */}
-            <a
-              href={deepLink}
-              className="flex items-center justify-center gap-3 w-full py-4 bg-[#7B61FF] hover:bg-[#6B51EF] text-white font-semibold rounded-xl transition-colors"
-            >
-              <FigmaLogo />
-              Open in Figma Plugin
-              <ExternalLinkIcon />
-            </a>
-
-            {/* Info row */}
-            <p className="text-center text-xs text-white/40 leading-relaxed">
-              Opens Figma desktop and launches the PLAYWRIGHT plugin automatically.
-              <br />
-              The plugin will import your storyboard with one click.
-            </p>
-
-            {/* Fallback — copy the storyboard ID for manual paste */}
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
-              <span className="text-xs text-white/40 flex-shrink-0">Storyboard ID</span>
-              <span className="flex-1 text-xs text-white/70 font-mono truncate">{storyboardId}</span>
-              <button
-                onClick={handleCopyId}
-                title="Copy storyboard ID"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 text-xs font-medium transition-colors flex-shrink-0"
-              >
-                {copied ? <CheckIcon /> : <CopyIcon />}
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
+            {/* Step 1 — Copy storyboard ID */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-3 space-y-2">
+              <p className="text-xs font-semibold text-white/60 uppercase tracking-wider">
+                Step 1 — Copy your Storyboard ID
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="flex-1 text-xs text-white/80 font-mono truncate bg-black/30 rounded-lg px-3 py-2 border border-white/10">
+                  {storyboardId}
+                </span>
+                <button
+                  onClick={handleCopyId}
+                  title="Copy storyboard ID"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#7B61FF] hover:bg-[#6B51EF] text-white text-xs font-semibold transition-colors flex-shrink-0"
+                >
+                  {copied ? <CheckIcon /> : <CopyIcon />}
+                  {copied ? 'Copied!' : 'Copy ID'}
+                </button>
+              </div>
             </div>
 
-            {/* Re-export link */}
+            {/* Step 2 — Open Figma and run plugin */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-3 space-y-2">
+              <p className="text-xs font-semibold text-white/60 uppercase tracking-wider">
+                Step 2 — Open Figma &amp; run the plugin
+              </p>
+              <button
+                onClick={openFigmaDesktop}
+                className="flex items-center justify-center gap-3 w-full py-3 bg-[#7B61FF] hover:bg-[#6B51EF] text-white font-semibold rounded-xl transition-colors"
+              >
+                <FigmaLogo size={18} />
+                Open Figma
+                <ExternalLinkIcon />
+              </button>
+              <p className="text-xs text-white/35 leading-relaxed">
+                In Figma: <span className="text-white/55">Plugins → Development → PLAYWRIGHT Storyboard</span>
+                <br />
+                Paste the copied ID and click <span className="text-white/55">Import Storyboard</span>.
+              </p>
+            </div>
+
+            {/* Re-export */}
             <button
               onClick={() => { setState('idle'); setStoryboardId(null) }}
               className="w-full text-xs text-white/30 hover:text-white/50 transition-colors py-1"

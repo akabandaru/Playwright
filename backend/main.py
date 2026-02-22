@@ -114,6 +114,129 @@ async def root():
     return {"message": "Welcome to PLAYWRIGHT API", "version": "1.0.0"}
 
 
+def _assign_character_seeds(beats: list[dict]) -> dict[str, int]:
+    """
+    Assign one stable seed per character name, derived deterministically from
+    the name itself. Every beat that contains that character will use the same
+    seed, so the diffusion model starts from the same noise state and produces
+    consistent facial structure, body proportions, and clothing across all beats.
+
+    The seed is a 31-bit positive integer (FLUX accepts 1–2_147_483_647).
+    Using hashlib keeps it stable across Python runs (unlike hash()).
+    """
+    import hashlib
+
+    char_seeds: dict[str, int] = {}
+    all_names: set[str] = set()
+    for beat in beats:
+        all_names.update(beat.get("characters_present", []))
+
+    for name in all_names:
+        digest = int(hashlib.sha256(name.encode()).hexdigest(), 16)
+        char_seeds[name] = (digest % 2_147_483_646) + 1  # clamp to [1, 2^31-1]
+
+    return char_seeds
+
+
+def _pick_beat_seed(beat: dict, char_seeds: dict[str, int], scene_seed: int) -> int:
+    """
+    Return the seed to use for this beat.
+
+    Priority:
+      1. If one character is present → use that character's seed.
+      2. If multiple characters are present → use the seed of the first listed
+         (the "dominant" character in the beat).
+      3. No characters → use the scene seed so environment stays consistent.
+    """
+    present = beat.get("characters_present", [])
+    for name in present:
+        if name in char_seeds:
+            return char_seeds[name]
+    return scene_seed
+
+
+def _build_diffusion_prompt(
+    beat: dict,
+    scene_context: dict,
+    char_desc_map: dict,
+) -> str:
+    """
+    Assemble a single, complete diffusion prompt from all available context.
+
+    The image provider server only uses visual_description — everything else
+    (mood, lighting, color_palette, character descriptions, scene style) must
+    be baked directly into this string. FLUX.1-schnell responds best to dense,
+    comma-separated tag-style prompts.
+
+    Character descriptions are placed FIRST so the model weights them most
+    heavily — this is the primary lever for appearance consistency alongside
+    seed locking.
+    """
+    parts: list[str] = []
+
+    # ── 1. Character physical descriptions FIRST (highest model weight) ───────
+    # Placing these before the scene description makes the model anchor on
+    # character appearance before interpreting the environment.
+    for name in beat.get("characters_present", []):
+        desc = char_desc_map.get(name, "").strip()
+        if desc:
+            parts.append(desc)
+
+    # ── 2. Core visual description from Gemini ────────────────────────────────
+    visual = beat.get("visual_description", "").strip()
+    if visual:
+        parts.append(visual)
+
+    # ── 3. Lighting ───────────────────────────────────────────────────────────
+    lighting = beat.get("lighting", "").strip()
+    if lighting:
+        parts.append(f"{lighting} lighting")
+
+    # ── 4. Mood as atmosphere tag ─────────────────────────────────────────────
+    mood = beat.get("mood", "").strip()
+    if mood and mood != "default":
+        parts.append(f"{mood} atmosphere")
+
+    # ── 5. Color palette ──────────────────────────────────────────────────────
+    palette = beat.get("color_palette", "").strip()
+    if palette:
+        parts.append(palette)
+
+    # ── 6. Foreground depth cue ───────────────────────────────────────────────
+    fg = beat.get("foreground_elements", "").strip()
+    if fg:
+        parts.append(fg)
+
+    # ── 7. Scene-level style (film stock + color grade + visual style) ────────
+    sc = scene_context or {}
+    style_tags: list[str] = []
+    if sc.get("visual_style"):
+        style_tags.append(sc["visual_style"])
+    if sc.get("film_stock"):
+        style_tags.append(sc["film_stock"])
+    if sc.get("color_grade"):
+        style_tags.append(sc["color_grade"])
+    if sc.get("genre"):
+        style_tags.append(sc["genre"])
+    if sc.get("era"):
+        style_tags.append(sc["era"])
+    if style_tags:
+        parts.append(", ".join(style_tags))
+
+    # ── 8. Cinematic quality tail ─────────────────────────────────────────────
+    parts.append("cinematic composition, professional photography, highly detailed, sharp focus")
+
+    return ", ".join(p for p in parts if p)
+
+
+def _build_negative_prompt(scene_context: dict, beat: dict) -> Optional[str]:
+    """Merge scene-level and beat-level negative prompt hints."""
+    global_neg = (scene_context or {}).get("negative_space", "")
+    beat_neg = beat.get("negative_prompt_hints", "")
+    combined = ", ".join(filter(None, [global_neg, beat_neg]))
+    return combined if combined else None
+
+
 async def generate_images_for_beats(beats: List[dict]) -> List[dict]:
     """Generate images for all beats using the image provider."""
     image_results = []
@@ -163,7 +286,29 @@ async def api_generate_video(request: ScriptRequest):
             
             result = await decompose_scene(request.script)
             beats = result["beats"]
-            
+            character_bible = result.get("character_bible", [])
+            scene_context = result.get("scene_context", {})
+
+            # Build a lookup from character name → physical description for prompt injection
+            char_desc_map = {
+                entry["name"]: entry["description"]
+                for entry in character_bible
+                if isinstance(entry, dict) and entry.get("name") and entry.get("description")
+            }
+
+            # Assign one stable seed per character (derived from their name) so every
+            # beat featuring the same character starts from the same noise state,
+            # producing consistent appearance across the whole storyboard.
+            char_seeds = _assign_character_seeds(beats)
+
+            # Scene seed: used for beats with no characters (environment/establishing shots).
+            # Derived from the script text so the world looks consistent too.
+            import hashlib as _hl
+            scene_seed = (int(_hl.sha256(request.script[:512].encode()).hexdigest(), 16) % 2_147_483_646) + 1
+
+            if char_seeds:
+                print(f"[PIPELINE] Character seeds: { {n: s for n, s in char_seeds.items()} }")
+
             yield f"data: {json.dumps({'stage': 'analyzing', 'message': f'Found {len(beats)} beats', 'beats': beats})}\n\n"
             
             # Stage 2: Generate visuals and narration in parallel
@@ -176,19 +321,32 @@ async def api_generate_video(request: ScriptRequest):
             # Generate images one by one and stream each as it completes
             for i, beat in enumerate(beats):
                 print(f"[PIPELINE]: Generating image {i+1}/{len(beats)}...")
-                print(f"  Visual: {beat.get('visual_description', '')[:100]}...")
-                print(f"  Camera: {beat.get('camera_angle', '')} | Mood: {beat.get('mood', '')} | Lighting: {beat.get('lighting', '')}")
+
+                # Assemble the full diffusion prompt — the server only uses visual_description
+                diffusion_prompt = _build_diffusion_prompt(beat, scene_context, char_desc_map)
+                negative = _build_negative_prompt(scene_context, beat)
+
+                # Pick seed: character seed if any character present, else scene seed
+                beat_seed = _pick_beat_seed(beat, char_seeds, scene_seed)
+                present = beat.get("characters_present", [])
+                seed_source = present[0] if present else "scene"
+                print(f"  Prompt ({len(diffusion_prompt)} chars): {diffusion_prompt[:120]}...")
+                print(f"  Seed: {beat_seed} (from: {seed_source}) | Camera: {beat.get('camera_angle', '')} | Mood: {beat.get('mood', '')}")
                 yield f"data: {json.dumps({'stage': 'generating', 'message': f'Generating image {i+1} of {len(beats)}...'})}\n\n"
-                
+
                 payload = ImageProviderBeatPayload(
                     beat_number=beat.get("beat_number", 0),
-                    visual_description=beat.get("visual_description", ""),
+                    visual_description=diffusion_prompt,
                     camera_angle=beat.get("camera_angle", ""),
                     mood=beat.get("mood", ""),
                     lighting=beat.get("lighting", ""),
                     characters_present=beat.get("characters_present", []),
                     narrator_line=beat.get("narrator_line", ""),
                     music_style=beat.get("music_style") or beat.get("music_recommendation"),
+                    negative_prompt=negative,
+                    steps=20,
+                    guidance_scale=7.0,
+                    seed=beat_seed,
                 )
                 
                 result = await generate_beat_image(payload)
@@ -202,7 +360,7 @@ async def api_generate_video(request: ScriptRequest):
                 # Update beat with image URL
                 beat["imageUrl"] = image_url
                 beat["image_url"] = image_url
-                
+
                 # Stream the updated beat immediately
                 yield f"data: {json.dumps({'stage': 'generating', 'message': f'Image {i+1} of {len(beats)} complete', 'beatUpdate': {'index': i, 'beat': beat}})}\n\n"
             
