@@ -195,6 +195,105 @@ async function createBeatFrame(frameDesc, beatIndex, totalBeats, apiUrl) {
   return { frameNode: frame, imageNodeId, labelNodeId, metaNodeId };
 }
 
+// ── Template patch mode ───────────────────────────────────────────────────────
+// Patches existing nodes in the Figma template using node IDs supplied by the
+// backend. Uses figma.getNodeById() so the template layout is fully preserved.
+
+async function patchTemplateBeats(payload, apiUrl) {
+  const patches  = payload.patches || [];
+  const sid      = payload.storyboard_id;
+  const fileName = payload.file_name;
+
+  if (!patches.length) {
+    send({ type: 'ERROR', error: 'Patch payload contains no beats.' });
+    return;
+  }
+
+  progress(10, 'Patching ' + patches.length + ' beat(s) into your template\u2026');
+
+  const beatNodeRecords = [];
+  let patchedCount = 0;
+
+  for (let i = 0; i < patches.length; i++) {
+    const patch      = patches[i];
+    const beatNumber = patch.beat_number;
+    const pct        = 15 + Math.round((i / patches.length) * 75);
+
+    progress(pct, 'Beat ' + beatNumber + ': loading image\u2026', i);
+
+    try {
+      // ── Image node: replace fill with the generated image ──────────────
+      if (patch.image_node_id && patch.imageUrl) {
+        var imgNode = figma.getNodeById(patch.image_node_id);
+        if (imgNode) {
+          var ok = await applyImageFill(imgNode, patch.imageUrl, apiUrl);
+          if (!ok) {
+            send({ type: 'BEAT_ERROR', beatIndex: i, beatNumber, error: 'Image load failed' });
+          }
+        }
+      }
+
+      // ── Label node: update narrator text ───────────────────────────────
+      if (patch.label_node_id && patch.label) {
+        var labelNode = figma.getNodeById(patch.label_node_id);
+        if (labelNode && labelNode.type === 'TEXT') {
+          await figma.loadFontAsync(labelNode.fontName);
+          labelNode.characters = patch.label;
+        }
+      }
+
+      // ── Meta node: update camera · lighting text ────────────────────────
+      if (patch.meta_node_id && patch.meta) {
+        var metaNode = figma.getNodeById(patch.meta_node_id);
+        if (metaNode && metaNode.type === 'TEXT') {
+          await figma.loadFontAsync(metaNode.fontName);
+          metaNode.characters = patch.meta;
+        }
+      }
+
+      beatNodeRecords.push({
+        beat_number:   beatNumber,
+        frame_node_id: patch.frame_node_id,
+        image_node_id: patch.image_node_id,
+        label_node_id: patch.label_node_id,
+        meta_node_id:  patch.meta_node_id,
+      });
+
+      patchedCount++;
+      send({ type: 'BEAT_DONE', beatIndex: i });
+
+    } catch (err) {
+      send({ type: 'BEAT_ERROR', beatIndex: i, beatNumber, error: String(err) });
+    }
+  }
+
+  progress(92, 'Fitting canvas\u2026');
+  figma.viewport.scrollAndZoomIntoView(figma.currentPage.children);
+
+  progress(95, 'Registering node mapping with backend\u2026');
+
+  const fileKey = figma.fileKey || '';
+  const fileUrl = fileKey
+    ? 'https://www.figma.com/file/' + fileKey
+    : 'https://www.figma.com/files/recent';
+
+  send({
+    type: 'REGISTER_MAPPING',
+    apiUrl,
+    sid,
+    body: {
+      file_key:   fileKey,
+      file_url:   fileUrl,
+      page_id:    figma.currentPage.id,
+      page_name:  figma.currentPage.name,
+      beat_nodes: beatNodeRecords,
+    },
+  });
+
+  send({ type: 'DONE', storyboard_id: sid, fileName, framesCreated: patchedCount });
+}
+
+
 // ── Main message handler ──────────────────────────────────────────────────────
 
 figma.ui.onmessage = async function(msg) {
@@ -225,9 +324,19 @@ figma.ui.onmessage = async function(msg) {
   if (msg.type !== 'CREATE_STORYBOARD') return;
 
   const { payload, apiUrl } = msg;
-  const frames   = payload.frames || [];
   const sid      = payload.storyboard_id;
   const fileName = payload.file_name;
+
+  // ── Route to the correct mode ─────────────────────────────────────────────
+  // patch_template: update existing nodes in the user's Figma template
+  // create_frames (default): create new frames from scratch
+  if (payload.mode === 'patch_template') {
+    await patchTemplateBeats(payload, apiUrl);
+    return;
+  }
+
+  // ── create_frames mode (no template) ─────────────────────────────────────
+  const frames = payload.frames || [];
 
   if (!frames.length) {
     send({ type: 'ERROR', error: 'Payload contains no frames.' });
@@ -276,7 +385,6 @@ figma.ui.onmessage = async function(msg) {
   progress(90, 'Grouping frames into section\u2026');
   if (createdFrameNodes.length > 0) {
     try {
-      // Compute bounding box of all frames with padding
       var SECTION_PAD = 80;
       var minX = createdFrameNodes[0].x;
       var minY = createdFrameNodes[0].y;
@@ -299,12 +407,10 @@ figma.ui.onmessage = async function(msg) {
         (maxY - minY) + SECTION_PAD * 2
       );
 
-      // Move all beat frames inside the section
       for (var si = 0; si < createdFrameNodes.length; si++) {
         section.appendChild(createdFrameNodes[si]);
       }
     } catch (sectionErr) {
-      // Sections may not be available in all Figma contexts — skip gracefully
       console.warn('Could not create section: ' + String(sectionErr));
     }
   }
@@ -319,7 +425,6 @@ figma.ui.onmessage = async function(msg) {
     ? 'https://www.figma.com/file/' + fileKey
     : 'https://www.figma.com/files/recent';
 
-  // Relay the HTTP registration call through the UI iframe (sandbox can't fetch)
   send({
     type: 'REGISTER_MAPPING',
     apiUrl,

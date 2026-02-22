@@ -4225,55 +4225,55 @@
     "page_id": "0:1",
     "page_name": "Storyboard",
     "created_at": "2026-02-22T06:40:10.198360+00:00",
-    "updated_at": "2026-02-22T06:40:33.881628+00:00",
+    "updated_at": "2026-02-22T07:29:07.349663+00:00",
     "beats": {
       "1": {
-        "frame_node_id": "2:2",
-        "image_node_id": "2:3",
-        "label_node_id": "2:4",
-        "meta_node_id": "2:6",
+        "frame_node_id": "5:157",
+        "image_node_id": "5:158",
+        "label_node_id": "5:159",
+        "meta_node_id": "5:161",
         "beat_number": 1,
-        "last_synced_at": "2026-02-22T06:40:33.831169+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.296357+00:00"
       },
       "2": {
-        "frame_node_id": "2:7",
-        "image_node_id": "2:8",
-        "label_node_id": "2:9",
-        "meta_node_id": "2:11",
+        "frame_node_id": "5:162",
+        "image_node_id": "5:163",
+        "label_node_id": "5:164",
+        "meta_node_id": "5:166",
         "beat_number": 2,
-        "last_synced_at": "2026-02-22T06:40:33.841834+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.309535+00:00"
       },
       "3": {
-        "frame_node_id": "2:12",
-        "image_node_id": "2:13",
-        "label_node_id": "2:14",
-        "meta_node_id": "2:16",
+        "frame_node_id": "5:167",
+        "image_node_id": "5:168",
+        "label_node_id": "5:169",
+        "meta_node_id": "5:171",
         "beat_number": 3,
-        "last_synced_at": "2026-02-22T06:40:33.851897+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.320464+00:00"
       },
       "4": {
-        "frame_node_id": "2:17",
-        "image_node_id": "2:18",
-        "label_node_id": "2:19",
-        "meta_node_id": "2:21",
+        "frame_node_id": "5:172",
+        "image_node_id": "5:173",
+        "label_node_id": "5:174",
+        "meta_node_id": "5:176",
         "beat_number": 4,
-        "last_synced_at": "2026-02-22T06:40:33.861617+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.330420+00:00"
       },
       "5": {
-        "frame_node_id": "2:22",
-        "image_node_id": "2:23",
-        "label_node_id": "2:24",
-        "meta_node_id": "2:26",
+        "frame_node_id": "5:177",
+        "image_node_id": "5:178",
+        "label_node_id": "5:179",
+        "meta_node_id": "5:181",
         "beat_number": 5,
-        "last_synced_at": "2026-02-22T06:40:33.871342+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.340401+00:00"
       },
       "6": {
-        "frame_node_id": "2:27",
-        "image_node_id": "2:28",
-        "label_node_id": "2:29",
-        "meta_node_id": "2:31",
+        "frame_node_id": "5:182",
+        "image_node_id": "5:183",
+        "label_node_id": "5:184",
+        "meta_node_id": "5:186",
         "beat_number": 6,
-        "last_synced_at": "2026-02-22T06:40:33.881625+00:00"
+        "last_synced_at": "2026-02-22T07:29:07.349651+00:00"
       }
     },
     "plugin_payload": {
@@ -5157,6 +5157,97 @@
               }
             }
           ]
+        }
+      ]
+    }
+  },
+  "761ebf0d-13b1-43be-ae6f-321f3567a373": {
+    "file_key": "",
+    "file_url": "https://www.figma.com/files/recent",
+    "file_name": "PLAYWRIGHT — 2026-02-22 02:40",
+    "page_id": "0:1",
+    "page_name": "Page 1",
+    "created_at": "2026-02-22T07:40:30.899211+00:00",
+    "updated_at": "2026-02-22T07:42:41.755580+00:00",
+    "beats": {
+      "1": {
+        "frame_node_id": "60:1151",
+        "image_node_id": "60:1154",
+        "label_node_id": "60:1153",
+        "meta_node_id": "60:1168",
+        "beat_number": 1,
+        "last_synced_at": "2026-02-22T07:42:41.722242+00:00"
+      },
+      "2": {
+        "frame_node_id": "60:1169",
+        "image_node_id": "60:1172",
+        "label_node_id": "60:1171",
+        "meta_node_id": "60:1186",
+        "beat_number": 2,
+        "last_synced_at": "2026-02-22T07:42:41.732448+00:00"
+      },
+      "3": {
+        "frame_node_id": "60:1187",
+        "image_node_id": "60:1190",
+        "label_node_id": "60:1189",
+        "meta_node_id": "60:1204",
+        "beat_number": 3,
+        "last_synced_at": "2026-02-22T07:42:41.744359+00:00"
+      },
+      "4": {
+        "frame_node_id": "60:1205",
+        "image_node_id": "60:1208",
+        "label_node_id": "60:1207",
+        "meta_node_id": "60:1222",
+        "beat_number": 4,
+        "last_synced_at": "2026-02-22T07:42:41.755573+00:00"
+      }
+    },
+    "plugin_payload": {
+      "storyboard_id": "761ebf0d-13b1-43be-ae6f-321f3567a373",
+      "file_name": "PLAYWRIGHT — 2026-02-22 02:40",
+      "page_name": "Page 1",
+      "mode": "patch_template",
+      "patches": [
+        {
+          "beat_number": 1,
+          "frame_node_id": "60:1151",
+          "image_node_id": "60:1154",
+          "label_node_id": "60:1153",
+          "meta_node_id": "60:1168",
+          "imageUrl": "http://localhost:8000/api/image/beat_1_80b35630-a1ae-4ac6-b6d8-12734e17391a.png",
+          "label": "The city never slept, but tonight, it felt like it was holding its breath, waiting for the next shoe to drop.",
+          "meta": "wide shot  ·  chiaroscuro"
+        },
+        {
+          "beat_number": 2,
+          "frame_node_id": "60:1169",
+          "image_node_id": "60:1172",
+          "label_node_id": "60:1171",
+          "meta_node_id": "60:1186",
+          "imageUrl": "http://localhost:8000/api/image/beat_2_1eaadaa8-38b6-4abb-aa94-c04284baf45b.png",
+          "label": "Every step was a gamble, every shadow a potential trap. He ran not from, but towards, a reckoning he knew was coming.",
+          "meta": "medium shot  ·  high-contrast, wet reflections"
+        },
+        {
+          "beat_number": 3,
+          "frame_node_id": "60:1187",
+          "image_node_id": "60:1190",
+          "label_node_id": "60:1189",
+          "meta_node_id": "60:1204",
+          "imageUrl": "http://localhost:8000/api/image/beat_3_1935098e-a19d-40cc-a334-9c2eb28f0058.png",
+          "label": "He carried the weight of the city on his shoulders, and tonight, the only way out was through the storm, not around it.",
+          "meta": "close up  ·  hard, dramatic backlight"
+        },
+        {
+          "beat_number": 4,
+          "frame_node_id": "60:1205",
+          "image_node_id": "60:1208",
+          "label_node_id": "60:1207",
+          "meta_node_id": "60:1222",
+          "imageUrl": "http://localhost:8000/api/image/beat_4_7627d6a3-dcb9-4cfd-9e45-fb72aecc3027.png",
+          "label": "The chase was far from over, but for now, he had bought himself another breath, another beat in the city's dark heart.",
+          "meta": "full shot  ·  silhouetted, atmospheric haze"
         }
       ]
     }

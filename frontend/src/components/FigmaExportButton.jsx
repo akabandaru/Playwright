@@ -33,19 +33,13 @@ const ExternalLinkIcon = () => (
   </svg>
 )
 
-// ── Open Figma desktop app ────────────────────────────────────────────────────
-// figma://run deep links only work for published Community plugins.
-// For a dev plugin the reliable path is: copy the storyboard ID, open Figma,
-// then run the plugin manually (Plugins → Development → PLAYWRIGHT Storyboard).
-function openFigmaDesktop() {
-  // Try to open Figma desktop via the figma:// scheme.
-  // If Figma desktop is installed this will focus it; otherwise it falls back
-  // to the web app.
-  window.location.href = 'figma://'
-  // Fallback: open Figma web after a short delay in case desktop didn't open
-  setTimeout(() => {
-    window.open('https://www.figma.com', '_blank')
-  }, 1500)
+// ── Open Figma with the plugin pre-filled via deep link ──────────────────────
+// The figma://run deep link works for dev plugins when Figma desktop is open.
+// It passes the storyboard_id directly so the plugin auto-starts the import.
+function openFigmaWithPlugin(storyboardId) {
+  const pluginData = JSON.stringify({ storyboard_id: storyboardId, api_url: API_URL })
+  const deepLink = `figma://run?pluginId=playwright-storyboard-exporter&pluginData=${encodeURIComponent(pluginData)}`
+  window.location.href = deepLink
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -85,7 +79,6 @@ export default function FigmaExportButton({ beats, disabled }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (_) {
-      // Fallback for non-secure contexts
       const el = document.createElement('textarea')
       el.value = storyboardId
       document.body.appendChild(el)
@@ -95,6 +88,10 @@ export default function FigmaExportButton({ beats, disabled }) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
+  }
+
+  const handleOpenFigma = () => {
+    openFigmaWithPlugin(storyboardId)
   }
 
   return (
@@ -136,7 +133,7 @@ export default function FigmaExportButton({ beats, disabled }) {
           </motion.div>
         )}
 
-        {/* ── Ready: two-step copy + open flow ────────────────────────────── */}
+        {/* ── Ready ───────────────────────────────────────────────────────── */}
         {state === 'ready' && (
           <motion.div
             key="ready"
@@ -145,44 +142,43 @@ export default function FigmaExportButton({ beats, disabled }) {
             exit={{ opacity: 0, y: -8 }}
             className="space-y-3"
           >
-            {/* Step 1 — Copy storyboard ID */}
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3 space-y-2">
-              <p className="text-xs font-semibold text-white/60 uppercase tracking-wider">
-                Step 1 — Copy your Storyboard ID
-              </p>
-              <div className="flex items-center gap-2">
-                <span className="flex-1 text-xs text-white/80 font-mono truncate bg-black/30 rounded-lg px-3 py-2 border border-white/10">
-                  {storyboardId}
-                </span>
+            {/* Primary CTA — open Figma with plugin pre-filled */}
+            <button
+              onClick={handleOpenFigma}
+              className="flex items-center justify-center gap-3 w-full py-4 bg-[#7B61FF] hover:bg-[#6B51EF] text-white font-semibold rounded-xl transition-colors"
+            >
+              <FigmaLogo />
+              Open in Figma
+              <ExternalLinkIcon />
+            </button>
+
+            <p className="text-xs text-white/40 text-center leading-relaxed px-2">
+              Figma will open with the plugin pre-filled. Click{' '}
+              <span className="text-white/60">Import Storyboard</span> to populate your template.
+              <br />
+              <span className="text-white/30">
+                If the plugin doesn't open automatically: Plugins → Development → PLAYWRIGHT Storyboard
+              </span>
+            </p>
+
+            {/* Storyboard ID — collapsed, copy available as fallback */}
+            <div className="rounded-xl bg-white/5 border border-white/10 p-3">
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">
+                  Storyboard ID
+                </p>
                 <button
                   onClick={handleCopyId}
                   title="Copy storyboard ID"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#7B61FF] hover:bg-[#6B51EF] text-white text-xs font-semibold transition-colors flex-shrink-0"
+                  className="flex items-center gap-1 text-xs text-white/40 hover:text-white/70 transition-colors"
                 >
                   {copied ? <CheckIcon /> : <CopyIcon />}
-                  {copied ? 'Copied!' : 'Copy ID'}
+                  {copied ? 'Copied!' : 'Copy'}
                 </button>
               </div>
-            </div>
-
-            {/* Step 2 — Open Figma and run plugin */}
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3 space-y-2">
-              <p className="text-xs font-semibold text-white/60 uppercase tracking-wider">
-                Step 2 — Open Figma &amp; run the plugin
-              </p>
-              <button
-                onClick={openFigmaDesktop}
-                className="flex items-center justify-center gap-3 w-full py-3 bg-[#7B61FF] hover:bg-[#6B51EF] text-white font-semibold rounded-xl transition-colors"
-              >
-                <FigmaLogo size={18} />
-                Open Figma
-                <ExternalLinkIcon />
-              </button>
-              <p className="text-xs text-white/35 leading-relaxed">
-                In Figma: <span className="text-white/55">Plugins → Development → PLAYWRIGHT Storyboard</span>
-                <br />
-                Paste the copied ID and click <span className="text-white/55">Import Storyboard</span>.
-              </p>
+              <span className="block text-xs text-white/50 font-mono truncate">
+                {storyboardId}
+              </span>
             </div>
 
             {/* Re-export */}

@@ -282,14 +282,16 @@
   }
 
   // ── Beat chips ────────────────────────────────────────────────────────────
-  function renderChips(frames) {
+  function renderChips(items) {
     const wrap = document.getElementById('beat-preview');
     wrap.innerHTML = '';
-    frames.forEach((f, i) => {
+    items.forEach((item, i) => {
       const chip = document.createElement('span');
       chip.className = 'beat-chip';
       chip.id = `chip-${i}`;
-      chip.textContent = `Beat ${f.name.split(' ')[1]}`;
+      // patch_template items have beat_number; create_frames items have name "Beat N"
+      const num = item.beat_number || (item.name && item.name.split(' ')[1]) || (i + 1);
+      chip.textContent = `Beat ${num}`;
       wrap.appendChild(chip);
     });
     wrap.classList.add('visible');
@@ -373,9 +375,11 @@
       // Payload fetched by code.js sandbox on our behalf
       case 'FETCH_PAYLOAD_RESULT': {
         const payload = msg.payload;
-        const frames  = payload.frames || [];
-        log('Payload received \u2014 ' + frames.length + ' beat(s), file: "' + payload.file_name + '"', 'ok');
-        renderChips(frames);
+        // Support both patch_template mode (patches[]) and create_frames mode (frames[])
+        const items = payload.patches || payload.frames || [];
+        const modeLabel = payload.mode === 'patch_template' ? 'template patch' : 'new frames';
+        log('Payload received \u2014 ' + items.length + ' beat(s) [' + modeLabel + '], file: "' + payload.file_name + '"', 'ok');
+        renderChips(items);
         setProgress(15);
         if (cancelled) { reset(); return; }
         parent.postMessage({
