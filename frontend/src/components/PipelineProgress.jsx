@@ -39,7 +39,7 @@ export default function PipelineProgress({ stage, message }) {
           <div className="absolute top-6 left-0 right-0 h-1 bg-white/10 rounded-full" />
 
           <motion.div
-            className="absolute top-6 left-0 h-1 bg-gradient-to-r from-accent-gold to-accent-teal rounded-full"
+            className="absolute top-6 left-0 h-1 bg-linear-to-r from-accent-gold to-accent-teal rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
