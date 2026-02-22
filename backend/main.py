@@ -3,6 +3,7 @@ import json
 import time
 import uuid
 import asyncio
+import httpx
 from pathlib import Path
 from typing import List, Optional
 from fastapi import FastAPI, HTTPException
@@ -427,14 +428,29 @@ async def _regenerate_image_for_beat(beat: dict, style_mode: str) -> dict:
 
 async def _regenerate_narrator_for_beat(beat: dict) -> dict:
     """Shared logic: generate new narrator audio for a beat and return {audio_path, audio_url}."""
+    
     text = beat.get("narrator_line", "")
     beat_number = beat.get("beat_number", 1)
     mood = beat.get("mood", "default").lower()
     music_style = beat.get("music_style", "cinematic")
     visuals = beat.get("visual_description", "")
     voice_id = MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
-    audio_path = await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style)
-    return {"audio_path": audio_path, "audio_url": f"/api/audio/{Path(audio_path).name}"}
+
+    async with httpx.AsyncClient(timeout=60) as client:
+        audio_path = await generate_scene_audio(
+            text,
+            visuals,
+            beat_number,
+            voice_id,
+            mood,
+            music_style,
+            client
+        )
+
+    return {
+        "audio_path": audio_path,
+        "audio_url": f"/api/audio/{Path(audio_path).name}"
+    }
 
 
 @app.post("/api/regenerate-image")
