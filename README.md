@@ -1,4 +1,6 @@
-# Full Stack Application
+# **Note:** `main2` is our main file.
+
+# Playwright
 
 A modern full-stack application with React (Vite) frontend and FastAPI backend.
 
@@ -108,11 +110,11 @@ npm run preview  # Preview production build
 
 ## API Endpoints
 
-| Method | Endpoint  | Description        |
-|--------|-----------|-------------------|
-| GET    | /         | Welcome message   |
-| GET    | /health   | Health check      |
-| GET    | /docs     | API documentation |
+| Method | Endpoint | Description       |
+| ------ | -------- | ----------------- |
+| GET    | /        | Welcome message   |
+| GET    | /health  | Health check      |
+| GET    | /docs    | API documentation |
 
 ## External Image Provider Integration
 
