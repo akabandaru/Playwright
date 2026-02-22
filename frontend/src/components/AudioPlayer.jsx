@@ -4,28 +4,49 @@ const API_URL = "http://localhost:8000";
 
 export default function AudioPlayer({ audioPath }) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const audioRef = useRef(null);
 
   if (!audioPath) return null;
 
   const audioUrl = audioPath.startsWith("http")
     ? audioPath
-    : `${API_URL}/api/audio/${encodeURIComponent(audioPath)}`;
+    : audioPath.startsWith("/")
+      ? `${API_URL}${audioPath}`
+      : `${API_URL}/api/audio/${encodeURIComponent(audioPath)}`;
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
+  const togglePlay = async () => {
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      try {
+        setHasError(false);
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch {
+        setHasError(true);
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
-  const handleEnded = () => {
+  const handleEnded = () => setIsPlaying(false);
+
+  const handleError = () => {
+    setHasError(true);
     setIsPlaying(false);
   };
+
+  if (hasError) {
+    return (
+      <div className="flex items-center gap-2 p-3 bg-red-500/10 rounded-lg">
+        <span className="text-red-400/60 text-xs">Audio unavailable</span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
@@ -56,6 +77,7 @@ export default function AudioPlayer({ audioPath }) {
         ref={audioRef}
         src={audioUrl}
         onEnded={handleEnded}
+        onError={handleError}
         preload="none"
       />
     </div>

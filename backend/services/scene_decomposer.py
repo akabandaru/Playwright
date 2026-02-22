@@ -9,8 +9,10 @@ Each beat returned contains:
     lighting, characters_present, narrator_line, music_style
 """
 
+import asyncio
 import json
 import os
+import re
 import time
 from typing import Any, Dict, List
 
@@ -21,12 +23,17 @@ import services.databricks_service as db
 
 # Initialized lazily so load_dotenv() has already run before the key is read
 _client: "genai.Client | None" = None
+_client_key: str | None = None
 
 
 def _get_client() -> "genai.Client":
-    global _client
-    if _client is None:
-        _client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+    global _client, _client_key
+    current_key = os.getenv("GEMINI_API_KEY")
+    if not current_key:
+        raise ValueError("GEMINI_API_KEY is not set in environment / .env")
+    if _client is None or _client_key != current_key:
+        _client = genai.Client(api_key=current_key)
+        _client_key = current_key
     return _client
 
 async def close_client():
@@ -35,24 +42,11 @@ async def close_client():
         await _client.aio.aclose()
         _client = None
 
-_SYSTEM_INSTRUCTION = """You are a professional film director and screenwriter.
-Your job is to break a screenplay scene into distinct visual beats suitable for storyboarding.
-
-Return a top-level JSON object with keys:
-    character_bible       (array of objects with keys: name, description)
-    beats                 (array of beat objects)
-
-For each character in character_bible:
-    - Use canonical character names as they appear in the script
-    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
-        clothing palette, signature accessory, and cinematic style notes
-    - Keep each description 180-260 characters and physically specific
-
-For each beat, return a JSON object with EXACTLY these keys:
+_BEAT_FIELD_RULES = """For each beat, return a JSON object with EXACTLY these keys:
   beat_number          (integer, starting at 1)
 
   visual_description   (string — what is visible in the frame; be highly descriptive about environment, texture, time of day, weather, architecture, props, depth, and atmosphere)
-    camera_angle         (MUST be one of EXACTLY these: extreme close up, close up, medium shot, full shot, wide shot, long shot)
+  camera_angle         (MUST be one of EXACTLY these: extreme close up, close up, medium shot, full shot, wide shot, long shot)
   mood                 (string — emotional tone of the beat, choose the best match from: happy, sad, tense, calm, melancholic, mysterious, default)
   lighting             (string — lighting style, e.g., harsh, soft, natural, dim, overcast, etc.)
   characters_present   (array of character names in the current beat, only include characters visible in the scene)
@@ -70,11 +64,47 @@ For each beat, return a JSON object with EXACTLY these keys:
   music_style          (string — music style or feel for this beat, e.g., ambient, orchestral, dark, melancholic, tense, etc.)
 
 Critical continuity and environment rules:
-    - Reuse character_bible details whenever a character appears in a beat.
     - Ensure each visual_description has rich environmental detail first, then character action.
-    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic.
+    - Avoid generic phrases like "nice room" or "city street"; be concrete and cinematic."""
 
-Return ONLY a valid JSON object: {"character_bible": [...], "beats": [ ... ]}
+_SYSTEM_INSTRUCTION = f"""You are a professional film director and screenwriter.
+Your job is to break a screenplay scene into distinct visual beats suitable for storyboarding.
+
+Return a top-level JSON object with keys:
+    character_bible       (array of objects with keys: name, description)
+    beats                 (array of beat objects)
+
+For each character in character_bible:
+    - Use canonical character names as they appear in the script
+    - description must lock visual continuity: age range, build, skin tone, hair, face traits,
+        clothing palette, signature accessory, and cinematic style notes
+    - Keep each description 180-260 characters and physically specific
+
+{_BEAT_FIELD_RULES}
+
+Additional rules:
+    - Reuse character_bible details whenever a character appears in a beat.
+
+Return ONLY a valid JSON object: {{"character_bible": [...], "beats": [ ... ]}}
+No markdown, no explanation, no extra keys.
+"""
+
+_REIMAGINE_SYSTEM_INSTRUCTION = f"""You are a professional film director and screenwriter.
+You are revising a SINGLE storyboard beat based on user feedback.
+
+You will receive the current beat as JSON plus the user's correction or request.
+Apply the user's feedback to produce a revised version of EXACTLY this one beat.
+
+RULES:
+- Return EXACTLY ONE beat — never split it into multiple beats.
+- Keep the same beat_number.
+- Preserve any fields the user did NOT ask to change.
+- Apply the user's feedback precisely — if they say "6 infinity stones not 8", fix that detail.
+- If the feedback changes the mood or tone, update mood, lighting, narrator_line, visuals, and music_style to match.
+
+{_BEAT_FIELD_RULES}
+
+Return ONLY a valid JSON object with the single revised beat: {{"beat": {{...}}}}
 No markdown, no explanation, no extra keys.
 """
 
@@ -239,8 +269,8 @@ async def decompose_scene(
     """
     normalized_genre = _normalize_genre_preset(genre_preset)
     normalized_style = _normalize_style_mode(style_mode)
-    genre_prompt = _GENRE_PRESET_PROMPTS[normalized_genre]
-    style_prompt = _STYLE_MODE_PROMPTS[normalized_style]
+    genre_prompt = _GENRE_PRESET_PROMPTS[_normalize_genre_preset(genre_preset)]
+    style_prompt = _STYLE_MODE_PROMPTS[_normalize_style_mode(style_mode)]
 
     print(
         f"[DECOMPOSER] Starting run (genre_preset={normalized_genre}, style_mode={normalized_style})..."
@@ -336,13 +366,81 @@ Return JSON:"""
         raise RuntimeError(f"decompose_scene failed: {exc}") from exc
 
 
+async def reimagine_beat(
+    current_beat: Dict[str, Any],
+    user_feedback: str,
+    genre_preset: str = "none",
+    style_mode: str = "photoreal",
+) -> Dict[str, Any]:
+    """
+    Revise a single beat based on user feedback using Gemini.
+
+    Sends the current beat JSON + the user's natural-language correction to Gemini
+    and returns exactly one updated beat with the same structure.
+    """
+    
+    genre_prompt = _GENRE_PRESET_PROMPTS[_normalize_genre_preset(genre_preset)]
+    style_prompt = _STYLE_MODE_PROMPTS[_normalize_style_mode(style_mode)]
+
+    prompt = f"""{_REIMAGINE_SYSTEM_INSTRUCTION}
+
+Genre visual grammar guidance:
+{genre_prompt}
+
+Style guidance:
+{style_prompt}
+
+CURRENT BEAT:
+{json.dumps(current_beat, indent=2)}
+
+USER FEEDBACK:
+{user_feedback}
+
+Return the revised beat as JSON:"""
+
+    print(f"[REIMAGINE] Beat {current_beat.get('beat_number')} — feedback: {user_feedback[:100]}")
+
+    try:
+        response = await _get_client().aio.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.5,
+                top_p=0.9,
+                top_k=40,
+                max_output_tokens=4096,
+                response_mime_type="application/json",
+            ),
+        )
+
+        raw_text = response.text
+        parsed = json.loads(raw_text)
+
+        if isinstance(parsed, dict) and "beat" in parsed:
+            beat = parsed["beat"]
+        elif isinstance(parsed, dict) and "beats" in parsed and len(parsed["beats"]) > 0:
+            beat = parsed["beats"][0]
+        elif isinstance(parsed, dict) and "beat_number" in parsed:
+            beat = parsed
+        else:
+            raise ValueError(f"Unexpected response shape: {list(parsed.keys()) if isinstance(parsed, dict) else type(parsed)}")
+
+        beat["beat_number"] = current_beat.get("beat_number", 1)
+        beats = _enforce_camera_angle_map([beat])
+        beat = beats[0]
+
+        print(f"[REIMAGINE] Beat {beat['beat_number']} revised successfully")
+        return beat
+
+    except Exception as exc:
+        raise RuntimeError(f"reimagine_beat failed: {exc}") from exc
+
+
 def _parse_beats(raw: str) -> List[Dict[str, Any]]:
     """
     Robustly extract the beats array from Gemini's JSON response.
     Handles both {"beats": [...]} and a bare [...] array.
     """
-    import re
-    
     # Try direct parse first
     try:
         parsed = json.loads(raw)

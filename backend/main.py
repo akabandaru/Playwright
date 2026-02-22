@@ -11,10 +11,10 @@ from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path(__file__).parent / ".env", override=True)
 
-from services.scene_decomposer import decompose_scene
-from services.elevenlabs_service import generate_voices_and_sfx
+from services.scene_decomposer import decompose_scene, reimagine_beat
+from services.elevenlabs_service import generate_voices_and_sfx, generate_scene_audio, MOOD_VOICE_MAP
 from services.video_service import render_video
 from services.figma_service import (
     create_figma_storyboard,
@@ -85,6 +85,29 @@ class Beat(BaseModel):
     music_style: Optional[str] = None
     imageUrl: Optional[str] = None
     image_url: Optional[str] = None
+
+
+class RegenerateImageRequest(BaseModel):
+    beat: Beat
+    style_mode: Optional[str] = "photoreal"
+
+
+class RegenerateNarratorRequest(BaseModel):
+    beat: Beat
+
+
+class ReimagineBeatRequest(BaseModel):
+    beat: Beat
+    feedback: str
+    genre_preset: Optional[str] = "none"
+    style_mode: Optional[str] = "photoreal"
+    regenerate_image: bool = True
+    regenerate_narrator: bool = True
+
+
+class RenderVideoRequest(BaseModel):
+    beats: list
+    audio_results: list
 
 
 class FigmaExportRequest(BaseModel):
@@ -254,6 +277,7 @@ async def api_generate_video(request: ScriptRequest):
                 beat_num = beat.get("beat_number", 0)
                 if beat_num in audio_map:
                     beat["audio_path"] = audio_map[beat_num]
+                    beat["audio_url"] = f"/api/audio/{Path(audio_map[beat_num]).name}"
             
             # Get music recommendation from first beat that has one
             music_rec = None
@@ -264,19 +288,9 @@ async def api_generate_video(request: ScriptRequest):
 
             yield f"data: {json.dumps({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
             
-            # Stage 3: Render video
-            print("[PIPELINE]: Rendering video...")
-            yield f"data: {json.dumps({'stage': 'rendering', 'message': 'Rendering video...'})}\n\n"
-            
-            video_result = await render_video(beats=beats, audio_files=audio_results)
-            print(f"[PIPELINE] complete")
-            
-            video_url = f"/api/video/{video_result['filename']}"
-            
             pipeline_latency = time.time() - pipeline_start
             log_metric("total_pipeline_latency", pipeline_latency)
             
-            # Log inference data
             moods = [b.get("mood", "") for b in beats]
             cameras = [b.get("camera_angle", "") for b in beats]
             log_inference(
@@ -289,10 +303,9 @@ async def api_generate_video(request: ScriptRequest):
             
             end_run("FINISHED")
             
-            print(f"[PIPELINE] COMPLETE in {pipeline_latency:.2f}s - Video: {video_url}\n")
+            print(f"[PIPELINE] STORYBOARD READY in {pipeline_latency:.2f}s — waiting for user review\n")
             
-            # Final result
-            yield f"data: {json.dumps({'stage': 'complete', 'message': 'Video ready!', 'videoUrl': video_url, 'beats': beats, 'duration': video_result.get('duration', 0), 'pipelineTime': pipeline_latency})}\n\n"
+            yield f"data: {json.dumps({'stage': 'review', 'message': 'Storyboard ready for review', 'beats': beats, 'audioResults': audio_results, 'pipelineTime': pipeline_latency})}\n\n"
             
         except Exception as e:
             print(f"[PIPELINE] ERROR: {str(e)}")
@@ -389,6 +402,106 @@ async def api_get_audio(filepath: str):
         media_type="audio/mpeg",
         filename=audio_path.name,
     )
+
+
+async def _regenerate_image_for_beat(beat: dict, style_mode: str) -> dict:
+    """Shared logic: generate a new image for a beat and return {imageUrl}."""
+    payload = ImageProviderBeatPayload(
+        beat_number=beat.get("beat_number", 0),
+        visual_description=beat.get("visual_description", ""),
+        camera_angle=beat.get("camera_angle", ""),
+        mood=beat.get("mood", ""),
+        lighting=beat.get("lighting", ""),
+        characters_present=beat.get("characters_present", []),
+        narrator_line=beat.get("narrator_line", ""),
+        music_style=beat.get("music_style") or beat.get("music_recommendation"),
+        style_mode=style_mode,
+    )
+    result = await generate_beat_image(payload)
+    request_id = result.metadata.get("request_id") or uuid.uuid4().hex
+    filename_hint = f"beat_{beat.get('beat_number', 0)}_{request_id}"
+    image_path = save_generated_image(result.image_bytes, filename_hint, IMAGES_DIR)
+    return {"imageUrl": f"/api/image/{image_path.name}"}
+
+
+async def _regenerate_narrator_for_beat(beat: dict) -> dict:
+    """Shared logic: generate new narrator audio for a beat and return {audio_path, audio_url}."""
+    text = beat.get("narrator_line", "")
+    beat_number = beat.get("beat_number", 1)
+    mood = beat.get("mood", "default").lower()
+    music_style = beat.get("music_style", "cinematic")
+    visuals = beat.get("visual_description", "")
+    voice_id = MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
+    audio_path = await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style)
+    return {"audio_path": audio_path, "audio_url": f"/api/audio/{Path(audio_path).name}"}
+
+
+@app.post("/api/regenerate-image")
+async def api_regenerate_image(request: RegenerateImageRequest):
+    """Regenerate the image for a single beat."""
+    beat = request.beat.model_dump()
+    return await _regenerate_image_for_beat(beat, _normalize_style_mode(request.style_mode))
+
+
+@app.post("/api/regenerate-narrator")
+async def api_regenerate_narrator(request: RegenerateNarratorRequest):
+    """Regenerate the narrator audio for a single beat."""
+    beat = request.beat.model_dump()
+    if not beat.get("narrator_line", "").strip():
+        raise HTTPException(status_code=400, detail="narrator_line is empty")
+    return await _regenerate_narrator_for_beat(beat)
+
+
+@app.post("/api/reimagine-beat")
+async def api_reimagine_beat(request: ReimagineBeatRequest):
+    """
+    Reimagine a beat via Gemini, then optionally regenerate its image
+    and/or narrator audio — all in one round-trip.
+    """
+    if not request.feedback.strip():
+        raise HTTPException(status_code=400, detail="feedback cannot be empty")
+
+    normalized_style = _normalize_style_mode(request.style_mode)
+
+    beat_dict = request.beat.model_dump()
+    revised = await reimagine_beat(
+        current_beat=beat_dict,
+        user_feedback=request.feedback,
+        genre_preset=request.genre_preset or "none",
+        style_mode=normalized_style,
+    )
+
+    result = {"beat": revised, "imageUrl": None, "audio_path": None, "audio_url": None}
+
+    tasks = {}
+    if request.regenerate_image:
+        tasks["image"] = asyncio.create_task(_regenerate_image_for_beat(revised, normalized_style))
+    if request.regenerate_narrator and revised.get("narrator_line", "").strip():
+        tasks["narrator"] = asyncio.create_task(_regenerate_narrator_for_beat(revised))
+
+    for key, task in tasks.items():
+        try:
+            res = await task
+            result.update(res)
+        except Exception as exc:
+            print(f"[REIMAGINE] {key} regeneration failed: {exc}")
+
+    return result
+
+
+@app.post("/api/render-video")
+async def api_render_video(request: RenderVideoRequest):
+    """Render the final video from reviewed beats + audio."""
+    if not request.beats:
+        raise HTTPException(status_code=400, detail="beats cannot be empty")
+
+    video_result = await render_video(beats=request.beats, audio_files=request.audio_results)
+    video_url = f"/api/video/{video_result['filename']}"
+    return {
+        "videoUrl": video_url,
+        "duration": video_result.get("duration", 0),
+        "render_time": video_result.get("render_time", 0),
+    }
 
 
 # For Figma Plugin
