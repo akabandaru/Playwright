@@ -16,7 +16,15 @@ load_dotenv()
 from services.scene_decomposer import decompose_scene
 from services.elevenlabs_service import generate_voices_and_sfx
 from services.video_service import render_video
-from services.figma_service import create_figma_storyboard
+from services.figma_service import (
+    create_figma_storyboard,
+    update_beat_in_figma,
+    register_plugin_mapping,
+    get_node_mapping,
+    get_plugin_payload,
+    get_all_mappings,
+    remove_storyboard_mapping,
+)
 from services.image_provider_models import ImageProviderBeatPayload
 from services.image_provider_service import (
     generate_beat_image,
@@ -39,8 +47,12 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://localhost:5174",
+        # Figma plugin sandbox runs with a null origin — must be allowed for
+        # code.js fetch() calls to reach the backend.
+        "null",
     ],
-    allow_credentials=True,
+    allow_origin_regex=r"https://.*\.figma\.com",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -73,6 +85,28 @@ class Beat(BaseModel):
 
 class FigmaExportRequest(BaseModel):
     beats: List[Beat]
+    storyboard_id: Optional[str] = None
+    target_file_key: Optional[str] = None
+
+
+class FigmaBeatUpdateRequest(BaseModel):
+    beat: Beat
+
+
+class FigmaPluginMappingBeatNode(BaseModel):
+    beat_number: int
+    frame_node_id: str
+    image_node_id: str = ""
+    label_node_id: str = ""
+    meta_node_id: str = ""
+
+
+class FigmaPluginMappingRequest(BaseModel):
+    file_key: str
+    file_url: str
+    page_id: str
+    page_name: str = "Storyboard"
+    beat_nodes: List[FigmaPluginMappingBeatNode]
 
 
 @app.get("/")
@@ -175,13 +209,13 @@ async def api_generate_video(request: ScriptRequest):
             # Wait for voice generation to complete
             audio_results = await voice_task
             
-            # Get music recommendation
-            # music_rec = None
-            # for beat in beats:
-            #     if beat.get("music_recommendation"):
-            #         music_rec = beat["music_recommendation"]
-            #         break
-            
+            # Get music recommendation from first beat that has one
+            music_rec = None
+            for beat in beats:
+                if beat.get("music_recommendation") or beat.get("music_style"):
+                    music_rec = beat.get("music_recommendation") or beat.get("music_style")
+                    break
+
             yield f"data: {json.dumps({'stage': 'generating', 'message': 'Visuals and narration complete', 'beats': beats})}\n\n"
             
             # Stage 3: Render video
@@ -232,6 +266,61 @@ async def api_generate_video(request: ScriptRequest):
     )
 
 
+@app.get("/api/export-figma/{storyboard_id}/mapping")
+async def api_get_figma_mapping(storyboard_id: str):
+    """
+    Retrieve the full Figma node mapping for a storyboard.
+
+    Returns file_key, file_url, and per-beat node IDs (frame, image, label, meta).
+    Useful for debugging or for the plugin to verify registered nodes.
+    """
+    try:
+        return get_node_mapping(storyboard_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/api/export-figma/{storyboard_id}/payload")
+async def api_get_figma_payload(storyboard_id: str):
+    """
+    Return the plugin payload for a storyboard.
+
+    Called by the PLAYWRIGHT Figma plugin to fetch the frame layout and
+    image data it needs to create the storyboard file client-side.
+    Only available for storyboards exported in plugin_payload mode.
+    """
+    try:
+        return get_plugin_payload(storyboard_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/api/export-figma")
+async def api_list_figma_mappings():
+    """
+    List all storyboards that have been exported to Figma.
+
+    Returns a summary (file_key, file_url, beat_count, timestamps) for each.
+    """
+    return get_all_mappings()
+
+
+@app.delete("/api/export-figma/{storyboard_id}/mapping")
+async def api_delete_figma_mapping(storyboard_id: str):
+    """
+    Delete the Figma node mapping for a storyboard.
+
+    Does NOT delete the Figma file itself — only removes the local mapping record.
+    """
+    deleted = remove_storyboard_mapping(storyboard_id)
+    if not deleted:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No mapping found for storyboard '{storyboard_id}'",
+        )
+    return {"deleted": True, "storyboard_id": storyboard_id}
+
+
 @app.get("/api/video/{filename}")
 async def api_get_video(filename: str):
     """Serve rendered video files for playback and download."""
@@ -264,14 +353,77 @@ async def api_get_image(filename: str):
 
 @app.post("/api/export-figma")
 async def api_export_figma(request: FigmaExportRequest):
-    """Export storyboard to Figma."""
+    """
+    Export storyboard to Figma.
+
+    Resolution order for the target file:
+      1. request.target_file_key  (explicit override)
+      2. FIGMA_TEMPLATE_FILE_KEY  env var  →  one-click template mode
+      3. Neither set              →  returns plugin payload JSON
+
+    Response always includes storyboard_id which the frontend uses to build
+    the figma:// deep link that opens the plugin pre-filled.
+    """
     if not request.beats:
         raise HTTPException(status_code=400, detail="Beats array cannot be empty")
-    
+
     try:
         beats_dict = [b.model_dump() for b in request.beats]
-        result = await create_figma_storyboard(beats_dict)
+        result = await create_figma_storyboard(
+            beats_dict,
+            storyboard_id=request.storyboard_id,
+            target_file_key=request.target_file_key,
+        )
         return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.patch("/api/export-figma/{storyboard_id}/beat/{beat_number}")
+async def api_update_figma_beat(
+    storyboard_id: str,
+    beat_number: int,
+    request: FigmaBeatUpdateRequest,
+):
+    """
+    Selectively update a single beat's image in Figma without re-exporting
+    the whole storyboard. Requires a prior full export so node IDs are stored.
+    """
+    try:
+        beat_dict = request.beat.model_dump()
+        result = await update_beat_in_figma(storyboard_id, beat_number, beat_dict)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/export-figma/{storyboard_id}/mapping")
+async def api_register_plugin_mapping(
+    storyboard_id: str,
+    request: FigmaPluginMappingRequest,
+):
+    """
+    Called by the Figma plugin after it creates the file client-side.
+    Registers the file_key and per-beat node IDs so future selective
+    updates via PATCH /beat/{n} work without re-importing.
+    """
+    try:
+        beat_nodes = [bn.model_dump() for bn in request.beat_nodes]
+        result = await register_plugin_mapping(
+            storyboard_id,
+            file_key=request.file_key,
+            file_url=request.file_url,
+            page_id=request.page_id,
+            page_name=request.page_name,
+            beat_nodes=beat_nodes,
+        )
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
