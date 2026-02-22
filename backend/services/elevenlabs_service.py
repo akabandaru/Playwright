@@ -1,14 +1,10 @@
 import os
 import asyncio
-import logging
-import shutil
-from urllib import response
 import httpx
 import uuid
 from pathlib import Path
 from typing import List, Dict, Any
 from elevenlabs.client import ElevenLabs
-from elevenlabs.play import play
 try:
     from pydub import AudioSegment
     _audio_segment_import_error = None
@@ -16,7 +12,6 @@ except Exception as exc:
     AudioSegment = None
     _audio_segment_import_error = exc
 
-logger = logging.getLogger(__name__)
 
 ELEVENLABS_API_URL = "https://api.elevenlabs.io/v1"
 MODEL_ID = "eleven_monolingual_v1"
@@ -35,9 +30,7 @@ MOOD_VOICE_MAP = {
 TEMP_DIR = Path(__file__).parent.parent / "temp"
 TEMP_DIR.mkdir(exist_ok=True)
 
-elevenlabs = ElevenLabs(
-    api_key=os.getenv("ELEVENLABS_API_KEY"),
-)
+elevenlabs = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"),)
 
 
 async def generate_single_voice(
@@ -71,12 +64,12 @@ async def generate_single_voice(
 
     retries = 3
     delay = 1
+    response = None
+
     for attempt in range(retries):
         try:
             response = await client.post(url, json=payload, headers=headers, timeout=60.0)
             response.raise_for_status()
-            char_cost = response.headers.get("x-character-count")
-            request_id = response.headers.get("request-id")
             break
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 429 and attempt < retries - 1:
@@ -84,6 +77,9 @@ async def generate_single_voice(
                 delay *= 2
             else:
                 raise
+
+    if response is None:
+        raise RuntimeError("Failed to generate voice after retries.")
 
     filename = f"narration_{beat_number}_{uuid.uuid4().hex[:8]}.mp3"
     filepath = TEMP_DIR / filename
@@ -97,7 +93,7 @@ async def generate_single_voice(
         "filename": filename,
     }
 
-async def generate_sound_effects(scene_description: str) -> str:
+def generate_sound_effects(scene_description: str) -> str:
     """Generate sound effects for the scene using ElevenLabs."""
     
     audio_generator = elevenlabs.text_to_sound_effects.convert(
@@ -114,7 +110,7 @@ async def generate_sound_effects(scene_description: str) -> str:
     return str(audio_path)
 
 
-async def generate_music(scene_description: str, mood: str, length_ms: int, music_style: str) -> str:
+def generate_music(scene_description: str, mood: str, length_ms: int, music_style: str) -> str:
     """
     Generate background music using ElevenLabs Music API.
     """
@@ -157,7 +153,7 @@ async def generate_music(scene_description: str, mood: str, length_ms: int, musi
     return str(music_path)
 
 
-def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, output_path: str, narration_volume: float = -5.0, sfx_volume: float = -20.0, music_volume: float = -8.0):
+def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, output_path: str, target_narration_db: float = -18.0, sfx_offset_db: float = -6.0, music_offset_db: float = -10.0):
     """
     Mix narration with background sound effects (from ElevenLabs).
     """
@@ -165,112 +161,132 @@ def mix_narration_with_sfx(narration_path: str, sfx_path: str, music_path: str, 
         raise RuntimeError(f"pydub/audio backend unavailable: {_audio_segment_import_error}")
 
     # Load narration
-    narration = AudioSegment.from_mp3(narration_path) + narration_volume
-    sfx = AudioSegment.from_mp3(sfx_path) + sfx_volume
-    music = AudioSegment.from_mp3(music_path) + music_volume
+    narration = AudioSegment.from_mp3(narration_path)
+    sfx = AudioSegment.from_mp3(sfx_path)
+    music = AudioSegment.from_mp3(music_path)
+
+    narration = narration.apply_gain(target_narration_db - narration.dBFS)
+    sfx = sfx.apply_gain(target_narration_db - sfx.dBFS + sfx_offset_db)
+    music = music.apply_gain(target_narration_db - music.dBFS + music_offset_db)
 
     # Loop SFX and music to match narration length
-    def loop_to_length(audio, target_length):
-        return (audio * (target_length // len(audio) + 1))[:target_length]
+    def fit_to_length(audio, target_length):
+        if len(audio) == target_length:
+            return audio
+        elif len(audio) > target_length:
+            return audio[:target_length]
+        else:
+            return (audio * (target_length // len(audio) + 1))[:target_length]
 
-    sfx = loop_to_length(sfx, len(narration))
-    music = loop_to_length(music, len(narration))
+    sfx = fit_to_length(sfx, len(narration))
+    music = fit_to_length(music, len(narration))
 
     # Layering order matters
-    mixed = narration.overlay(sfx)
-    mixed = mixed.overlay(music)
+    mixed = music.overlay(sfx)
+    mixed = mixed.overlay(narration)
 
     mixed.export(output_path, format="mp3")
+
+    # Clean up temp files
+    for path in [narration_path, sfx_path, music_path]:
+        try:
+            os.remove(path)
+        except Exception as e:
+            print(f"Failed to delete {path}: {e}")
+
     return output_path
 
 
-async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: int, voice_id: str, mood: str, music_style: str) -> str:
+async def generate_scene_audio(screenplay_text: str, visuals: str,beat_number: int, voice_id: str, mood: str, music_style: str, client: httpx.AsyncClient) -> str:
     # Step 1: Generate the narration
-    async with httpx.AsyncClient() as client:
-        narration = await generate_single_voice(screenplay_text, beat_number, voice_id, client)
+    narration = await generate_single_voice(screenplay_text, beat_number, voice_id, client)
 
-    if AudioSegment is None:
-        logger.warning(
-            "Audio backend unavailable; using narration-only audio for beat=%s detail=%s",
-            beat_number,
-            str(_audio_segment_import_error),
-        )
-        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
-        shutil.copyfile(narration["audio_path"], output_path)
-        return str(output_path)
+    narration_length = await asyncio.to_thread(get_mp3_length, narration['audio_path'])
+    narration_length *= 1000
 
-    narration_length = get_mp3_length(narration['audio_path']) * 1000
     # Step 2: Generate sound effects based on the scene description
-    scene_description = scene_description = f"""
+    scene_description = f"""
         Cinematic background ambience.
         Scene: {visuals}.
         Mood: {mood}.
-        Narator line: {screenplay_text}.
+        Narrator line: {screenplay_text}.
         No voices. Background ambience only.
         """  
-    # Custom description for sound effects
-    try:
-        sfx_path = await generate_sound_effects(scene_description)
-        sfx_length = get_mp3_length(sfx_path) * 1000
+    async def safe_thread(func, *args):
+        try:
+            return await asyncio.to_thread(func, *args)
+        except Exception as e:
+            print(f"{func.__name__} failed:", e)
+            return None
 
-        print(f"Length of narration: {narration_length} milliseconds")
-        print(f"Length of sound effects: {sfx_length} milliseconds")
+    sfx_path, music_path = await asyncio.gather(
+        safe_thread(generate_sound_effects, scene_description),
+        safe_thread(generate_music, scene_description, mood, narration_length, music_style)
+    )
 
-        music_path = await generate_music(
-            scene_description,
-            mood,
-            narration_length,
-            music_style,
+    sfx_length = get_mp3_length(sfx_path) * 1000
+    music_length = get_mp3_length(music_path) * 1000
+
+    print(f"Length of narration: {narration_length} milliseconds")
+    print(f"Length of sound effects: {sfx_length} milliseconds")
+    print(f"Length of music: {music_length} milliseconds")
+
+    # Step 3: Mix narration with sound effects
+    output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
+
+    if sfx_path and music_path:
+        final_audio_path = mix_narration_with_sfx(
+            narration['audio_path'],
+            sfx_path,
+            music_path,
+            output_path
         )
+    else:
+        # Narration only fallback
+        final_audio_path = narration['audio_path']
+    
+    final_length = await asyncio.to_thread(get_mp3_length, final_audio_path)
+    print(f"Length of final mixed audio: {final_length} milliseconds")
 
-        # Step 3: Mix narration with sound effects
-        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
-        final_audio_path = mix_narration_with_sfx(narration['audio_path'], sfx_path, music_path, output_path)
-
-        final_length = get_mp3_length(final_audio_path)
-        print(f"Length of final mixed audio: {final_length} milliseconds")
-
-        return final_audio_path
-    except Exception as exc:
-        logger.warning(
-            "SFX/music mix unavailable for beat=%s, using narration-only audio. detail=%s",
-            beat_number,
-            str(exc),
-        )
-        output_path = TEMP_DIR / f"final_scene_{beat_number}.mp3"
-        shutil.copyfile(narration["audio_path"], output_path)
-        return str(output_path)
+    return final_audio_path
 
 async def generate_voices_and_sfx(beats: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Generate voice audio and sound effects for all narrator lines in parallel with mood-based voices."""
     semaphore = asyncio.Semaphore(2)  # Limit concurrency to avoid rate limits
-    results = []
 
     async with httpx.AsyncClient(timeout=60) as client:
         async def safe_generate(beat):
             async with semaphore:
                 text = beat.get("narrator_line", "")
                 visuals = beat.get("visuals", "")
-                beat_number = beat.get("beat_number", 1)
+                beat_number = beat.get("beat_number")
                 mood = beat.get("mood", "default").lower()
                 music_style = beat.get("music_style", "cinematic")
                 voice_id = MOOD_VOICE_MAP["default"] # MOOD_VOICE_MAP.get(mood, MOOD_VOICE_MAP["default"])
-                return await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style)
+                return await generate_scene_audio(text, visuals, beat_number, voice_id, mood, music_style, client)
 
-        tasks = [safe_generate(b) for b in beats if b.get("narrator_line")]
+        filtered_beats = [b for b in beats if b.get("narrator_line")]
+        tasks = [safe_generate(b) for b in filtered_beats]
+
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
     # Process results
     processed_results = []
-    for idx, result in enumerate(results):
+
+    for beat, result in zip(filtered_beats, results):
+        beat_number = beat.get("beat_number")
+
         if isinstance(result, Exception):
             processed_results.append({
-                "beat_number": idx + 1,
+                "beat_number": beat_number,
                 "audio_path": None,
                 "error": str(result),
             })
         else:
-            processed_results.append({"beat_number": idx + 1, "audio_path": result})
+            processed_results.append({
+                "beat_number": beat_number,
+                "audio_path": result
+            })
 
     return processed_results
 
